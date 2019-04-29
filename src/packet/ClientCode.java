@@ -47,7 +47,7 @@ public enum ClientCode {
     ),
     UserSelectNpc(241,
         (pStream) -> {
-            int dwNpcID = pStream.ReadInt();
+            int dwNpcID = pStream.ReadInt(); //not template ID, this relates to the map object ID
             Point ptPos = new Point(pStream.ReadShort(), pStream.ReadShort());
             return new UserSelectNpc(dwNpcID, ptPos);
         }

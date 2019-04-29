@@ -11,7 +11,9 @@ import packet.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
 import script.ScriptModifier;
+import script.ScriptTemplateMap;
 import script.ScriptWriteRequest;
+import template.FieldTemplate;
 
 /**
  *
@@ -207,7 +209,15 @@ public class UserInGameDirectionEvent extends PacketWriteRequest {
 
     @Override
     public ScriptModifier CreateScriptModifier() {
-        return null;
+        ScriptModifier pScriptModifier = (Script pScript) -> {
+            if (pScript.pTemplate == null) {
+                FieldTemplate pFieldTemplate = ScriptTemplateMap.GetUserEnterTemplate(pScript.dwField);
+                if (pFieldTemplate != null && !pFieldTemplate.sScript.isEmpty()) {
+                    pScript.CreateNewTemplate(new ScriptWriteRequest(pFieldTemplate.dwTemplateID, pFieldTemplate), true);
+                }
+            }
+        };
+        return pScriptModifier;
     }
 
     @Override

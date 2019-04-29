@@ -68,7 +68,7 @@ public class UserQuestRequest extends Packet {
             if (bOpening) {
                 QuestStartTemplate pQuestTemplate = ScriptTemplateMap.GetQuestStartTemplate(nQuestID);
                 if (pQuestTemplate != null) {
-                    Logger.LogError("pQuestStartTemplate found - " + pQuestTemplate.sQuestName + " / " + pQuestTemplate.sScript);
+                    //Logger.LogError("pQuestStartTemplate found - " + pQuestTemplate.sQuestName + " / " + pQuestTemplate.sScript);
                     pQuestTemplate.nQuestState = nQuestState;
                     pScript.CreateNewTemplate(null);
                     pScript.CreateNewTemplate(new ScriptWriteRequest(pScript.dwField, pQuestTemplate));
@@ -77,7 +77,7 @@ public class UserQuestRequest extends Packet {
                 if (bComplete) {
                     QuestEndTemplate pQuestTemplate = ScriptTemplateMap.GetQuestEndTemplate(nQuestID);
                     if (pQuestTemplate != null) {
-                        Logger.LogError("pQuestEndTemplate found - " + pQuestTemplate.sQuestName + " / " + pQuestTemplate.sScript);
+                        //Logger.LogError("pQuestEndTemplate found - " + pQuestTemplate.sQuestName + " / " + pQuestTemplate.sScript);
                         pQuestTemplate.nQuestState = nQuestState;
                         pScript.CreateNewTemplate(new ScriptWriteRequest(pScript.dwField, pQuestTemplate), true);
                     }

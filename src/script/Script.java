@@ -268,10 +268,10 @@ public class Script {
                         }
                         if (!bFoundNestedBlockHistory && pNestedBlockHistory != null) {
                             if (pNestedBlockHistory.IsNestedBlockFound(sLine)) {
-                                Logger.LogError("Found Nested Block History sTargetText value for file - [sFileName] " + sFileName);
+                                /*Logger.LogError("Found Nested Block History sTargetText value for file - [sFileName] " + sFileName);
                                 Logger.LogAdmin("          - sOutput = " + pWriteRequest.GetOutput());
                                 Logger.LogAdmin("          - sTargetText = " + pNestedBlockHistory.sTargetText);
-                                Logger.LogAdmin("          - sLine = " + sLine);
+                                Logger.LogAdmin("          - sLine = " + sLine);*/
                                 bFoundNestedBlockHistory = true;
                             }
                             lScriptLines.add(sLine);
@@ -285,9 +285,9 @@ public class Script {
                                 continue;
                             }
                             if (pNestedBlockHistory != null && sLine.contains("}")) {
-                                Logger.LogError("End of Nested Block History found for file (inserting BEFORE sLine) - [sFileName] " + sFileName);
+                                /*Logger.LogError("End of Nested Block History found for file (inserting BEFORE sLine) - [sFileName] " + sFileName);
                                 Logger.LogAdmin("          - sOutput = " + pWriteRequest.GetOutput());
-                                Logger.LogAdmin("          - sLine = " + sLine);
+                                Logger.LogAdmin("          - sLine = " + sLine);*/
                                 lScriptLines.add(Config.MessageHistoryDebug ? sOutputWithDebug : pWriteRequest.GetOutput());
                                 for (String s : pWriteRequest.GetNestedBlockOutput()) {
                                     lScriptLines.add(s);
@@ -295,9 +295,9 @@ public class Script {
                                 lScriptLines.add(sLine);
                                 bMergedOrDuplicate = true;
                             } else if (pNestedBlockHistory == null && !pReader.ready()) {
-                                Logger.LogError("End of Nested Block History found for file (inserting AFTER sLine) - [sFileName] " + sFileName);
+                                /*Logger.LogError("End of Nested Block History found for file (inserting AFTER sLine) - [sFileName] " + sFileName);
                                 Logger.LogAdmin("          - sLine = " + sLine);
-                                Logger.LogAdmin("          - sOutput = " + pWriteRequest.GetOutput());
+                                Logger.LogAdmin("          - sOutput = " + pWriteRequest.GetOutput());*/
                                 lScriptLines.add(sLine);
                                 lScriptLines.add(Config.MessageHistoryDebug ? sOutputWithDebug : pWriteRequest.GetOutput());
                                 for (String s : pWriteRequest.GetNestedBlockOutput()) {
@@ -311,16 +311,16 @@ public class Script {
                         lScriptLines.add(sLine);
                     }
                 } catch (FileNotFoundException ignore) { 
-                    Logger.LogError("Did not create a template file for -");
+                    /*Logger.LogError("Did not create a template file for -");
                     Logger.LogAdmin("          - pWriteRequest.GetOutput() [" + pWriteRequest.GetOutput() + "]");
-                    Logger.LogAdmin("          - " + pTemplate.sScript + " [sScript] / " + pTemplate.sDirPath + " [sDirPath] / " + pTemplate.dwTemplateID + " [dwTemplateID]");
+                    Logger.LogAdmin("          - " + pTemplate.sScript + " [sScript] / " + pTemplate.sDirPath + " [sDirPath] / " + pTemplate.dwTemplateID + " [dwTemplateID]");*/
                     ignore.printStackTrace();
                 } finally {
-                    Logger.LogError("Final values for script - [sFileName] " + sFileName);
+                    /*Logger.LogError("Final values for script - [sFileName] " + sFileName);
                     Logger.LogAdmin("          - bFoundHistory = " + bFoundHistory);
                     Logger.LogAdmin("          - bFoundNestedBlockHistory = " + bFoundNestedBlockHistory);
                     Logger.LogAdmin("          - (target-output) = " + (pNestedBlockHistory != null ? pNestedBlockHistory.sTargetText : "none"));
-                    Logger.LogAdmin("          - bMergedOrDuplicate = " + bMergedOrDuplicate);
+                    Logger.LogAdmin("          - bMergedOrDuplicate = " + bMergedOrDuplicate);*/
                 }
                 
                 //Write everything to the script
@@ -340,77 +340,80 @@ public class Script {
         }
     }
         
-        /*String sLine = pReader.readLine();
-                        if (!bWriteRequestComplete) {
-                            if (!bFoundNestedBlock) {
-                                if (aHistoryNestedBlock.size() > nNestedBlockCount) {
-                                    NestedBlockHistory pNestedBlock = aHistoryNestedBlock.get(nNestedBlockCount);
-                                    if (pNestedBlock.IsNestedBlockFound(sLine)) {
-                                        nNestedBlockCount++;
-                                        if (nNestedBlockCount == aHistoryNestedBlock.size()) {
-                                            Logger.LogError("Found nested block - ");
-                                            Logger.LogAdmin("        - sLine:  " + sLine + "");
-                                            Logger.LogAdmin("        - sOutput: " + pWriteRequest.GetOutput() + "");
-                                            Logger.LogAdmin("        - Script: [" + pWriteRequest.GetTemplate().sScript + "]");
-                                            bFoundNestedBlock = true;
-                                        }
-                                    }
-                                    lScriptLines.add(sLine);
-                                    continue;
-                                } else {
-                                    bFoundNestedBlock = true; //found the last occurrence and array is emptied
-                                }
-                            }
-                            if (bFoundNestedBlock) {
-                                if ((sLine.contains(pWriteRequest.GetOutput()) || pWriteRequest.GetOutput().contains(sLine))) {
-                                    bWriteRequestComplete = true;//duplicate line found
-                                    lScriptLines.add(sLine);
-                                    continue;
-                                }
-                                if (aHistoryNestedBlock.size() > 0) {
-                                    bFoundEndOfBlock = sLine.contains("}");
-                                    if (bFoundEndOfBlock) {
-                                        pWriteRequest.SetOutput((Config.MessageHistoryDebug ? (pWriteRequest.GetOutput() + "//(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
-                                        lScriptLines.add(pWriteRequest.GetOutput());
-                                        if (pWriteRequest.GetNestedBlockOutput().size() > 0) {
-                                            pWriteRequest.GetNestedBlockOutput().stream().forEach((s) -> {
-                                                lScriptLines.add(s);
-                                            });
-                                        }
-                                        bWriteRequestComplete = true;
-                                        lScriptLines.add(sLine);
-                                    } else {
-                                        lScriptLines.add(sLine);
-                                    }
-                                } else {
-                                    if (!pReader.ready()) {
-                                        lScriptLines.add(sLine);
-                                        pWriteRequest.SetOutput((Config.MessageHistoryDebug ? (pWriteRequest.GetOutput() + "//(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
-                                        lScriptLines.add(pWriteRequest.GetOutput());
-                                        if (pWriteRequest.GetNestedBlockOutput().size() > 0) {
-                                            pWriteRequest.GetNestedBlockOutput().stream().forEach((s) -> {
-                                                lScriptLines.add(s);
-                                            });
-                                        }
-                                        bWriteRequestComplete = true;
-                                    } else {
-                                        lScriptLines.add(sLine);
-                                    }
-                                }
-                            }
-                        } else {
-                            lScriptLines.add(sLine);
+    /*
+    //backup code from the C# version
+    {
+        String sLine = pReader.readLine();
+        if (!bWriteRequestComplete) {
+            if (!bFoundNestedBlock) {
+                if (aHistoryNestedBlock.size() > nNestedBlockCount) {
+                    NestedBlockHistory pNestedBlock = aHistoryNestedBlock.get(nNestedBlockCount);
+                    if (pNestedBlock.IsNestedBlockFound(sLine)) {
+                        nNestedBlockCount++;
+                        if (nNestedBlockCount == aHistoryNestedBlock.size()) {
+                            Logger.LogError("Found nested block - ");
+                            Logger.LogAdmin("        - sLine:  " + sLine + "");
+                            Logger.LogAdmin("        - sOutput: " + pWriteRequest.GetOutput() + "");
+                            Logger.LogAdmin("        - Script: [" + pWriteRequest.GetTemplate().sScript + "]");
+                            bFoundNestedBlock = true;
                         }
                     }
-                    if (!bWriteRequestComplete) { //force complete, this shouldn't normally (ever) occur
-                        pWriteRequest.SetOutput((Config.MessageHistoryDebug ? (pWriteRequest.GetOutput() + " //(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
+                    lScriptLines.add(sLine);
+                    continue;
+                } else {
+                    bFoundNestedBlock = true; //found the last occurrence and array is emptied
+                }
+            }
+            if (bFoundNestedBlock) {
+                if ((sLine.contains(pWriteRequest.GetOutput()) || pWriteRequest.GetOutput().contains(sLine))) {
+                    bWriteRequestComplete = true;//duplicate line found
+                    lScriptLines.add(sLine);
+                    continue;
+                }
+                if (aHistoryNestedBlock.size() > 0) {
+                    bFoundEndOfBlock = sLine.contains("}");
+                    if (bFoundEndOfBlock) {
+                        pWriteRequest.SetOutput((Config.MessageHistoryDebug ? (pWriteRequest.GetOutput() + "//(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
                         lScriptLines.add(pWriteRequest.GetOutput());
                         if (pWriteRequest.GetNestedBlockOutput().size() > 0) {
                             pWriteRequest.GetNestedBlockOutput().stream().forEach((s) -> {
                                 lScriptLines.add(s);
                             });
                         }
-                    }*/
+                        bWriteRequestComplete = true;
+                        lScriptLines.add(sLine);
+                    } else {
+                        lScriptLines.add(sLine);
+                    }
+                } else {
+                    if (!pReader.ready()) {
+                        lScriptLines.add(sLine);
+                        pWriteRequest.SetOutput((Config.MessageHistoryDebug ? (pWriteRequest.GetOutput() + "//(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
+                        lScriptLines.add(pWriteRequest.GetOutput());
+                        if (pWriteRequest.GetNestedBlockOutput().size() > 0) {
+                            pWriteRequest.GetNestedBlockOutput().stream().forEach((s) -> {
+                                lScriptLines.add(s);
+                            });
+                        }
+                        bWriteRequestComplete = true;
+                    } else {
+                        lScriptLines.add(sLine);
+                    }
+                }
+            }
+        } else {
+            lScriptLines.add(sLine);
+        }
+    }
+    if (!bWriteRequestComplete) { //force complete, this shouldn't normally (ever) occur
+        pWriteRequest.SetOutput((Config.MessageHistoryDebug ? (pWriteRequest.GetOutput() + " //(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
+        lScriptLines.add(pWriteRequest.GetOutput());
+        if (pWriteRequest.GetNestedBlockOutput().size() > 0) {
+            pWriteRequest.GetNestedBlockOutput().stream().forEach((s) -> {
+                lScriptLines.add(s);
+            });
+        }
+    }*/
     
     public void SetScript(ScriptWriteRequest pWriteRequest) {
         this.dwField = pWriteRequest.GetField();
