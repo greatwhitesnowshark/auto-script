@@ -5,10 +5,12 @@
  */
 package packet.client;
 
+import game.network.InPacket;
 import java.awt.Point;
 import packet.ClientCode;
-import packet.Packet;
+import packet.PacketNullWrapper;
 import script.Script;
+import script.ScriptFieldObjMap;
 import script.ScriptModifier;
 import script.ScriptTemplateMap;
 import script.ScriptWriteRequest;
@@ -16,51 +18,36 @@ import template.NpcTemplate;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
-public class UserSelectNpc extends Packet {
+public class UserSelectNpc extends PacketNullWrapper {
     
-    private final int nNpcID;
-    private final Point ptPos;
-    private ScriptModifier pScriptMod = null;
+    public final int dwNpcObjectID;
+    public final Point ptPos;
+    public ScriptModifier pScriptMod = null;
     
-    public UserSelectNpc(int nNpcID, Point ptPos) {
+    public UserSelectNpc(InPacket iPacket) {
         super(ClientCode.UserSelectNpc.nCode);
-        this.nNpcID = nNpcID;
-        this.ptPos = ptPos;
+        this.dwNpcObjectID = iPacket.DecodeInt(); //not template ID, this relates to the map object ID
+        this.ptPos = new Point(iPacket.DecodeShort(), iPacket.DecodeShort());
     }
 
     @Override
     public ScriptModifier CreateScriptModifierOnEnd() {
         return pScriptMod;
     }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
-        return null;
-    }
-
-    @Override
-    public ScriptWriteRequest CreateScriptWriteRequest() {
-        return null;
-    }
     
     @Override
     public ScriptModifier CreateScriptModifier() {
         ScriptModifier pScriptModifier = (Script pScript) -> {
-            NpcTemplate pNpcTemplate = ScriptTemplateMap.GetNpcTemplate(nNpcID);
+            NpcTemplate pNpcTemplate = ScriptTemplateMap.GetNpcTemplate(ScriptFieldObjMap.GetNpcTemplateID(dwNpcObjectID));
             if (pNpcTemplate != null) {
                 pScript.CreateNewTemplate(new ScriptWriteRequest(pScript.dwField, pNpcTemplate), true);
-            }/* else {
-                pScriptModifierOverride = (Script pScript) -> {
+            } else {
+                pScriptMod = (Script pScriptReset) -> {
                     pScript.CreateNewTemplate(null);
                 };
-            }*/
+            }
         };
         return pScriptModifier;
     }

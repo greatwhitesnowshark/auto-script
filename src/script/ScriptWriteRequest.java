@@ -11,7 +11,7 @@ import template.AbstractTemplate;
 
 public class ScriptWriteRequest<T extends AbstractTemplate> {
     
-    private final int dwField, nStrPaddingIndex;
+    private final int dwField;
     private final T pTemplate;
     private final List<String> lConditionalText;
     private String sOutput;
@@ -28,7 +28,6 @@ public class ScriptWriteRequest<T extends AbstractTemplate> {
         }
         this.dwField = dwField;
         this.pTemplate = pTemplate;
-        this.nStrPaddingIndex = nStrPaddingIndex;
     }
     
     public ScriptWriteRequest(int dwField, T pTemplate) {
@@ -36,10 +35,13 @@ public class ScriptWriteRequest<T extends AbstractTemplate> {
         this.sOutput = "";
         this.pTemplate = pTemplate;
         this.lConditionalText = new LinkedList<>();
-        this.nStrPaddingIndex = 0;
     }
     
-    public int GetField() {
+    public T GetTemplate() {
+        return pTemplate;
+    }
+    
+    public int GetFieldID() {
         return dwField;
     }
     
@@ -53,10 +55,6 @@ public class ScriptWriteRequest<T extends AbstractTemplate> {
     
     public String GetOutput() {
         return sOutput;
-    }
-    
-    public T GetTemplate() {
-        return pTemplate;
     }
     
     public List<String> GetNestedBlockOutput() {

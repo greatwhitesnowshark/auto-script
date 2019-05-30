@@ -5,6 +5,7 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
 import java.util.LinkedList;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
@@ -14,30 +15,15 @@ import script.ScriptWriteRequest;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class UserSetStandaloneMode extends PacketWriteRequest {
     
     private final boolean bEnable;
     
-    public UserSetStandaloneMode(boolean bEnable) {
+    public UserSetStandaloneMode(InPacket iPacket) {
         super(LoopbackCode.UserSetStandaloneMode.nCode);
-        this.bEnable = bEnable;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
+        this.bEnable = iPacket.DecodeBool();
     }
 
     @Override
@@ -55,7 +41,7 @@ public class UserSetStandaloneMode extends PacketWriteRequest {
     @Override
     public ScriptWriteRequest CreateScriptWriteRequest() {
         if (pTemplate != null) {
-            String sOutput = "self.OnUserSetStandaloneMode(" + (!bEnable ? "false" : "true") + ");";
+            String sOutput = "self.OnUserSetStandaloneMode(" + bEnable + ");";
             return new ScriptWriteRequest(dwField, sOutput, pTemplate, new LinkedList<>(), nStrPaddingIndex);
         }
         return null;

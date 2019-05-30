@@ -5,16 +5,17 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
+import game.scripting.ScriptMan;
+import game.scripting.ScriptMan.MessageType;
 import java.util.LinkedList;
 import java.util.List;
-import message.MessageType;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
 import script.ScriptModifier;
-import script.ScriptTemplateMap;
 import script.ScriptWriteRequest;
-import template.NpcTemplate;
+import util.Logger;
 
 /**
  *
@@ -30,241 +31,242 @@ public class ScriptMessage extends PacketWriteRequest {
     private int[] aCode = new int[0];
     private String[] aImage = new String[0], aPath = new String[0];
     
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, byte bPrev, byte bNext, int tWait) {
+    public ScriptMessage(InPacket iPacket) {
         super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.bPrev = bPrev;
-        this.bNext = bNext;
-        this.tWait = tWait;
-    }
-    
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String[] aImage) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.aImage = aImage;
-    }
-    
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-    }
-    
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, String sDefaultText, int nMin, int nMax) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.sDefaultText = sDefaultText;
-        this.nMin = nMin;
-        this.nMax = nMax;
-    }
-    
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, int nDefault, int nMin, int nMax) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.nDefault = nDefault;
-        this.nMin = nMin;
-        this.nMax = nMax;
-    }
-    
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sTitle, String sProblemText, String sHintText, int nMin, int nMax, int tRemain) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sTitle = sTitle;
-        this.sProblemText = sProblemText;
-        this.sHintText = sHintText;
-        this.nMin = nMin;
-        this.nMax = nMax;
-        this.tRemain = tRemain;
-    }
-    
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, int nQuizType, int dwQuizAnswer, int nQuizCorrect, int nQuizRemain, int tRemain) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.nQuizType = nQuizType;
-        this.dwQuizAnswer = dwQuizAnswer;
-        this.nQuizCorrect = nQuizCorrect;
-        this.nQuizRemain = nQuizRemain;
-        this.tRemain = tRemain;
-    }
-    
-    //AskIcQuiz
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sProblemText, String sHintText, int tRemain) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sProblemText = sProblemText;
-        this.sHintText = sHintText;
-        this.tRemain = tRemain;
-    }
-    
-    //AskAvatar
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, byte bAngelicBuster, byte bZeroData, int[] aCode) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.bAngelicBuster = bAngelicBuster;
-        this.bZeroData = bZeroData;
-        this.aCode = aCode;
-    }
-    
-    //AskAndroid
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, int[] aCode) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.aCode = aCode;
-    }
-    
-    //AskBoxText
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, String sDefaultText, short nCol, short nLine) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.sDefaultText = sDefaultText;
-        this.nCol = nCol;
-        this.nLine = nLine;
-    }
-    
-    //AskSlideMenu
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, int nDlgType, int nDefaultSelect) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.nDlgType = nDlgType;
-        this.nDefaultSelect = nDefaultSelect;
-    }
-    
-    //AskSelectMenu
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, int nDlgType, String[] aPath) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.nDlgType = nDlgType;
-        this.aPath = aPath;
-    }
-    
-    //AskIllustration
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, byte bPrev, byte bNext, int nNpcID, int nFaceIndex, int bIsLeft, int nFaceIndex2) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.bPrev = bPrev;
-        this.bNext = bNext;
-        this.nNpcID = nNpcID;
-        this.nFaceIndex = nFaceIndex;
-        this.bIsLeft = bIsLeft;
-        this.nFaceIndex2 = nFaceIndex2;
-    }
-    
-    //AskIllustration
-    public ScriptMessage(int nSpeakerTypeID, int nSpeakerTemplateID, int nMsgType, short bParam, byte bSpecificSpeaker, byte eColor, String sText, short nBgIdx, String sDefaultText, short nCol, short nLine, short nFontSize) {
-        super(LoopbackCode.ScriptMessage.nCode);
-        this.nSpeakerTypeID = nSpeakerTypeID;
-        this.nSpeakerTemplateID = nSpeakerTemplateID;
-        this.nMsgType = nMsgType;
-        this.bParam = bParam;
-        this.bSpecificSpeaker = bSpecificSpeaker;
-        this.eColor = eColor;
-        this.sText = sText;
-        this.nBgIdx = nBgIdx;
-        this.sDefaultText = sDefaultText;
-        this.nCol = nCol;
-        this.nLine = nLine;
-        this.nFontSize = nFontSize;
-    }
-    
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        ScriptModifier pScriptModifier = (Script pScript) -> {
-            if (pScript.pTemplate == null) {
-                NpcTemplate pNpcTemplate = ScriptTemplateMap.GetNpcTemplate(nSpeakerTemplateID);
-                if (pNpcTemplate != null) {
-                    pScript.CreateNewTemplate(new ScriptWriteRequest(pNpcTemplate.dwTemplateID, pNpcTemplate), true);
-                }
+        try {
+            this.nSpeakerTypeID = iPacket.DecodeByte();
+            this.nSpeakerTemplateID = iPacket.DecodeInt();
+            this.bSpecificSpeaker = iPacket.DecodeByte();
+            if (this.bSpecificSpeaker == 1) {
+                this.nSpeakerTemplateID = iPacket.DecodeInt();
             }
-        };
-        return pScriptModifier;
-    }
+            this.nMsgType = iPacket.DecodeByte();
+            this.bParam = iPacket.DecodeShort();
+            this.eColor = iPacket.DecodeByte();
+            switch (nMsgType) {
+                case MessageType.Say:
+                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                        this.nSpeakerTemplateID = iPacket.DecodeInt();
+                    }
+                    this.sText = iPacket.DecodeString();
+                    this.bPrev = iPacket.DecodeByte();
+                    this.bNext = iPacket.DecodeByte();
+                    this.tWait = iPacket.DecodeInt();
+                    break;
 
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
+                case MessageType.SayImage:
+                    byte nSize = iPacket.DecodeByte();
+                    this.aImage = new String[nSize];
+                    for (byte i = 0; i < nSize; i++) {
+                        this.aImage[i] = iPacket.DecodeString();
+                    }
+                    break;
 
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
+                case MessageType.AskYesNo:
+                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                        this.nSpeakerTemplateID = iPacket.DecodeInt();
+                    }
+                    this.sText = iPacket.DecodeString();
+                    break;
+
+                case MessageType.AskMenu:
+                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                        this.nSpeakerTemplateID = iPacket.DecodeInt();
+                    }
+                    this.sText = iPacket.DecodeString();
+                    break;
+
+                case MessageType.AskAccept:
+                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0)
+                    {
+                        this.nSpeakerTemplateID = iPacket.DecodeInt();
+                    }
+                    this.sText = iPacket.DecodeString();
+                    break;
+
+                case MessageType.AskText:
+                    if ((bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                        this.nSpeakerTemplateID = iPacket.DecodeInt();
+                    }
+                    this.sText = iPacket.DecodeString();
+                    this.sDefaultText = iPacket.DecodeString();
+                    this.nMin = iPacket.DecodeShort();
+                    this.nMax = iPacket.DecodeShort();
+                    break;
+
+                case MessageType.AskNumber:
+                    this.sText = iPacket.DecodeString();
+                    this.nDefault = iPacket.DecodeInt();
+                    this.nMin = iPacket.DecodeInt();
+                    this.nMax = iPacket.DecodeInt();
+                    break;
+
+                case MessageType.AskQuiz:
+                    this.nQuizResult = iPacket.DecodeByte();
+                    if (this.nQuizResult == 0) {//InitialQuizResult.Request
+                        this.sTitle = iPacket.DecodeString();
+                        this.sProblemText = iPacket.DecodeString();
+                        this.sHintText = iPacket.DecodeString();
+                        this.nMin = iPacket.DecodeInt();
+                        this.nMax = iPacket.DecodeInt();
+                        this.tRemain = iPacket.DecodeInt();
+                    }
+                    break;
+
+                case MessageType.AskSpeedQuiz:
+                    this.nQuizResult = iPacket.DecodeByte();
+                    if (this.nQuizResult == 0) {// InitialQuizResult.Request
+                        this.nQuizType = iPacket.DecodeInt();
+                        this.dwQuizAnswer = iPacket.DecodeInt();
+                        this.nQuizCorrect = iPacket.DecodeInt();
+                        this.nQuizRemain = iPacket.DecodeInt();
+                        this.tRemain = iPacket.DecodeInt();
+                    }
+                    break;
+
+                case MessageType.AskIcQuiz:
+                    this.nQuizResult = iPacket.DecodeByte();
+                    if (nQuizResult == 0) {// InitialQuizResult.Request
+                        this.sProblemText = iPacket.DecodeString();
+                        this.sHintText = iPacket.DecodeString();
+                        this.tRemain = iPacket.DecodeInt();
+                    }
+                    break;
+
+                case MessageType.AskAvatar:
+                case MessageType.Unknown2:
+                    this.bAngelicBuster = iPacket.DecodeByte();
+                    this.bZeroData = iPacket.DecodeByte();
+                    this.sText = iPacket.DecodeString();
+                    nSize = iPacket.DecodeByte();
+                    this.aCode = new int[nSize];
+                    for (byte i = 0; i < nSize; i++) {
+                        this.aCode[i] = iPacket.DecodeInt();
+                    }
+                    break;
+
+                case MessageType.AskAndroid:
+                case MessageType.Unknown:
+                    this.sText = iPacket.DecodeString();
+                    nSize = iPacket.DecodeByte();
+                    this.aCode = new int[nSize];
+                    for (byte i = 0; i < nSize; i++)
+                    {
+                        this.aCode[i] = iPacket.DecodeInt();
+                    }
+                    break;
+
+                case MessageType.AskPet: //Todo
+                case MessageType.AskPetAll: //Todo
+                    this.sText = iPacket.DecodeString();
+                    break;
+
+                case MessageType.AskBoxText:
+                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                        this.nSpeakerTemplateID = iPacket.DecodeInt();
+                    }
+                    this.sText = iPacket.DecodeString();
+                    this.sDefaultText = iPacket.DecodeString();
+                    this.nCol = iPacket.DecodeShort();
+                    this.nLine = iPacket.DecodeShort();
+                    break;
+
+                case MessageType.AskSlideMenu:
+                    this.nDlgType = iPacket.DecodeInt();
+                    if (this.nDlgType == 1)
+                    {
+                        iPacket.DecodeInt();
+                        iPacket.DecodeString();
+                        //EncodeInt / EncodeString
+                    }
+                    this.nDefaultSelect = iPacket.DecodeInt();
+                    this.sText = iPacket.DecodeString();
+                    break;
+
+                case MessageType.AskSelectMenu:
+                    this.nDlgType = iPacket.DecodeInt();
+                    int nIntSize = iPacket.DecodeInt();
+                    this.aPath = new String[nIntSize];
+                    for (int i = 0; i < nIntSize; i++) {
+                        this.aPath[i] = iPacket.DecodeString();
+                    }
+                    break;
+
+                case MessageType.SayIllustration:
+                case MessageType.SayDualIllustration:
+                case MessageType.AskYesNoIllustration:
+                case MessageType.AskAcceptIllustration:
+                case MessageType.AskYesNoDualIllustration:
+                case MessageType.AskAcceptDualIllustration:
+                case MessageType.AskMenuIllustration:
+                case MessageType.AskMenuDualIllustration:
+                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                        this.nSpeakerTemplateID = iPacket.DecodeInt();
+                    }
+                    this.sText = iPacket.DecodeString();
+                    this.bPrev = iPacket.DecodeByte();
+                    this.bNext = iPacket.DecodeByte();
+                    this.nNpcID = iPacket.DecodeInt();
+                    this.nFaceIndex = iPacket.DecodeInt();
+                    this.bIsLeft = iPacket.DecodeInt();
+                    if (iPacket.CountRemaining() >= 4) {
+                        this.nFaceIndex2 = iPacket.DecodeInt();
+                    }
+                    break;
+
+                case MessageType.AskBoxTextBgImg:
+                    this.nBgIdx = iPacket.DecodeShort();
+                    this.sText = iPacket.DecodeString();
+                    this.sDefaultText = iPacket.DecodeString();
+                    this.nCol = iPacket.DecodeShort();
+                    this.nLine = iPacket.DecodeShort();
+                    this.nFontSize = iPacket.DecodeShort();
+                    break;
+
+                case MessageType.AskMixHair:
+                    this.bAngelicBuster = iPacket.DecodeByte();
+                    this.bZeroData = iPacket.DecodeByte();
+                    iPacket.DecodeByte();
+                    this.sText = iPacket.DecodeString();
+                    nSize = iPacket.DecodeByte();
+                    this.aCode = new int[nSize];
+                    for (int i = 0; i < nSize; i++) {
+                        this.aCode[i] = iPacket.DecodeInt();
+                    }
+                    break;
+
+                case MessageType.AskMixHairZero:
+                    iPacket.DecodeByte();
+                    this.sText = iPacket.DecodeString();
+                    nSize = iPacket.DecodeByte();
+                    this.aCode = new int[nSize];
+                    for (int i = 0; i < nSize; i++) {
+                        this.aCode[i] = iPacket.DecodeInt();
+                    }   
+                    break;
+
+                case MessageType.AskAngelicBuster:
+                case MessageType.AskAvatarZero:
+                case MessageType.Unknown3:
+                case MessageType.Unknown4:
+                case MessageType.AskWeaponBox:
+                case MessageType.AskCustomMixHair:
+                case MessageType.AskCustomMixHairAndProb:
+                case MessageType.AskMixHairNew:
+                case MessageType.AskMixHairNewZero:
+                case MessageType.AskScreenShinningStarMsg:
+                case MessageType.AskNumberKeypad:
+                case MessageType.SpinoffGuitarRhythmGame:
+                case MessageType.AskGhostParkEnterUI:
+                case MessageType.CameraMsg:
+                case MessageType.SlidePuzzle:
+                case MessageType.Disguise:
+                case MessageType.NeedClientResponse:
+            }
+        } catch (Exception eee) {
+            Logger.LogError("Exception thrown at ScriptMessage. nSpeakerTypeID[" + nSpeakerTypeID + "] nSpeakerTemplateID[" + nSpeakerTemplateID + "] nMsgType[" + nMsgType + "] bParam[" + bParam + "]");
+            eee.printStackTrace();
+        }
     }
 
     @Override
@@ -281,13 +283,15 @@ public class ScriptMessage extends PacketWriteRequest {
 
     @Override
     public ScriptWriteRequest CreateScriptWriteRequest() {
-        if (pTemplate != null) {
-            String sOutput = "";
+        if (pTemplate != null && !sText.isEmpty()) {
             List<String> lConditionalText = new LinkedList<>();
+            String sOutput = "";
+            sText = sText.replace("\r\n", "\\r\\n");
             switch (nMsgType) {
                 case MessageType.Say:
                     sOutput = bParam == 2 || bParam == 3 ? ("self.SayUser(\"" + sText + "\", true") : ("self.Say(\"" + sText + "\", true");
                     break;
+                    
                 case MessageType.SayImage:
                     String sImage = "";
                     for (int i = 0; i < aImage.length; i++) {
@@ -298,16 +302,17 @@ public class ScriptMessage extends PacketWriteRequest {
                         sOutput += ("self.SayImage(\"" + sImage + "\"");
                     }
                     break;
+                    
                 case MessageType.AskYesNo:
                     sOutput += (bParam == 2 || bParam == 3) ? "nRet = self.AskYesNoUser(\"" + sText + "\"" : "nRet = self.AskYesNo(\"" + sText + "\"";
                     lConditionalText.add("if (nRet == 0) {");
                     lConditionalText.add("} else if (nRet == 1) {");
                     lConditionalText.add("}");
                     break;
+                    
                 case MessageType.AskMenu:
-                    sText = sText.replace("\r\n", "\\r\\n");
                     sOutput += "nSel = self.AskMenu(\"" + sText + "\"";
-                    String[] aSelection = sText.replace("\r\n", "@").split("@");
+                    String[] aSelection = sText.replace("\\r\\n", "@").split("@");
                     int i = 0;
                     for (String s : aSelection) {
                         String sSelection = "n/a";
@@ -330,18 +335,21 @@ public class ScriptMessage extends PacketWriteRequest {
                         }
                     }
                     break;
+                    
                 case MessageType.AskAccept:
                     sOutput += "nRet = self.AskAccept(\"" + sText + "\"";
                     lConditionalText.add("if (nRet == 0) {");
                     lConditionalText.add("} else if (nRet == 1) {");
                     lConditionalText.add("}");
                     break;
+                    
                 case MessageType.AskText:
                     sOutput += "sInput = self.AskText(\"" + sText + "\", \"Type answer here\", 1, 99";
                     lConditionalText.add("if (sInput == \"\") {");
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");
                     break;
+                    
                 case MessageType.AskNumber:
                     sOutput += "nInput = self.AskNumber(\"" + sText + "\", 0, 0, 254";
                     lConditionalText.add("nResult = -1;");
@@ -349,18 +357,21 @@ public class ScriptMessage extends PacketWriteRequest {
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");
                     break;
+                    
                 case MessageType.AskQuiz:
                     sOutput += "nInput = self.AskQuiz(\"" + sText + "\", \"" + sTitle + "\", \"" + sProblemText + "\", \"" + sHintText + "\", " + nMin + ", " + nMax + ", " + tRemain + "";
                     lConditionalText.add("if (nInput ==  /*[INSERT ANSWER]*/-1) {");
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");
                     break;
+                    
                 case MessageType.AskSpeedQuiz:
                     sOutput += "nInput = self.AskSpeedQuiz(\"" + sText + "\", " + nQuizType + ", " + dwQuizAnswer + ", " + nQuizCorrect + ", " + nQuizRemain + ", " + tRemain + "";
                     lConditionalText.add("if (nInput == /*[INSERT ANSWER]*/-1) {");
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");
                     break;
+                    
                 case MessageType.AskAvatar:
                 case MessageType.Unknown2:
                     String sCode = "aCode = [";
@@ -373,10 +384,10 @@ public class ScriptMessage extends PacketWriteRequest {
                     sCode += "];\r\n";
                     sOutput += "nSel = self.AskAvatar(\"" + sText + "\", " + sCode;
                     break;
+                    
                 case MessageType.AskSlideMenu:
                     sOutput += "nSel = script.AskSlideMenu(\"" + sText + "\", " + nDefaultSelect + ", " + nDlgType;
                     break;
-
 
                 case MessageType.AskMixHair:
                 case MessageType.AskMixHairZero:

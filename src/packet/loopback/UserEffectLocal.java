@@ -5,8 +5,9 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
+import game.user.UserEffect;
 import java.util.LinkedList;
-import message.UserEffectLocalType;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
@@ -15,46 +16,35 @@ import script.ScriptWriteRequest;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class UserEffectLocal extends PacketWriteRequest {
     
-    private final byte nType;
-    private final boolean bFlip;
-    private final int nRange, nNameHeight;
-    private final String sMsg;
+    public byte nType;
+    public boolean bFlip;
+    public int nRange, nNameHeight;
+    public String sMsg;
     
-    public UserEffectLocal(boolean bFlip, int nRange, int nNameHeight, String sMsg) {
+    public UserEffectLocal(byte nType, InPacket iPacket) {
         super(LoopbackCode.UserEffectLocal.nCode);
-        this.nType = UserEffectLocalType.Reserved;
-        this.bFlip = bFlip;
-        this.nRange = nRange;
-        this.nNameHeight = nNameHeight;
-        this.sMsg = sMsg;
+        this.nType = nType;
+        if (nType == UserEffect.ReservedEffect) {
+            this.bFlip = iPacket.DecodeBool();
+            this.nRange = iPacket.DecodeInt();
+            this.nNameHeight = iPacket.DecodeInt();
+            this.sMsg = iPacket.DecodeString();
+        } else if (nType == UserEffect.AvatarOriented) {
+            this.sMsg = iPacket.DecodeString();
+        }
     }
     
     public UserEffectLocal(String sMsg) {
         super(LoopbackCode.UserEffectLocal.nCode);
-        this.nType = UserEffectLocalType.AvatarOriented;
+        this.nType = UserEffect.AvatarOriented;
         this.bFlip = false;
         this.nRange = 0;
         this.nNameHeight = 0;
         this.sMsg = sMsg;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
     }
 
     @Override
@@ -73,9 +63,9 @@ public class UserEffectLocal extends PacketWriteRequest {
     public ScriptWriteRequest CreateScriptWriteRequest() {
         if (pTemplate != null) {
             String sOutput = "";
-            if (nType == UserEffectLocalType.AvatarOriented) {
+            if (nType == UserEffect.AvatarOriented) {
                 sOutput = "self.EffectAvatarOriented(\"" + sMsg + "\");";
-            } else if (nType == UserEffectLocalType.Reserved) {
+            } else if (nType == UserEffect.ReservedEffect) {
                 sOutput = "self.EffectReserved(\"" + sMsg + "\"";
             }
             return new ScriptWriteRequest(dwField, sOutput, pTemplate, new LinkedList<>(), nStrPaddingIndex);

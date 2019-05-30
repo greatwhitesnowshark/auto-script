@@ -5,6 +5,7 @@
  */
 package packet;
 
+import script.MessageHistory;
 import template.AbstractTemplate;
 
 /**
@@ -12,24 +13,13 @@ import template.AbstractTemplate;
  * @author Sharky
  * @param <T> script-type
  */
-public abstract class PacketWriteRequest<T extends AbstractTemplate> extends Packet {
+public abstract class PacketWriteRequest<T extends AbstractTemplate> extends PacketNullWrapper {
     
     public int dwField, nStrPaddingIndex;
+    public MessageHistory pHistory;
     public T pTemplate;
     
     public PacketWriteRequest(int nHeader) {
         super(nHeader);
-    }
-    
-    public int GetField() {
-        return this.dwField;
-    }
-    
-    public T GetTemplate() {
-        return this.pTemplate;
-    }
-    
-    public int GetStrPaddingIndex() {
-        return this.nStrPaddingIndex;
     }
 }

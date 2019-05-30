@@ -13,6 +13,7 @@ public class Config {
     
     public static boolean MessageHistoryDebug = false;
     public static boolean QuestStateDebug = false;
+    public static boolean TemplateMapDebug = false;
     public static boolean UserTalkDebug = false;
     
 }

@@ -5,9 +5,9 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
 import packet.LoopbackCode;
-import packet.Packet;
-import script.ScriptModifier;
+import packet.PacketNullWrapper;
 import script.ScriptWriteRequest;
 import util.Config;
 import util.Logger;
@@ -16,33 +16,15 @@ import util.Logger;
  *
  * @author Sharky
  */
-public class UserTalk extends Packet {
+public class UserTalk extends PacketNullWrapper {
     
-    private String sMsg = "";
+    public String sMsg = "";
 
-    public UserTalk(String sMsg) {
+    public UserTalk(InPacket iPacket) {
         super(LoopbackCode.UserTalk.nCode);
-        this.sMsg = sMsg;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
-        return null;
+        iPacket.DecodeByte();
+        iPacket.DecodeInt();
+        this.sMsg = iPacket.DecodeString();
     }
     
     @Override

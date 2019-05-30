@@ -4,23 +4,16 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/SetField.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/client/UserQuestRequest.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/ScriptTemplateMap.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/LoopbackCode.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/UserTalk.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/UserInGameDirectionEvent.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/Script.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/message/InGameDirectionEventType.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/main/Analyzer.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/ClientCode.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/UserSetStandaloneMode.java</file>
             <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/client/UserScriptMessageAnswer.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/ScriptTemplateMap.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/UserTalk.java</file>
             <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/client/UserSelectNpc.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/template/NpcTemplate.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/ScriptMessage.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/util/StringUtil.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/Script.java</file>
             <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/Compiler.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/UserSetInGameDirectionMode.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/main/Purge.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/main/Analyzer.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/util/Config.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/ScriptWriteRequest.java</file>
         </group>
     </open-files>
 </project-private>

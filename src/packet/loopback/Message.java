@@ -5,6 +5,8 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
+import game.user.quest.QuestMan;
 import java.util.LinkedList;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
@@ -18,34 +20,32 @@ import script.ScriptWriteRequest;
  */
 public class Message extends PacketWriteRequest {
     
-    private final int nType, nQuestID, nQuestRecordStatus;
-    private final long tTimestamp;
-    private final boolean bAutoComplete;
-    private final String sRecord;
+    public int nType, nQuestID, nQuestRecordStatus;
+    public long tTimestamp;
+    public boolean bAutoComplete;
+    public String sRecord;
     
-    public Message(int nType, int nQuestID, int nQuestRecordStatus, String sRecord, boolean bAutoComplete, long tTimestamp) {
+    public Message(InPacket iPacket) {
         super(LoopbackCode.Message.nCode);
-        this.nType = nType;
-        this.nQuestID = nQuestID;
-        this.nQuestRecordStatus = nQuestRecordStatus;
-        this.sRecord = sRecord;
-        this.bAutoComplete = bAutoComplete;
-        this.tTimestamp = tTimestamp;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
+        this.nType = iPacket.DecodeByte();
+        if (nType == 1) {//QuestRecord
+            this.nQuestID = iPacket.DecodeInt();
+            this.nQuestRecordStatus = iPacket.DecodeByte();
+            this.sRecord = "";
+            this.bAutoComplete = false;
+            this.tTimestamp = 0;
+            switch (nQuestRecordStatus) {
+                case QuestMan.None:
+                    this.bAutoComplete = iPacket.DecodeBool();
+                    break;
+                case QuestMan.Perform:
+                    this.sRecord = iPacket.DecodeString();
+                    break;
+                case QuestMan.Complete:
+                    this.tTimestamp = iPacket.DecodeLong();
+                    break;
+            }
+        }
     }
 
     @Override
@@ -85,5 +85,4 @@ public class Message extends PacketWriteRequest {
         }
         return null;
     }
-    
 }

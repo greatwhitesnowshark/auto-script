@@ -5,8 +5,9 @@
  */
 package packet.client;
 
+import game.network.InPacket;
 import packet.ClientCode;
-import packet.Packet;
+import packet.PacketNullWrapper;
 import script.Script;
 import script.ScriptModifier;
 import script.ScriptTemplateMap;
@@ -15,17 +16,17 @@ import template.PortalTemplate;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
-public class UserPortalScriptRequest extends Packet {
+public class UserPortalScriptRequest extends PacketNullWrapper {
     
-    private final byte nType;
-    private final String sPortalName;
+    public final byte nType;
+    public final String sPortalName;
     
-    public UserPortalScriptRequest(byte nType, String sPortalName) {
+    public UserPortalScriptRequest(InPacket iPacket) {
         super(ClientCode.UserPortalScriptRequest.nCode);
-        this.nType = nType;
-        this.sPortalName = sPortalName;
+        this.nType = iPacket.DecodeByte();
+        this.sPortalName = iPacket.DecodeString();
     }
     
     @Override
@@ -38,25 +39,4 @@ public class UserPortalScriptRequest extends Packet {
         };
         return pScriptModifier;
     }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
-        return null;
-    }
-
-    @Override
-    public ScriptWriteRequest CreateScriptWriteRequest() {
-        return null;
-    }
-    
 }

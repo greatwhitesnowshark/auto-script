@@ -5,6 +5,7 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
 import java.util.LinkedList;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
@@ -14,33 +15,18 @@ import script.ScriptWriteRequest;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class ForceMoveByScript extends PacketWriteRequest {
     
     private final int nForcedMoveDir, nForcedMoveFixel, ptStartY, ptStartX;
     
-    public ForceMoveByScript(int nForcedMoveDir, int nForcedMoveFixel, int ptStartY, int ptStartX) {
+    public ForceMoveByScript(InPacket iPacket) {
         super(LoopbackCode.ForceMoveByScript.nCode);
-        this.nForcedMoveDir = nForcedMoveDir;
-        this.nForcedMoveFixel = nForcedMoveFixel;
-        this.ptStartY = ptStartY;
-        this.ptStartX = ptStartX;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
+        this.nForcedMoveDir = iPacket.DecodeInt();
+        this.nForcedMoveFixel = iPacket.DecodeInt();
+        this.ptStartY = iPacket.DecodeInt();
+        this.ptStartX = iPacket.DecodeInt();
     }
 
     @Override
@@ -62,5 +48,4 @@ public class ForceMoveByScript extends PacketWriteRequest {
         }
         return pWriteRequest;
     }
-    
 }

@@ -12,7 +12,7 @@ import script.ScriptWriteRequest;
  *
  * @author Sharky
  */
-public abstract class Packet {
+public abstract class PacketWrapper {
     
     private final int nHeader;
     public abstract ScriptModifier CreateScriptModifier();
@@ -21,7 +21,7 @@ public abstract class Packet {
     public abstract ScriptModifier CreateScriptModifierOnMerge();
     public abstract ScriptWriteRequest CreateScriptWriteRequest();
     
-    public Packet(int nHeader) {
+    public PacketWrapper(int nHeader) {
         this.nHeader = nHeader;
     }
     

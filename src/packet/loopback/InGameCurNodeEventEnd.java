@@ -23,21 +23,6 @@ public class InGameCurNodeEventEnd extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
-    }
-
-    @Override
     public ScriptModifier CreateScriptModifierOnMerge() {
         ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
             dwField = pScriptCopy.dwField;
@@ -56,5 +41,4 @@ public class InGameCurNodeEventEnd extends PacketWriteRequest {
         }
         return pWriteRequest;
     }
-    
 }

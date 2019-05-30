@@ -5,36 +5,37 @@
  */
 package packet.client;
 
+import game.network.InPacket;
+import game.scripting.ScriptSysFunc;
 import packet.ClientCode;
-import packet.Packet;
+import packet.PacketNullWrapper;
 import script.Script;
 import script.ScriptModifier;
 import script.ScriptTemplateMap;
 import script.ScriptWriteRequest;
 import template.QuestEndTemplate;
 import template.QuestStartTemplate;
+import util.Config;
 import util.Logger;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
-public class UserQuestRequest extends Packet {
+public class UserQuestRequest extends PacketNullWrapper {
     
-    private final int nQuestState, nQuestID;
-    private final boolean bOpening, bComplete;
+    public final int nQuestState, nQuestID;
+    public final boolean bOpening, bComplete;
     
-    public UserQuestRequest(int nQuestState, int nQuestID, boolean bOpening, boolean bComplete) {
+    public UserQuestRequest(InPacket iPacket) {
         super(ClientCode.UserQuestRequest.nCode);
-        this.nQuestState = nQuestState;
-        this.nQuestID = nQuestID;
-        this.bOpening = bOpening;
-        this.bComplete = bComplete;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
+        this.nQuestState = iPacket.DecodeByte();
+        this.nQuestID = iPacket.DecodeInt();
+        this.bOpening = nQuestState == ScriptSysFunc.QuestRequestType.OpeningScript;
+        this.bComplete = nQuestState == ScriptSysFunc.QuestRequestType.CompleteScript;
+        if (Config.QuestStateDebug) {
+            Logger.LogAdmin(("\r\nUserQuestRequest hit... \r\nQuest ID: " + nQuestID + "  -  nQRStatus: " + nQuestState + "  -  bOpening: " + bOpening + "  -  bComplete: " + bComplete + "\r\n...end\r\n"));
+        }
     }
 
     @Override
@@ -51,16 +52,6 @@ public class UserQuestRequest extends Packet {
         };
         return pScriptModifier;
     }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
-        return null;
-    }
-
-    @Override
-    public ScriptWriteRequest CreateScriptWriteRequest() {
-        return null;
-    }
     
     @Override
     public ScriptModifier CreateScriptModifier() {
@@ -68,7 +59,6 @@ public class UserQuestRequest extends Packet {
             if (bOpening) {
                 QuestStartTemplate pQuestTemplate = ScriptTemplateMap.GetQuestStartTemplate(nQuestID);
                 if (pQuestTemplate != null) {
-                    //Logger.LogError("pQuestStartTemplate found - " + pQuestTemplate.sQuestName + " / " + pQuestTemplate.sScript);
                     pQuestTemplate.nQuestState = nQuestState;
                     pScript.CreateNewTemplate(null);
                     pScript.CreateNewTemplate(new ScriptWriteRequest(pScript.dwField, pQuestTemplate));
@@ -77,7 +67,6 @@ public class UserQuestRequest extends Packet {
                 if (bComplete) {
                     QuestEndTemplate pQuestTemplate = ScriptTemplateMap.GetQuestEndTemplate(nQuestID);
                     if (pQuestTemplate != null) {
-                        //Logger.LogError("pQuestEndTemplate found - " + pQuestTemplate.sQuestName + " / " + pQuestTemplate.sScript);
                         pQuestTemplate.nQuestState = nQuestState;
                         pScript.CreateNewTemplate(new ScriptWriteRequest(pScript.dwField, pQuestTemplate), true);
                     }

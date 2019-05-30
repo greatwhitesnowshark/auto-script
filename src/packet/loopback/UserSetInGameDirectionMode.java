@@ -5,6 +5,7 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
 import java.util.LinkedList;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
@@ -14,33 +15,18 @@ import script.ScriptWriteRequest;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class UserSetInGameDirectionMode extends PacketWriteRequest {
     
     private final boolean bInGameDirectionMode, bBlackFrame, bForceMouseOver, bShowUI;
     
-    public UserSetInGameDirectionMode(boolean bInGameDirectionMode, boolean bBlackFrame, boolean bForceMouseOver, boolean bShowUI) {
+    public UserSetInGameDirectionMode(InPacket iPacket) {
         super(LoopbackCode.UserSetInGameDirectionMode.nCode);
-        this.bInGameDirectionMode = bInGameDirectionMode;
-        this.bBlackFrame = bBlackFrame;
-        this.bForceMouseOver = bForceMouseOver;
-        this.bShowUI = bShowUI;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
+        this.bInGameDirectionMode = iPacket.DecodeBool();
+        this.bBlackFrame = iPacket.DecodeBool();
+        this.bForceMouseOver = iPacket.CountRemaining() > 0 ? iPacket.DecodeBool() : false;
+        this.bShowUI = iPacket.CountRemaining() > 0 ? iPacket.DecodeBool() : false;
     }
 
     @Override
@@ -58,7 +44,7 @@ public class UserSetInGameDirectionMode extends PacketWriteRequest {
     @Override
     public ScriptWriteRequest CreateScriptWriteRequest() {
         if (pTemplate != null) {
-            String sOutput = ("self.OnSetInGameDirectionMode(" + (bInGameDirectionMode ? "true" : "false") + ", " + (bBlackFrame ? "true" : "false") + ", " + (bForceMouseOver ? "true" : "false") + ", " + (bShowUI ? "true" : "false") + ");");
+            String sOutput = ("self.OnSetInGameDirectionMode(" + bInGameDirectionMode + ", " + bBlackFrame + ", " + bForceMouseOver + ", " + bShowUI + ");");
             return new ScriptWriteRequest(dwField, sOutput, pTemplate, new LinkedList<>(), nStrPaddingIndex);
         }
         return null;

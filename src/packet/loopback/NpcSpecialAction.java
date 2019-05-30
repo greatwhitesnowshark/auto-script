@@ -5,6 +5,7 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
 import java.util.LinkedList;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
@@ -14,7 +15,7 @@ import script.ScriptWriteRequest;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class NpcSpecialAction extends PacketWriteRequest {
     
@@ -22,27 +23,12 @@ public class NpcSpecialAction extends PacketWriteRequest {
     private final int dwID, tDuration;
     private final String sMsg;
     
-    public NpcSpecialAction(int dwID, String sMsg, int tDuration, boolean bLocal) {
+    public NpcSpecialAction(InPacket iPacket) {
         super(LoopbackCode.NpcSpecialAction.nCode);
-        this.dwID = dwID;
-        this.sMsg = sMsg;
-        this.tDuration = tDuration;
-        this.bLocal = bLocal;
-    }
-    
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
+        this.dwID = iPacket.DecodeInt();
+        this.sMsg = iPacket.DecodeString();
+        this.tDuration = iPacket.DecodeInt();
+        this.bLocal = iPacket.DecodeBool();
     }
 
     @Override

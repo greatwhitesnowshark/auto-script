@@ -6,15 +6,16 @@
 package script;
 
 import java.util.List;
+import util.StringUtil;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class NestedBlockHistory {
     
     public int nResult;
-    public String sText, sTargetText, sResult; //previous chat line, line w/ corresponding block result
+    public String sText, sTargetText, sResult; 
     public List<String> lConditionalText;
 
     public NestedBlockHistory(int nResult, String sText, List<String> lConditionalText) {
@@ -23,25 +24,27 @@ public class NestedBlockHistory {
         this.sTargetText = "";
     }
     
-    public boolean IsTargetTextSet() {
-        return !sTargetText.isEmpty();
-    }
-
     public boolean IsNestedBlockFound(String sLine) {
-        return sLine.trim().replaceAll("\t", "").contains(this.sTargetText.trim().replaceAll("\t", ""));
+        return StringUtil.CountStringPadding(this.sTargetText) == StringUtil.CountStringPadding(sLine) && sLine.trim().replaceAll("\t", "").contains(this.sTargetText.trim().replaceAll("\t", ""));
     }
     
     public void SetNestedBlockResult(int nResult) {
         this.nResult = nResult;
-        lConditionalText.stream().filter((sConditional) -> sConditional.contains("== " + nResult) || (sConditional.contains("case " + nResult + ":"))).forEach((sConditional) -> {
-            this.sTargetText = sConditional;
-        });
+        for (String sConditional : lConditionalText) {
+            if (sConditional.contains((" == " + nResult)) || sConditional.contains((nResult + ":"))) {
+                this.sTargetText = sConditional;
+                break;
+            }
+        }
     }
     
     public void SetNestedBlockResult(String sResult) {
         this.sResult = sResult;
-        lConditionalText.stream().filter((sConditional) -> sConditional.contains("== " + sResult) || (sConditional.contains("case " + sResult + ":"))).forEach((sConditional) -> {
-            this.sTargetText = sConditional;
-        });
+        for (String sConditional : lConditionalText) {
+            if (sConditional.contains((" == " + sResult)) || sConditional.contains((sResult + ":")) || sConditional.contains((".equals(\"" + sResult)) || sConditional.contains((".equalsIgnoreCase(\"" + sResult))) {
+                this.sTargetText = sConditional;
+                break;
+            }
+        }
     }
 }

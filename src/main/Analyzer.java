@@ -5,14 +5,14 @@
  */
 package main;
 
-import packet.inputstream.PacketInputStream;
-import packet.Packet;
+import game.network.InPacket;
+import io.netty.buffer.Unpooled;
+import packet.PacketWrapper;
 import packet.LoopbackCode;
 import script.ScriptTemplateMap;
 import script.Compiler;
 import java.awt.Color;
 import java.awt.Insets;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -22,11 +22,11 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import packet.ClientCode;
+import util.Logger;
 
 /**
  *
- * @author Chris
- * @version Purpose is to analyze the packet data from the .msb files, give the buffer data to LoopbackCode for decoding, then give to the compiler
+ * @author Sharky
  */
 public class Analyzer extends javax.swing.JFrame {
     
@@ -60,7 +60,7 @@ public class Analyzer extends javax.swing.JFrame {
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFont(new java.awt.Font("Georgia", 2, 12)); // NOI18N
 
-        jFileChooser1.setCurrentDirectory(new java.io.File("C:\\Users\\Chris\\Desktop\\GUI\\analyzer"));
+        jFileChooser1.setCurrentDirectory(new java.io.File("C:\\Users\\Chris\\Desktop"));
         jFileChooser1.setDialogTitle("");
         jFileChooser1.setMultiSelectionEnabled(true);
         jFileChooser1.addActionListener(new java.awt.event.ActionListener() {
@@ -109,56 +109,64 @@ public class Analyzer extends javax.swing.JFrame {
         jLog.setMargin(new Insets(5,5,5,5));
         jLog.setEditable(true);
         jLog.setVisible(true);
-        
+        long tPacketTime = 0;
         //Add content to the (text area) based on the jFileChooser1's event responses
         if (jFileChooser1.getSelectedFiles() != null && jFileChooser1.getSelectedFiles().length > 0) {
             //Add content to the window.
             for (File pFile : jFileChooser1.getSelectedFiles()) {
-                try {
-                    PacketInputStream pStream = new PacketInputStream(new DataInputStream(new FileInputStream(pFile)));
-                    short nVersion = pStream.ReadShort();
-                    String sLocalEndPoint = pStream.ReadString();
-                    short nLocalPort = pStream.ReadShort();
-                    String sRemoteEndPoint = pStream.ReadString();
-                    short nRemotePort = pStream.ReadShort();
-                    byte nLocale = pStream.readByte();
-                    short nBuild = pStream.ReadShort();
-                    String sPatchLocation = pStream.ReadString();
+                
+                try (DataInputStream pDataInputStream = new DataInputStream(new FileInputStream(pFile))) {
+                    long tCur = tPacketTime = System.currentTimeMillis();
+                    System.out.print(String.format("Processing file `%s`.....", pFile.getName()));
+                    short nVersion = ReadShort(pDataInputStream);
+                    String nLocalEndPoint = ReadString(pDataInputStream);
+                    short nLocalPort = ReadShort(pDataInputStream);
+                    String sRemoteEndPoint = ReadString(pDataInputStream);
+                    short nRemotePort = ReadShort(pDataInputStream);
+                    byte nLocale = pDataInputStream.readByte();
+                    short nBuild = ReadShort(pDataInputStream);
+                    String sPatchLocation = ReadString(pDataInputStream);
                     while (true) {
                         // no length encoded :(
-                        long tTimestamp = pStream.ReadLong();
-                        int nSize = pStream.ReadInt();
-                        short nHeader = pStream.ReadShort();
-                        pStream.SetHeader(nHeader);
-                        boolean bLoopback = !pStream.readBoolean();
-                        byte[] aContent = pStream.ReadArr(nSize);
-                        byte[] aContentBuffer = new byte[2 + aContent.length];
-                        aContentBuffer[0] = (byte) (nHeader & 0xFF);
-                        aContentBuffer[1] = (byte) ((nHeader >> 8) & 0xFF);
-                        System.arraycopy(aContent, 0, aContentBuffer, 2, aContent.length);
-                        int nPreDecodeIV = pStream.ReadInt();
-                        int nPostDecodeIV = pStream.ReadInt();
-                        Packet pPacket = null;
+                        if (System.currentTimeMillis() - tCur >= 1000) {
+                            System.out.print(".");
+                            tCur = System.currentTimeMillis();
+                        }
+                        long tTimestamp = ReadLong(pDataInputStream);
+                        int nSize = ReadInt(pDataInputStream);
+                        short nHeader = ReadShort(pDataInputStream);
+                        boolean bLoopback = !pDataInputStream.readBoolean();
+                        byte[] aContent = ReadArr(pDataInputStream, nSize);
+                        byte[] aTotalContent = new byte[2 + aContent.length];
+                        aTotalContent[0] = (byte) (nHeader & 0xFF);
+                        aTotalContent[1] = (byte) ((nHeader >> 8) & 0xFF);
+                        System.arraycopy(aContent, 0, aTotalContent, 2, aContent.length);
+                        int aPreDecodeIV = ReadInt(pDataInputStream);
+                        int aPostDecodeIV = ReadInt(pDataInputStream);
+                        InPacket iPacket = new InPacket(Unpooled.wrappedBuffer(aContent));
+                        PacketWrapper pPacketWrapper = null;
                         if (bLoopback) {
                             LoopbackCode pCode = LoopbackCode.GetLoopback(nHeader);
                             if (pCode != null) {
-                                pPacket = pCode.pDecodePacket.ReadPacket(new PacketInputStream(nHeader, new ByteArrayInputStream(aContent)));
+                                pPacketWrapper = pCode.pDecodePacket.ReadPacket(iPacket);
                             }
                         } else {
                             ClientCode pCode = ClientCode.GetClient(nHeader);
                             if (pCode != null) {
-                                pPacket = pCode.pDecodePacket.ReadPacket(new PacketInputStream(nHeader, new ByteArrayInputStream(aContent)));
+                                pPacketWrapper = pCode.pDecodePacket.ReadPacket(iPacket);
                             }
                         }
-                        if (pPacket != null) {
-                            Compiler.ProcessPacket(pPacket);
+                        if (pPacketWrapper != null) {
+                            Compiler.Compile(pPacketWrapper);
                         }
                     }
                 } catch (EOFException e) {
                     // no length specified, so this is intended.
-                    util.Logger.LogReport("End of file.");
-                } catch (IOException ex) {
-                    util.Logger.LogError("Exception thrown:  " + ex.toString());
+                    long nTimeTaken = System.currentTimeMillis() - tPacketTime;
+                    System.out.println("completed.");
+                    Logger.LogReport("Done analyzing file [%s]... time: %dms", pFile.getName(), nTimeTaken);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
             jLog.append(Compiler.GetOutputLog());
@@ -186,6 +194,52 @@ public class Analyzer extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new Analyzer().setVisible(true);
         });
+    }
+    
+    //Credit to: Swordie devs for read- methods, muchas gracias ~~
+    private static short ReadShort(DataInputStream dis) throws IOException {
+        short s = (short) (dis.readByte() & 0xFF);
+        s += (dis.readByte() & 0xFF) << 8;
+        return s;
+    }
+
+    private static int ReadInt(DataInputStream dis) throws IOException {
+        int s = (dis.readByte() & 0xFF);
+        s += (dis.readByte() & 0xFF) << 8;
+        s += (dis.readByte() & 0xFF) << 16;
+        s += (dis.readByte() & 0xFF) << 24;
+        return s;
+    }
+
+    private static long ReadLong(DataInputStream dis) throws IOException {
+        long s = (dis.readByte() & 0xFF);
+        s += (dis.readByte() & 0xFF) << 8;
+        s += (dis.readByte() & 0xFF) << 16;
+        s += (dis.readByte() & 0xFF) << 24;
+        s += (long) (dis.readByte() & 0xFF) << 32;
+        s += (long) (dis.readByte() & 0xFF) << 40;
+        s += (long) (dis.readByte() & 0xFF) << 48;
+        s += (long) (dis.readByte() & 0xFF) << 56;
+        return s;
+    }
+    
+    
+    
+    private static String ReadString(DataInputStream dis) throws IOException {
+        int size = dis.readByte();
+        byte[] arr = new byte[size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = dis.readByte();
+        }
+        return new String(arr);
+    }
+
+    private static byte[] ReadArr(DataInputStream dis, int size) throws IOException {
+        byte[] arr = new byte[size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = dis.readByte();
+        }
+        return arr;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

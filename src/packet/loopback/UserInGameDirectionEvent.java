@@ -5,8 +5,11 @@
  */
 package packet.loopback;
 
+import game.network.InPacket;
+import game.scripting.ScriptSysFunc.InGameDirectionEvent;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.LinkedList;
-import message.InGameDirectionEventType;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
@@ -17,7 +20,7 @@ import template.FieldTemplate;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class UserInGameDirectionEvent extends PacketWriteRequest {
     
@@ -30,179 +33,99 @@ public class UserInGameDirectionEvent extends PacketWriteRequest {
     private int[] aItem = new int[0];
     private String sType, sEffectUOL = "", sPattern = "", sMonologue = "";
     
-    public UserInGameDirectionEvent(int nType) {
+    public UserInGameDirectionEvent(InPacket iPacket) {
         super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-    }
-    
-    public UserInGameDirectionEvent(int nType, boolean bVanshee) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
+        this.nType = iPacket.DecodeByte();
+        this.sType = GetDirectionEventName(nType);
         switch (nType) {
-            case InGameDirectionEventType.VansheeMode:
-                this.bVanshee = bVanshee;
+            case InGameDirectionEvent.ForcedAction:
+                this.nAction = iPacket.DecodeInt();
+                this.tDuration = iPacket.DecodeInt();
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, byte nUIType) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.InputUI:
-                this.nUIType = nUIType;
+            case InGameDirectionEvent.Delay:
+                this.tDelay = iPacket.DecodeInt();
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, int nVal) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.Delay:
-                this.tDelay = nVal;
+            case InGameDirectionEvent.EffectPlay:
+                this.sEffectUOL = iPacket.DecodeString();
+                this.tDuration = iPacket.DecodeInt();
+                this.x = iPacket.DecodeInt();
+                this.y = iPacket.DecodeInt();
+                byte bEncode = iPacket.DecodeByte();
+                this.v17 = 0;
+                if (bEncode > 0) {
+                    this.v17 = iPacket.DecodeInt();
+                }
+                bEncode = iPacket.DecodeByte();
+                this.dwNpcID = 0;
+                if (bEncode > 0) {
+                    this.dwNpcID = iPacket.DecodeInt();
+                }
+                this.bNotOrigin = iPacket.CountRemaining() > 0 && iPacket.DecodeByte() == 1;
                 break;
-            case InGameDirectionEventType.ForcedInput:
-                this.nForcedInput = nVal;
+            case InGameDirectionEvent.ForcedInput:
+                this.nForcedInput = iPacket.DecodeInt();
                 break;
-            case InGameDirectionEventType.CameraOnCharacter:
-                this.dwNpcID = nVal;
+            case InGameDirectionEvent.PatternInputRequest:
+                this.sPattern = iPacket.DecodeString();
+                this.nAct = iPacket.DecodeInt();
+                this.nRequestCount = iPacket.DecodeInt();
+                this.nTime = iPacket.DecodeInt();
                 break;
-            case InGameDirectionEventType.FaceOff:
-                this.nFaceItemID = nVal;
+            case InGameDirectionEvent.CameraMove:
+                this.bBack = iPacket.DecodeByte() == 1;
+                this.nPixelPerSec = iPacket.DecodeInt();
+                if (!this.bBack) {
+                    this.x = iPacket.DecodeInt();
+                    this.y = iPacket.DecodeInt();
+                }
                 break;
-            case InGameDirectionEventType.ForcedFlip:
-                this.nForcedFlip = nVal;
+            case InGameDirectionEvent.CameraOnCharacter:
+                this.dwNpcID = iPacket.DecodeInt();
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, int nVal, int nVal2) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.ForcedAction:
-                this.nAction = nVal;
-                this.tDuration = nVal2;
+            case InGameDirectionEvent.CameraZoom:
+                this.nTime = iPacket.DecodeInt();
+                this.nScale = iPacket.DecodeInt();
+                this.nTimePos = iPacket.DecodeInt();
+                this.x = iPacket.DecodeInt();
+                this.y = iPacket.DecodeInt();
                 break;
-            case InGameDirectionEventType.ForcedMove:
-                this.nDir = nVal;
-                this.nSpeed = nVal2;
+            case InGameDirectionEvent.CameraReleaseFromUserPoint:
+            case InGameDirectionEvent.RemoveAdditionalEffect:
+            case InGameDirectionEvent.CloseUI:
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, boolean bBack, int nPixelPerSec) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.CameraMove:
-                this.bBack = bBack;
-                this.nPixelPerSec = nPixelPerSec;
+            case InGameDirectionEvent.VansheeMode:
+                this.bVanshee = iPacket.DecodeByte() == 1;
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, boolean bBack, int nPixelPerSec, int x, int y) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.CameraMove:
-                this.bBack = bBack;
-                this.nPixelPerSec = nPixelPerSec;
-                this.x = x;
-                this.y = y;
+            case InGameDirectionEvent.FaceOff:
+                this.nFaceItemID = iPacket.DecodeInt();
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, int nTime, int nScale, int nTimePos, int x, int y) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.CameraZoom:
-                this.nTime = nTime;
-                this.nScale = nScale;
-                this.nTimePos = nTimePos;
-                this.x = x;
-                this.y = y;
+            case InGameDirectionEvent.Monologue:
+                this.sMonologue = iPacket.DecodeString();
+                this.bMonologueEnd = iPacket.DecodeByte() == 1;
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, String sMonologue, boolean bMonologueEnd) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.Monologue:
-                this.sMonologue = sMonologue;
-                this.bMonologueEnd = bMonologueEnd;
+            case InGameDirectionEvent.MonologueScroll:
+                sMonologue = iPacket.DecodeString();
+                this.bStayModal = iPacket.DecodeByte() == 1;
+                this.nAlign = iPacket.DecodeShort();
+                this.nUpdateSpeedTime = iPacket.DecodeInt();
+                this.nDecTic = iPacket.DecodeInt();
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, String sMonologue, boolean bStayModal, short nAlign, int nUpdateSpeedTime, int nDecTic) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.MonologueScroll:
-                this.sMonologue = sMonologue;
-                this.bStayModal = bStayModal;
-                this.nAlign = nAlign;
-                this.nUpdateSpeedTime = nUpdateSpeedTime;
-                this.nDecTic = nDecTic;
+            case InGameDirectionEvent.AvatarLookSet:
+                byte nSize = iPacket.DecodeByte();
+                this.aItem = new int[nSize];
+                for (int i = 0; i < nSize; i++) {
+                    this.aItem[i] = iPacket.DecodeInt();
+                }
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, String sPattern, int nAct, int nRequestCount, int nTime) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.PatternInputRequest:
-                this.sPattern = sPattern;
-                this.nAct = nAct;
-                this.nRequestCount = nRequestCount;
-                this.nTime = nTime;
+            case InGameDirectionEvent.ForcedMove:
+                this.nDir = iPacket.DecodeInt();
+                this.nSpeed = iPacket.DecodeInt();
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, String sEffectUOL, int tDuration, int x, int y, int v17, int dwNpcID, boolean bNotOrigin) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.EffectPlay:
-                this.sEffectUOL = sEffectUOL;
-                this.tDuration = tDuration;
-                this.x = x;
-                this.y = y;
-                this.v17 = v17;
-                this.dwNpcID = dwNpcID;
-                this.bNotOrigin = bNotOrigin;
+            case InGameDirectionEvent.ForcedFlip:
+                this.nForcedFlip = iPacket.DecodeInt();
                 break;
-        }
-    }
-    
-    public UserInGameDirectionEvent(int nType, int[] aItem) {
-        super(LoopbackCode.UserInGameDirectionEvent.nCode);
-        this.nType = nType;
-        this.sType = InGameDirectionEventType.GetName(nType);
-        switch (nType) {
-            case InGameDirectionEventType.AvatarLookSet:
-                this.aItem = aItem;
+            case InGameDirectionEvent.InputUI:
+                this.nUIType = iPacket.DecodeByte();
                 break;
         }
     }
@@ -221,16 +144,6 @@ public class UserInGameDirectionEvent extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
-    }
-
-    @Override
     public ScriptModifier CreateScriptModifierOnMerge() {
         ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
             if (pScriptCopy.pTemplate != null) {
@@ -245,72 +158,88 @@ public class UserInGameDirectionEvent extends PacketWriteRequest {
     @Override
     public ScriptWriteRequest CreateScriptWriteRequest() {
         if (pTemplate != null) {
-            String sOutput = "self.OnUserInGameDirectionEventType(InGameDirectionEventType." + sType + ", ";
+            String sOutput = "self.OnUserInGameDirectionEvent(InGameDirectionEvent." + sType + ", ";
             switch (nType) {
-                case InGameDirectionEventType.ForcedAction:
+                case InGameDirectionEvent.ForcedAction:
                     sOutput += (nAction + ", " + tDuration + ");");
                     break;
-                case InGameDirectionEventType.Delay:
+                case InGameDirectionEvent.Delay:
                     sOutput += (tDelay + ");");
                     break;
-                case InGameDirectionEventType.EffectPlay:
+                case InGameDirectionEvent.EffectPlay:
                     sOutput += ("\"" + sEffectUOL + "\", " + tDuration + ", " + x + ", " + y + ", " + v17 + ", " + dwNpcID + ", " + (bNotOrigin ? "true" : "false") + ");");
                     break;
-                case InGameDirectionEventType.ForcedInput:
+                case InGameDirectionEvent.ForcedInput:
                     sOutput += (nForcedInput + ");");
                     break;
-                case InGameDirectionEventType.PatternInputRequest:
+                case InGameDirectionEvent.PatternInputRequest:
                     sOutput += ("\"" + sPattern + "\", " + nAct + ", " + nRequestCount + ", " + nTime + ");");
                     break;
-                case InGameDirectionEventType.CameraMove:
+                case InGameDirectionEvent.CameraMove:
                     if (!bBack) {
                         sOutput += ("false, " + nPixelPerSec + ", " + x + ", " + y + ");");
                     } else {
                         sOutput += ("true, " + nPixelPerSec + ");");
                     }
                     break;
-                case InGameDirectionEventType.CameraOnCharacter:
+                case InGameDirectionEvent.CameraOnCharacter:
                     sOutput += (dwNpcID + ");");
                     break;
-                case InGameDirectionEventType.CameraZoom:
+                case InGameDirectionEvent.CameraZoom:
                     sOutput += (nTime + ", " + nScale + ", " + nTimePos + ", " + x + ", " + y + ");");
                     break;
-                case InGameDirectionEventType.CameraReleaseFromUserPoint:
-                case InGameDirectionEventType.RemoveAdditionalEffect:
-                case InGameDirectionEventType.CloseUI:
+                case InGameDirectionEvent.CameraReleaseFromUserPoint:
+                case InGameDirectionEvent.RemoveAdditionalEffect:
+                case InGameDirectionEvent.CloseUI:
                     sOutput += (");");
                     sOutput = sOutput.replace(", );", ");");
                     break;
-                case InGameDirectionEventType.VansheeMode:
+                case InGameDirectionEvent.VansheeMode:
                     sOutput += ((bVanshee ? "true);" : "false);"));
                     break;
-                case InGameDirectionEventType.FaceOff:
+                case InGameDirectionEvent.FaceOff:
                     sOutput += (nFaceItemID + ");");
                     break;
-                case InGameDirectionEventType.Monologue:
+                case InGameDirectionEvent.Monologue:
                     sOutput += ("\"" + sMonologue + "\", " + (bMonologueEnd ? "true" : "false") + ");");
                     break;
-                case InGameDirectionEventType.MonologueScroll:
+                case InGameDirectionEvent.MonologueScroll:
                     sOutput += ("\"" + sMonologue + "\", " + (bStayModal ? "true" : "false") + ", " + nAlign + ", " + nUpdateSpeedTime + ", " + nDecTic + ");");
                     break;
-                case InGameDirectionEventType.AvatarLookSet:
+                case InGameDirectionEvent.AvatarLookSet:
                     for (int i = 0; i < aItem.length; i++) {
                         sOutput += aItem[i];
                         sOutput += (i != (aItem.length - 1)) ? ", " : ");";
                     }
                     break;
-                case InGameDirectionEventType.ForcedMove:
+                case InGameDirectionEvent.ForcedMove:
                     sOutput += (nDir + ", " + nSpeed + ");");
                     break;
-                case InGameDirectionEventType.ForcedFlip:
+                case InGameDirectionEvent.ForcedFlip:
                     sOutput += (nForcedFlip + ");");
                     break;
-                case InGameDirectionEventType.InputUI:
+                case InGameDirectionEvent.InputUI:
                     sOutput += (nUIType + ");");
                     break;
             }
             return new ScriptWriteRequest(dwField, sOutput, pTemplate, new LinkedList<>(), nStrPaddingIndex);
         }
         return null;
+    }
+    
+    public static String GetDirectionEventName(int nType) {
+        try {
+            for (Field pField : InGameDirectionEvent.class.getDeclaredFields()) {
+                int nMod = pField.getModifiers();
+                if (Modifier.isStatic(nMod) && Modifier.isFinal(nMod)) {
+                    if (pField.getInt(null) == nType) {
+                        return pField.getName();
+                    }
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return String.format("Unknown-Type-Exception-Thrown[%d]", nType);
     }
 }

@@ -11,17 +11,15 @@ import template.AbstractTemplate;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class MessageHistory {
     
-    private final AbstractTemplate pTemplate;
     private final String sOutput;
     private final List<String> lConditionalText;
     private final int nStrPaddingIndex;
 
     public MessageHistory(ScriptWriteRequest<?> pScriptWriteRequest) {
-        this.pTemplate = pScriptWriteRequest.GetTemplate();
         String sMessage = pScriptWriteRequest.GetOutput();
         if (sMessage.contains("];\r\n")) {
             sMessage = sMessage.replace("];\r\n", "@").split("@")[1];
@@ -47,10 +45,6 @@ public class MessageHistory {
         }
         this.sOutput = sMessage;
         this.nStrPaddingIndex = nPad;
-    }
-    
-    public AbstractTemplate GetTemplate() {
-        return this.pTemplate;
     }
     
     public String GetOutput() {

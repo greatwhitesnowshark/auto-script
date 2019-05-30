@@ -5,70 +5,39 @@
  */
 package packet;
 
-import packet.inputstream.PacketInputStream;
-import java.awt.Point;
+import game.network.InPacket;
 import java.io.IOException;
 import java.util.Arrays;
-import message.MessageType;
-import message.QuestMessageType;
 import packet.client.UserPortalScriptRequest;
 import packet.client.UserQuestRequest;
 import packet.client.UserScriptMessageAnswer;
 import packet.client.UserSelectNpc;
 import script.Script;
-import util.Config;
-import util.Logger;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public enum ClientCode {
     
     UserScriptMessageAnswer(243,
-        (pStream) -> {
-            int nMsgTypeInput, nRetInput = 1, nSelectionInput = -1; 
-            nMsgTypeInput = pStream.readByte();
-            if (nMsgTypeInput != MessageType.AskInGameDirection) {
-                nRetInput = pStream.readByte();
-                if (pStream.available() >= 2) {
-                    nSelectionInput = -1;
-                    if (pStream.available() >= 6) {
-                        switch (nMsgTypeInput) {
-                            case MessageType.AskMenu:
-                                nSelectionInput = pStream.ReadInt();
-                                break;
-                        }
-                    }
-                }
-            }
-            return new UserScriptMessageAnswer(nMsgTypeInput, nRetInput, nSelectionInput);
+        (iPacket) -> {
+            return new UserScriptMessageAnswer(iPacket);
         }
     ),
     UserSelectNpc(241,
-        (pStream) -> {
-            int dwNpcID = pStream.ReadInt(); //not template ID, this relates to the map object ID
-            Point ptPos = new Point(pStream.ReadShort(), pStream.ReadShort());
-            return new UserSelectNpc(dwNpcID, ptPos);
+        (iPacket) -> {
+            return new UserSelectNpc(iPacket);
         }
     ),
     UserPortalScriptRequest(349,
-        (pStream) -> {
-            byte nType = pStream.readByte();
-            String sPortalName = pStream.ReadString(true);
-            return new UserPortalScriptRequest(nType, sPortalName);
+        (iPacket) -> {
+            return new UserPortalScriptRequest(iPacket);
         }
     ),
     UserQuestRequest(358,
-        (pStream) -> {
-            int nQuestState = pStream.readByte();
-            int nQuestID = pStream.ReadInt();
-            boolean bOpening = nQuestState == QuestMessageType.OpeningScript;
-            boolean bComplete = nQuestState == QuestMessageType.CompleteScript;
-            if (Config.QuestStateDebug) {
-                Logger.LogAdmin(("\r\nUserQuestRequest hit... \r\nQuest ID: " + nQuestID + "  -  nQRStatus: " + QuestMessageType.sType[nQuestState] + "  -  bOpening: " + bOpening + "  -  bComplete: " + bComplete + "\r\n...end\r\n"));
-            }
-            return new UserQuestRequest(nQuestState, nQuestID, bOpening, bComplete);
+        (iPacket) -> {
+            return new UserQuestRequest(iPacket);
         }
     );
     public int nCode;
@@ -95,7 +64,7 @@ public enum ClientCode {
     
     
     public static interface OnPacket {    
-        public Packet ReadPacket(PacketInputStream pStream) throws IOException;    
+        public PacketWrapper ReadPacket(InPacket iPacket) throws IOException;    
     }
     
 }

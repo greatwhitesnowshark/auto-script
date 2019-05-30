@@ -7,7 +7,7 @@ package template;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public abstract class AbstractTemplate {
     

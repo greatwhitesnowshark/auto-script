@@ -7,7 +7,7 @@ package util;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class Logger {
 

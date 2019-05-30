@@ -20,6 +20,7 @@ import template.QuestEndTemplate;
 import template.QuestStartTemplate;
 import template.ReactorTemplate;
 import template.FieldTemplate;
+import util.Logger;
 
 /**
  *
@@ -105,7 +106,12 @@ public class ScriptTemplateMap {
             }
         }
         pStream.close();
-        aTemplate.stream().forEach((pNpcTemplate) -> mTemplate.get(NpcTemplate.class.hashCode()).put(pNpcTemplate.dwTemplateID, pNpcTemplate));
+        aTemplate.stream().forEach((pNpcTemplate) -> {
+            mTemplate.get(NpcTemplate.class.hashCode()).put(pNpcTemplate.dwTemplateID, pNpcTemplate);
+            if (util.Config.TemplateMapDebug) {
+                Logger.LogReport("pNpcTemplate.dwTemplateID [" + pNpcTemplate.dwTemplateID + "] / pNpcTemplate.sScript [" + pNpcTemplate.sScript + "]");
+            }
+        });
         aTemplate.clear();
         pStream = new BufferedReader(new FileReader("script\\NpcID_to_Name.txt"));
         while (pStream.ready()) {

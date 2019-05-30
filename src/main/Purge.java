@@ -22,7 +22,11 @@ public class Purge {
                          sUserEnterDirectory = "script\\field\\UserEnter\\",
                          sFirstUserEnterDirectory = "script\\field\\FirstUserEnter\\";
     
-    public static void Purge(String... aDir) {
+    public static void main(String[] args) {
+        DeleteFromDirectory(new String[] {sNpcDirectory, sQuestDirectory, sPortalDirectory, sReactorDirectory, sDeveloperDirectory, sFieldScriptDirectory, sUserEnterDirectory, sFirstUserEnterDirectory});
+    }
+    
+    public static void DeleteFromDirectory(String... aDir) {
         for (String sDirectory : aDir) {
             File pDirectory = new File(sDirectory);
             if (pDirectory.isDirectory()) {
@@ -33,9 +37,5 @@ public class Purge {
                 }
             }
         }
-    }
-    
-    public static void main(String[] args) {
-        Purge(new String[] {sNpcDirectory, sQuestDirectory, sPortalDirectory, sReactorDirectory, sDeveloperDirectory, sFieldScriptDirectory, sUserEnterDirectory, sFirstUserEnterDirectory});
     }
 }

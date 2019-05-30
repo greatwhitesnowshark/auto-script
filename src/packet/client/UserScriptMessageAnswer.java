@@ -5,10 +5,12 @@
  */
 package packet.client;
 
+import game.network.InPacket;
+import game.scripting.ScriptMan;
+import game.scripting.ScriptMan.MessageType;
 import java.util.LinkedList;
-import message.MessageType;
 import packet.ClientCode;
-import packet.Packet;
+import packet.PacketWriteRequest;
 import script.MessageHistory;
 import script.NestedBlockHistory;
 import script.Script;
@@ -18,23 +20,23 @@ import util.Logger;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
-public class UserScriptMessageAnswer extends Packet {
+public class UserScriptMessageAnswer extends PacketWriteRequest {
     
-    private final int nMsgTypeInput, nModeInput, nSelectionInput;
-    private ScriptWriteRequest pWriteRequestOverride = null;
+    public int nMsgTypeInput, nModeInput, nSelectionInput;
     
-    public UserScriptMessageAnswer(int nMsgTypeInput, int nModeInput, int nSelectionInput) {
+    public UserScriptMessageAnswer(InPacket iPacket) {
         super(ClientCode.UserScriptMessageAnswer.nCode);
-        this.nMsgTypeInput = nMsgTypeInput;
-        this.nModeInput = nModeInput;
-        this.nSelectionInput = nSelectionInput;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
+        this.nMsgTypeInput = iPacket.DecodeByte();
+        if (this.nMsgTypeInput != ScriptMan.MessageType.AskInGameDirection) {
+            this.nModeInput = iPacket.DecodeByte();
+            if (iPacket.GetBufferLength() >= 2) {
+                if (iPacket.GetBufferLength() >= 4 && this.nModeInput == 1) {
+                    this.nSelectionInput = iPacket.DecodeInt();
+                }
+            }
+        }
     }
 
     @Override
@@ -49,13 +51,17 @@ public class UserScriptMessageAnswer extends Packet {
                             if (pMessageHistory.GetOutput().contains("nRet") || pMessageHistory.GetOutput().contains("nSel")) {
                                 int nResult = pMessageHistory.GetOutput().contains("nSel") ? nSelectionInput : nModeInput;
                                 pScriptMod.GetNestedBlockHistory().SetNestedBlockResult(nResult);
-                                Logger.LogAdmin("SetNestedBlockResult(" + nResult + ") processed for pScriptMod.sScriptName = " + pScriptMod.sScriptName);
+                                if (util.Config.MessageHistoryDebug) {
+                                    Logger.LogAdmin("SetNestedBlockResult(" + nResult + ") processed for pScriptMod.sScriptName = " + pScriptMod.sScriptName);
+                                }
                             }
                         }
                     }
                 }
             } else {
-                pWriteRequestOverride = new ScriptWriteRequest(pScriptMod.dwField, "self.Wait();", pScriptMod.pTemplate, new LinkedList<>(), pScriptMod.GetStrPaddingIndex());
+                if (!pHistory.GetOutput().contains("self.Wait();")) {
+                    pScriptMod.ProcessWriteRequest(new ScriptWriteRequest(pScriptMod.dwField, "self.Wait();", pScriptMod.pTemplate, new LinkedList<>(), pScriptMod.GetStrPaddingIndex()));
+                }
             }
         };
         return pScriptModifier;
@@ -63,16 +69,14 @@ public class UserScriptMessageAnswer extends Packet {
 
     @Override
     public ScriptModifier CreateScriptModifierOnMerge() {
-        return null;
-    }
-
-    @Override
-    public ScriptWriteRequest CreateScriptWriteRequest() {
-        return pWriteRequestOverride;
-    }
-    
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
+        ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
+            if (pScriptCopy.pTemplate != null) {
+                dwField = pScriptCopy.dwField;
+                pHistory = pScriptCopy.pHistory;
+                pTemplate = pScriptCopy.pTemplate;
+                nStrPaddingIndex = pScriptCopy.GetStrPaddingIndex();
+            }
+        };
+        return pScriptModifier;
     }
 }

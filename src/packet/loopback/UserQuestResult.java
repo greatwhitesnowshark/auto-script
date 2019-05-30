@@ -1,12 +1,14 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package packet.loopback;
 
+import game.network.InPacket;
+import game.scripting.ScriptSysFunc.QuestResultType;
+import game.user.quest.QuestResult;
 import java.util.LinkedList;
-import message.QuestResultType;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
@@ -15,40 +17,52 @@ import script.ScriptWriteRequest;
 
 /**
  *
- * @author Five
+ * @author Sharky
  */
 public class UserQuestResult extends PacketWriteRequest {
     
-    private final boolean bNavigation, bQuestName;
-    private final byte nResult;
-    private final int nQuestID, dwNpcTemplateID, nNextQuestID;
-    private final int[] aTimerQuestID, aTimeRemaining;
+    public boolean bNavigation, bQuestName;
+    public byte nResult;
+    public int nQuestID, dwNpcTemplateID, nNextQuestID;
+    public int[] aTimerQuestID, aTimeRemaining;
     
-    public UserQuestResult(byte nResult, int nQuestID, int dwNpcTemplateID, int nNextQuestID, boolean bNavigation, boolean bQuestName, int[] aTimerQuestID, int[] aTimeRemaining) {
+    public UserQuestResult(InPacket iPacket) {
         super(LoopbackCode.UserQuestResult.nCode);
-        this.nResult = nResult;
-        this.nQuestID = nQuestID;
-        this.dwNpcTemplateID = dwNpcTemplateID;
-        this.nNextQuestID = nNextQuestID;
-        this.bNavigation = bNavigation;
-        this.bQuestName = bQuestName;
-        this.aTimerQuestID = aTimerQuestID;
-        this.aTimeRemaining = aTimeRemaining;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return null;
-    }
-
-    @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        return null;
+        this.nResult = iPacket.DecodeByte();
+        switch (nResult) {
+            case QuestResult.Success:
+                this.nQuestID = iPacket.DecodeInt();
+                this.dwNpcTemplateID = iPacket.DecodeInt();
+                this.nNextQuestID = iPacket.DecodeInt();
+                this.bNavigation = iPacket.DecodeBool();
+                break;
+            case QuestResult.FailedInventory:
+                this.nQuestID = iPacket.DecodeInt();
+                this.bQuestName = iPacket.DecodeBool();
+                break;
+            case QuestResult.StartQuestTimer:
+            case QuestResult.StartTimeKeepQuestTimer:
+                short nSize = iPacket.DecodeShort();
+                this.aTimeRemaining = new int[nSize];
+                this.aTimerQuestID = new int[nSize];
+                for (int i = 0; i < nSize; i++) {
+                    this.aTimerQuestID[i] = iPacket.DecodeInt();
+                    this.aTimeRemaining[i] = iPacket.DecodeInt();
+                }
+                break;
+            case QuestResult.EndQuestTimer:
+            case QuestResult.EndTimeKeepQuestTimer:
+                nSize = iPacket.DecodeShort();
+                this.aTimerQuestID = new int[nSize];
+                for (int i = 0; i < nSize; i++) {
+                    this.aTimerQuestID[i] = iPacket.DecodeInt();
+                }
+                break;
+            case QuestResult.FailedTimeOver:
+            case QuestResult.ResetQuestTimer:
+                this.nQuestID = iPacket.DecodeInt();
+                break;
+        }
     }
 
     @Override
@@ -56,6 +70,7 @@ public class UserQuestResult extends PacketWriteRequest {
         ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
             if (pScriptCopy.pTemplate != null) {
                 dwField = pScriptCopy.dwField;
+                pHistory = pScriptCopy.pHistory;
                 pTemplate = pScriptCopy.pTemplate;
                 nStrPaddingIndex = pScriptCopy.GetStrPaddingIndex();
             }
@@ -66,7 +81,7 @@ public class UserQuestResult extends PacketWriteRequest {
     @Override
     public ScriptWriteRequest CreateScriptWriteRequest() {
         if (pTemplate != null) {
-            String sOutput = "", sTimerQuestID = "";
+            String sOutput = "", sTimerQuestID;
             switch (nResult) {
                     case QuestResultType.Success:
                         sOutput = "self.OnUserQuestResult(QuestResultType.Success, " + nQuestID + ", " + dwNpcTemplateID + ", " + nNextQuestID + ", " + bNavigation + ");";
