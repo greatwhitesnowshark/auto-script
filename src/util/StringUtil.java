@@ -11,7 +11,24 @@ package util;
  */
 public class StringUtil {
     
-    public static int CountStringPadding(String sLine) {
+    public static String AddStringPaddingChar(String sLine, int nPadding) {
+        StringBuilder sLinePadded = new StringBuilder();
+        for (int i = 0; i < nPadding; i++) {
+            sLinePadded.append(" ");
+        }
+        sLinePadded.append(sLine);
+        return sLinePadded.toString();
+    }
+    
+    public static int CountStringPaddingChar(String sLine) {
+        int nPadding = 0;
+        while (nPadding < sLine.length() && sLine.subSequence(nPadding, nPadding + 1).equals(" ")) {
+            nPadding++;
+        }
+        return nPadding;
+    }
+    
+    public static int CountStringPaddingTab(String sLine) {
         int nPadding = 0;
         String sTrimmed = sLine.contains("(") ? sLine.substring(0, sLine.indexOf('(')) : sLine;
         while (sTrimmed.contains("\t")) {

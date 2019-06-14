@@ -25,7 +25,7 @@ public class NestedBlockHistory {
     }
     
     public boolean IsNestedBlockFound(String sLine) {
-        return StringUtil.CountStringPadding(this.sTargetText) == StringUtil.CountStringPadding(sLine) && sLine.trim().replaceAll("\t", "").contains(this.sTargetText.trim().replaceAll("\t", ""));
+        return StringUtil.CountStringPaddingTab(this.sTargetText) == StringUtil.CountStringPaddingTab(sLine) && sLine.trim().replaceAll("\t", "").contains(this.sTargetText.trim().replaceAll("\t", ""));
     }
     
     public void SetNestedBlockResult(int nResult) {

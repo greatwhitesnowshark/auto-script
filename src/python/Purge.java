@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scriptmaker;
+package python;
 
 import java.io.File;
 
@@ -13,22 +13,23 @@ import java.io.File;
  */
 public class Purge {
     
-    public static String sNpcDirectory = "script\\npc\\",
-                         sQuestDirectory = "script\\quest\\",
-                         sPortalDirectory = "script\\portal\\",
-                         sReactorDirectory = "script\\reactor\\",
-                         sDeveloperDirectory = "script\\developer\\",
-                         sFieldScriptDirectory = "script\\field\\FieldScript\\",
-                         sUserEnterDirectory = "script\\field\\UserEnter\\",
-                         sFirstUserEnterDirectory = "script\\field\\FirstUserEnter\\";
+    public static String sDirectory = "C:\\Users\\Chris\\Desktop\\Swordie\\scripts_javascript\\";
+    public static String sNpcDirectory = "npc\\",
+                         sQuestDirectory = "quest\\",
+                         sPortalDirectory = "portal\\",
+                         sReactorDirectory = "reactor\\",
+                         sDeveloperDirectory = "developer\\",
+                         sFieldScriptDirectory = "field\\fieldscript\\",
+                         sUserEnterDirectory = "field\\userenter\\",
+                         sFirstUserEnterDirectory = "field\\firstuserenter\\";
     
     public static void main(String[] args) {
         DeleteFromDirectory(new String[] {sNpcDirectory, sQuestDirectory, sPortalDirectory, sReactorDirectory, sDeveloperDirectory, sFieldScriptDirectory, sUserEnterDirectory, sFirstUserEnterDirectory});
     }
     
     public static void DeleteFromDirectory(String... aDir) {
-        for (String sDirectory : aDir) {
-            File pDirectory = new File(sDirectory);
+        for (String sPath : aDir) {
+            File pDirectory = new File(sDirectory + sPath);
             if (pDirectory.isDirectory()) {
                 for(File pFile: pDirectory.listFiles()) {
                     if (!pFile.isDirectory()) {

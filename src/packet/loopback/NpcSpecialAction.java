@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import packet.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
+import script.ScriptFieldObjMap;
 import script.ScriptModifier;
 import script.ScriptWriteRequest;
 
@@ -46,7 +47,8 @@ public class NpcSpecialAction extends PacketWriteRequest {
     @Override
     public ScriptWriteRequest CreateScriptWriteRequest() {
         if (pTemplate != null) {
-            String sOutput = "self.OnNpcSpecialAction(" + dwID + ", \"" + sMsg + "\", " + tDuration + ", " + (bLocal ? "true" : "false") + ");";
+            int dwTemplateID = ScriptFieldObjMap.GetNpcTemplateID(this.dwID);
+            String sOutput = "self.OnNpcSpecialAction(" + dwTemplateID + ", \"" + sMsg + "\", " + tDuration + ", " + (bLocal ? "true" : "false") + ");";
             return new ScriptWriteRequest(dwField, sOutput, pTemplate, new LinkedList<>(), nStrPaddingIndex);
         }
         return null;

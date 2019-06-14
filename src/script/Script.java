@@ -264,8 +264,8 @@ public class Script {
                                             if (util.Config.MessageHistoryDebug) {
                                                 Logger.LogError("[TRUE] nNestedBlockCount == aHistoryNestedBlock.size() [" + nNestedBlockCount + "]");
                                                 Logger.LogError("Found nested block - ");
-                                                Logger.LogAdmin("        - sLine:  " + sLine + ", CountStringPadding = " + StringUtil.CountStringPadding(sLine));
-                                                Logger.LogAdmin("        - pNestedBlock.sTargetText = " + pNestedBlock.sTargetText + ", CountStringPadding = " + StringUtil.CountStringPadding(pNestedBlock.sTargetText));
+                                                Logger.LogAdmin("        - sLine:  " + sLine + ", CountStringPadding = " + StringUtil.CountStringPaddingTab(sLine));
+                                                Logger.LogAdmin("        - pNestedBlock.sTargetText = " + pNestedBlock.sTargetText + ", CountStringPadding = " + StringUtil.CountStringPaddingTab(pNestedBlock.sTargetText));
                                                 Logger.LogAdmin("        - sOutput: " + pWriteRequest.GetOutput() + "");
                                                 Logger.LogAdmin("        - Script: [" + pWriteRequest.GetTemplate().sScript + "]");
                                             }
@@ -341,7 +341,7 @@ public class Script {
                         });
                     }
                     String sPadding = "";
-                    int nPad = StringUtil.CountStringPadding(GetNestedBlockHistory().sTargetText);
+                    int nPad = StringUtil.CountStringPaddingTab(GetNestedBlockHistory().sTargetText);
                     for (int i = 0; i < nPad; i++) {
                         sPadding += "\t";
                     }
