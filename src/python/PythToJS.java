@@ -25,19 +25,17 @@ import util.StringUtil;
 
 /**
  *
- * @author Five
+ * @author Sharky - Really more of "swordie-python" to JS
  */
 public class PythToJS {
     
     public static final Map<String, LinkedList<String>> mScriptLines = Collections.synchronizedMap(new HashMap<>());
     public static final Map<String, String> mReplace = new LinkedHashMap<>();
-    public static final Map<String, String> mReplaceRegex = new LinkedHashMap<>();
-    public static final Map<String, Integer> mParamArgsAdd = new LinkedHashMap<>();
-    public static final Map<String, Integer> mParamArgsRemove = new LinkedHashMap<>();
-    public static final Map<Integer, String> mParamArgsAppend = new LinkedHashMap<>();
-    public static final Map<String, String> mDebugLines = new HashMap<>();
-    public static final List<Integer> aParamArgs = new LinkedList<>();
-    public static final int User = 1, NoESC = 2;
+    public static final Map<String, String> mFuncArgsAppend = new LinkedHashMap<>();
+    public static final Map<String, String> mChatTypeAppend = new LinkedHashMap<>();
+    public static final Map<String, String> mDebugFuncName = new HashMap<>();
+    public static final Map<String, String> mFuncAppend = new HashMap<>();
+    public static final List<String> aParamArgs = new LinkedList<>();
         
 
     public static void main(String[] args) {
@@ -46,7 +44,7 @@ public class PythToJS {
             Files.walk(Paths.get(sDirectory)).forEach((pFile) -> {
                 if (!pFile.toFile().isDirectory()) {
                     try {
-                        ConvertPythonScript(pFile.toFile());
+                        ConvertPythToJS(pFile.toFile());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -67,12 +65,12 @@ public class PythToJS {
                 Logger.logMsg(Logger.INFO, "Created new script - `" + sFileName + "`");
             }
             
-            if (!mDebugLines.isEmpty()) {
-                Object[] aSortedKey = mDebugLines.keySet().toArray();
+            if (!mDebugFuncName.isEmpty()) {
+                Object[] aSortedKey = mDebugFuncName.keySet().toArray();
                 Arrays.sort(aSortedKey);
                 System.out.println("These are the [" + aSortedKey.length + "] methods that are currently unaccounted for: \r\n");
                 for (Object sDebug : aSortedKey) {
-                    System.out.println("\t- " + sDebug + " //" + mDebugLines.get((String) sDebug));
+                    System.out.println("\t- " + sDebug + " //" + mDebugFuncName.get((String) sDebug));
                 }
             }
         } catch (Exception e) {
@@ -80,163 +78,232 @@ public class PythToJS {
         }
     }
     
-    public static final void ConvertPythonScript(File pFile) throws IOException {
-        //Task 1.  Convert all script lines from their python indentation and block them appropriately
-        boolean bConcatNextLine = false;
-        int nCloseBracketPad = -1;
-        LinkedList<String> aScriptLines = new LinkedList<>();
-        try (BufferedReader pReader = new BufferedReader(new FileReader(pFile))) {
-            mParamArgsAppend.clear();
-            mParamArgsRemove.clear();
-            while (pReader.ready()) {
-                String sLine = pReader.readLine();
-                boolean bComment = false, bParamArg = false;
-                if (!sLine.trim().isEmpty()) {
-                    //comments
-                    if (sLine.charAt(0) == '#') {
-                        sLine = ("//" + sLine.substring(1));
-                        bComment = true;
-                    } else if (sLine.contains(" # ")) {
-                        sLine = sLine.replace(" # ", "; // ");
-                        bComment = true;
-                    } else if (sLine.contains("sm.dispose()")) {
-                        //sLine = ("//" + sLine);
-                        continue;
-                    } else {
-                        if (bConcatNextLine) {
-                            bConcatNextLine = false;
-                            if (sLine.indexOf('"') >= 0 && sLine.indexOf('"') + 1 < sLine.length()) {
-                                String sPrevLine = aScriptLines.remove(aScriptLines.size() - 1);
-                                String sTrimmedLine = sLine.substring(sLine.indexOf('"') + 1);
-                                sPrevLine = sPrevLine.substring(0, sPrevLine.length() - 1);
-                                String sResult = (sPrevLine + sTrimmedLine);
-                                //check for additional line concats
-                                if (sResult.contains("sm.") && sResult.contains("(\"")) {
-                                    if (!sLine.contains("\")")) {
-                                        bConcatNextLine = true;
-                                    }
-                                }
-                                if (sResult.charAt(sResult.length() - 1) == ')') {
-                                    sResult += ";";
-                                }
-                                //modify say functions based on bparam options
-                                for (String sKey : mParamArgsAdd.keySet()) {
-                                    if (sResult.contains(sKey)) {
-                                        int nFlag = mParamArgsAdd.get(sKey);
-                                        if (!aParamArgs.contains(nFlag)) {
-                                            aParamArgs.add(nFlag);
-                                            bParamArg = true;
-                                        }
-                                    }
-                                }
-                                //convert functions/syntax
-                                for (String sKey : mReplace.keySet()) {
-                                    while (sResult.contains(sKey)) {
-                                        sResult = sResult.replace(sKey, mReplace.get(sKey));
-                                    }
-                                }
-                                //convert reg-ex expressions
-                                for (String sKey : mReplaceRegex.keySet()) {
-                                    if (sResult.contains(sKey)) {
-                                        sResult = sResult.replaceAll(sKey, mReplaceRegex.get(sKey));
-                                    }
-                                }
-                                if (!bParamArg) {
-                                    aScriptLines.add(sResult);
-                                }
-                                continue;
-                            }
-                        }
-                        if (!bConcatNextLine && !bParamArg) {
-                            //add closing bracket
-                            if (nCloseBracketPad >= 0) {
-                                if (StringUtil.CountStringPaddingChar(sLine) == nCloseBracketPad || !pReader.ready()) {
-                                    aScriptLines.add(ToPaddedString("}", nCloseBracketPad));
-                                    nCloseBracketPad = -1;
-                                }
-                            }
+    public static final String ConvertComments(String sScriptLine) {
+        if (!sScriptLine.isEmpty()) {
+            if (sScriptLine.trim().charAt(0) == '#') {
+                sScriptLine = sScriptLine.replace("#", "// ");
+            } else if (sScriptLine.contains(" # ")) {
+                sScriptLine = sScriptLine.replace(" # ", (!sScriptLine.contains("{") && !sScriptLine.contains(":") ? "; // " : " // "));
+            }
+            if (GetBlockPaddingChar(sScriptLine, false) < 4) {
+                sScriptLine = sScriptLine.trim();
+            }
+        }
+        return sScriptLine;
+    }
+    
+    public static final String ConvertIfElseStatements(String sScriptLine) {
+        if (sScriptLine.contains("while ") && !sScriptLine.contains("while (")) {
+            sScriptLine = sScriptLine.replace("while ", "while (");
+        } else if (sScriptLine.contains("elif")) {
+            sScriptLine = sScriptLine.replace("elif", "} else if (");
+        } else if (sScriptLine.contains("if ") && sScriptLine.contains(":")) {
+            sScriptLine = sScriptLine.replace("if ", "if (");
+        } else if (sScriptLine.contains("else:")) {
+            sScriptLine = sScriptLine.replace("else:", "} else:");
+        }
+        String sComment = "";
+        if (sScriptLine.contains(":")) {
+            if (sScriptLine.contains("//")) {
+                sComment = sScriptLine.substring(sScriptLine.indexOf("//"));
+                sScriptLine = sScriptLine.substring(0, sScriptLine.indexOf("//"));
+            }
+            if (sScriptLine.contains("\"")) {
+                String[] aScriptLine = sScriptLine.split("\"");
+                sScriptLine = "";
+                for (int i = 0; i < aScriptLine.length; i++) {
+                    if (i % 2 == 0) {
+                        if (aScriptLine[i].contains(":")) {
+                            aScriptLine[i] = aScriptLine[i].replace(":", sScriptLine.contains("else:") ? " {" : ") {");
                         }
                     }
-                    //conditional blocks
-                    if (sLine.contains("elif")) {
-                        aScriptLines.remove(aScriptLines.size() - 1);
-                        sLine = sLine.replace("elif", "} else if (");
-                    } else if (sLine.contains("if ")) {
-                        sLine = sLine.replace("if ", "if (");
-                    } else if (sLine.contains("else:")) {
-                        aScriptLines.remove(aScriptLines.size() - 1);
-                        sLine = sLine.replace("else:", "} else:");
-                    }
-                    //curly bracket for :
-                    if (!bComment && sLine.contains(":") && !sLine.contains("case")) {
-                        sLine = sLine.replace(":", (sLine.contains("else:") ? " {" : ") {"));
-                        nCloseBracketPad = StringUtil.CountStringPaddingChar(sLine);
-                        //aScriptLines.add(sLine);
-                        //continue;
-                    }
-                    //check for line concat
-                    if (sLine.contains("sm.send") && sLine.contains("(\"")) {
-                        if (!sLine.contains("\")")) {
-                            bConcatNextLine = true;
-                        }
-                    }
-                    //add semicolon to finish a statement
-                    if (!bConcatNextLine && !bComment && !sLine.contains("{")) {
-                        sLine += ";";
-                    }
-                    //modify say functions based on bparam options
-                    for (String sKey : mParamArgsAdd.keySet()) {
-                        if (sLine.contains(sKey)) {
-                            int nFlag = mParamArgsAdd.get(sKey);
-                            if (!aParamArgs.contains(nFlag)) {
-                                aParamArgs.add(nFlag);
-                                bParamArg = true;
-                            }
-                        }
-                    }
-                    final boolean bAppend = sLine.contains("sm.send");
-                    //convert functions/syntax
-                    for (String sKey : mReplace.keySet()) {
-                        while (sLine.contains(sKey)) {
-                            sLine = sLine.replace(sKey, mReplace.get(sKey));
-                        }
-                    }
-                    //convert reg-ex expressions
-                    for (String sKey : mReplaceRegex.keySet()) {
-                        if (sLine.contains(sKey)) {
-                            sLine = sLine.replaceAll(sKey, mReplaceRegex.get(sKey));
-                        }
-                    }
-                    if (bAppend) {
-                        String sAppend = "";
-                        for (int nFlag : aParamArgs) {
-                            sAppend += mParamArgsAppend.get(nFlag);
-                        }
-                        if (!sAppend.isEmpty()) {
-                            sLine = sLine.substring(0, sLine.indexOf("(")) + sAppend + sLine.substring(sLine.indexOf("("));
-                        }
-                    }
-                    //compile list of functions still need to be converted
-                    if (sLine.contains("self.") && Character.isLowerCase(sLine.charAt(sLine.indexOf(".") + 1)) && sLine.contains("(")) {
-                        String sTrimmedLine = sLine.substring(sLine.indexOf("self."));
-                        if (sTrimmedLine.contains("(")) {
-                            String sDebug = sTrimmedLine.substring(0, sTrimmedLine.indexOf("("));
-                            if (!mDebugLines.keySet().contains(sDebug)) {
-                                mDebugLines.put(sDebug, pFile.getName());
-                            }
-                        }
-                    }
-                    //add result to queue
-                    if (!bParamArg) {
-                        aScriptLines.add(sLine);
-                        //check for any additional functions that need to be added after line has been inserted
-                        if (sLine.contains("InGameDirectionEvent.Delay")) {
-                            int nPadding = StringUtil.CountStringPaddingChar(sLine);
-                            sLine = StringUtil.AddStringPaddingChar("self.Wait();", nPadding);
-                            aScriptLines.add(sLine);
-                        }
+                    sScriptLine += aScriptLine[i];
+                    if (i != aScriptLine.length - 1) {
+                        sScriptLine += "\"";
                     }
                 }
+            } else {
+                sScriptLine = sScriptLine.replace(":", sScriptLine.contains("else:") ? " {" : ") {");
+            }
+        }
+        if (sScriptLine.contains(" ( ")) {
+            sScriptLine = sScriptLine.replace(" ( ", " (");
+        }
+        sScriptLine += sComment;
+        return sScriptLine;
+    }
+    
+    public static final String ConvertFuncArgsAppend(String sScriptLine) {
+        for (String sLine : mFuncArgsAppend.keySet()) {
+            if (sScriptLine.contains(sLine)) {
+                if (sScriptLine.contains(")") && !sScriptLine.contains(mFuncArgsAppend.get(sLine))) {
+                    sScriptLine = sScriptLine.replace(")", mFuncArgsAppend.get(sLine) + ")");
+                    break;
+                }
+            }
+        }
+        return sScriptLine;
+    }
+    
+    public static final String ConvertReplaceFunc(String sScriptLine) {
+        for (String sLine : mReplace.keySet()) {
+            if (sScriptLine.contains(sLine)) {
+                sScriptLine = sScriptLine.replace(sLine, mReplace.get(sLine));
+            }
+        }
+        return sScriptLine;
+    }
+    
+    public static final String ConvertChatTypeAppend(String sScriptLine) {
+        if (sScriptLine.contains("self.Say") || sScriptLine.contains("self.Ask")) {
+            if (!aParamArgs.isEmpty() && sScriptLine.contains("(")) {
+                String sAppend = "";
+                for (String s : aParamArgs) {
+                    sAppend += s;
+                }
+                sScriptLine = sScriptLine.replace("(", (sAppend + "("));
+            }
+        }
+        return sScriptLine;
+    }
+    
+    public static final String ConvertSemicolon(String sScriptLine) {
+        if (!sScriptLine.contains("//") && sScriptLine.trim().charAt(sScriptLine.trim().length() -1) != '{') {
+            sScriptLine += ";";
+        }
+        return sScriptLine;
+    }
+    
+    public static final String ConvertMergeWithNextLine(String sScriptLine, String sAppend) {
+        int nLineSubstr, nAppendSubstr;
+        boolean bOperatorAppend = sScriptLine.trim().charAt(sScriptLine.trim().length() - 1) == '+';
+        if (bOperatorAppend) {
+            nLineSubstr = sScriptLine.lastIndexOf("+") + 1;
+            nAppendSubstr = 0;
+        } else {
+            if (sAppend.trim().length() > 3 && sAppend.trim().substring(0, 3).equals("+ \"")) {
+                nLineSubstr = sScriptLine.lastIndexOf("\"");
+                nAppendSubstr = sAppend.indexOf("\"") + 1;
+            } else {
+                nLineSubstr = sScriptLine.length() - 1;
+                nAppendSubstr = sAppend.indexOf("\"") + 1;
+            }
+        }
+        return sScriptLine.substring(0, nLineSubstr) + (nAppendSubstr == 0 ? " " : "") + sAppend.substring(nAppendSubstr);
+    }
+    
+    public static final String GetFuncAppend(String sScriptLine) {
+        for (String sKey : mFuncAppend.keySet()) {
+            if (sScriptLine.contains(sKey)) {
+                return mFuncAppend.get(sKey);
+            }
+        }
+        return "";
+    }
+    
+    public static final boolean IsSkippedLine(String sScriptLine) {
+        if (sScriptLine.contains("sm.dispose") || sScriptLine.contains("sm.diposse") || sScriptLine.contains("sm.disose")) {
+            return true;
+        } else {
+            for (String sKey : mChatTypeAppend.keySet()) {
+                if (sScriptLine.contains(sKey)) {
+                    String sAppend = mChatTypeAppend.get(sKey);
+                    if (!aParamArgs.contains(sAppend)) {
+                        aParamArgs.add(sAppend);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static final boolean IsClosingBracketInsert(String sScriptLine, int nBlockPadding) {
+        if (sScriptLine.contains("}") && GetBlockPaddingChar(sScriptLine, false) == nBlockPadding) {
+            return false;
+        }
+        return nBlockPadding >= 0 && GetBlockPaddingChar(sScriptLine, false) <= nBlockPadding;
+    }
+    
+    public static final boolean IsClosingBracketNeeded(String sScriptLine) {
+        return sScriptLine.contains("{") && (sScriptLine.contains("if") || sScriptLine.contains("else"));
+    }
+    
+    public static final boolean IsLineSplit(String sScriptLine) {
+        char c = sScriptLine.trim().length() > 1 ? sScriptLine.trim().charAt(sScriptLine.trim().length() - 1) : '_', 
+             b = sScriptLine.trim().length() > 2 ? sScriptLine.trim().charAt(sScriptLine.trim().length() - 2) : '_', 
+             a = sScriptLine.trim().length() > 3 ? sScriptLine.trim().charAt(sScriptLine.trim().length() - 3) : '_';
+        if (c == '+' || c == '"' || (c == ')' && (b == '(' || (b == ')' && a == '(')))) {
+            return (sScriptLine.contains("sm.") && (sScriptLine.contains("(\"") || sScriptLine.contains(", \""))) || sScriptLine.contains("= \"");
+        }
+        return false;
+    }
+    
+    public static final int GetBlockPaddingChar(String sScriptLine, boolean bSet) {
+        int nCharPad = StringUtil.CountStringPaddingChar(sScriptLine);
+        int nTabPad = StringUtil.CountStringPaddingTab(sScriptLine);
+        return nCharPad > nTabPad * 4 ? nCharPad : nTabPad * 4;
+    }
+    
+    public static final void LogDebugInfo(String sScriptLine, String sFileName) {
+        if (sScriptLine.contains("self.") && Character.isLowerCase(sScriptLine.charAt(sScriptLine.indexOf(".") + 1)) && sScriptLine.contains("(")) {
+            String sDebug = sScriptLine.substring(sScriptLine.indexOf("self."));
+            if (sDebug.contains("(")) {
+                String sDebugFuncName = sDebug.substring(0, sDebug.indexOf("("));
+                if (!mDebugFuncName.keySet().contains(sDebugFuncName)) {
+                    mDebugFuncName.put(sDebugFuncName, sFileName);
+                }
+            }
+        }
+    }
+    
+    public static final void ConvertPythToJS(File pFile) throws IOException {
+        LinkedList<String> aScriptLines = new LinkedList<>();
+        try (BufferedReader pReader = new BufferedReader(new FileReader(pFile))) {
+            aParamArgs.clear();
+            int nBlockPadding = -1;
+            while (pReader.ready()) {
+                String sScriptLine = pReader.readLine();
+                if (!sScriptLine.trim().isEmpty()) {
+                    if (!IsSkippedLine(sScriptLine)) {
+                        sScriptLine = ConvertComments(sScriptLine);
+                        sScriptLine = ConvertIfElseStatements(sScriptLine);
+                        if (IsClosingBracketInsert(sScriptLine, nBlockPadding)) {
+                            while (nBlockPadding > GetBlockPaddingChar(sScriptLine, false)) {
+                                aScriptLines.add(ToPaddedString("}", nBlockPadding));
+                                nBlockPadding -= 4;
+                            }
+                            nBlockPadding = -1;
+                        }
+                        if (IsClosingBracketNeeded(sScriptLine)) {
+                            nBlockPadding = GetBlockPaddingChar(sScriptLine, false);
+                        }
+                        while (IsLineSplit(sScriptLine) && !sScriptLine.contains("\")") && pReader.ready()) {
+                            String sAppend = pReader.readLine().trim();
+                            sAppend = ConvertComments(sAppend);
+                            if (sAppend.length() > 1 && sAppend.contains(("\""))) {
+                                sScriptLine = ConvertMergeWithNextLine(sScriptLine, sAppend);
+                            } else {
+                                break;
+                            }
+                        }
+                        sScriptLine = ConvertFuncArgsAppend(sScriptLine);
+                        sScriptLine = ConvertReplaceFunc(sScriptLine);
+                        sScriptLine = ConvertChatTypeAppend(sScriptLine);
+                        sScriptLine = ConvertSemicolon(sScriptLine);
+                        aScriptLines.add(sScriptLine);
+                        String sFuncAppend = GetFuncAppend(sScriptLine);
+                        if (!sFuncAppend.isEmpty()) {
+                            int nPadding = GetBlockPaddingChar(sScriptLine, false);
+                            aScriptLines.add(ToPaddedString(sFuncAppend, nPadding));
+                        }
+                        LogDebugInfo(sScriptLine, pFile.getName());
+                    }
+                }
+            }
+            while (nBlockPadding >= 0) {
+                aScriptLines.add(ToPaddedString("}", nBlockPadding));
+                nBlockPadding -= 4;
             }
         }
         if (!aScriptLines.isEmpty()) {
@@ -264,24 +331,100 @@ public class PythToJS {
     }
     
     static {
-        mReplace.put("False", "false");
-        mReplace.put("True", "true");
-        mReplace.put("str(", "(");
-        mReplace.put("sm.", "self.");
-        mReplace.put("sendSay", "Say");
-        mReplace.put("sendNext", "SayNext");
         
+        mReplace.put("addAP", "UserIncAP");
         mReplace.put("addDamageSkin", "UserSaveDamageSkin");
+        mReplace.put("addLevel", "UserIncLevel");
+        mReplace.put("addMaxHP", "UserIncMHP");
+        mReplace.put("addMaxMP", "UserIncMMP");
+        mReplace.put("addSP", "UserIncSP");
+        mReplace.put("addSp", "UserIncSP");
         mReplace.put("avatarLookSet(", "OnUserInGameDirectionEvent(InGameDirectionEvent.AvatarLookSet, ");
         mReplace.put("avatarOriented", "EffectAvatarOriented");
         mReplace.put("addPopupSay", "UserAddPopupSay");
+        mReplace.put("addPopUpSay", "UserAddPopupSay");
         mReplace.put("addQRValue", "QuestRecordSet");
         mReplace.put("balloonMsg", "UserBalloonMsg");
         mReplace.put("blind", "FieldEffectBlind");
         mReplace.put("bgmVolume", "FieldEffectBGMVolumeOnly");
+        mReplace.put("canHold", "InventoryIsSlotFreeItemID");
+        mReplace.put("changeBGM", "FieldEffectChangeBGM");
+        mReplace.put("changeChannelAndWarp", "RegisterTransferFieldChannel"); //review these to determine if these should be instanced locations
+        mReplace.put("changeCharacterLook", "TryChangeHairSkinOrFace");
+        mReplace.put("changeFoothold", "SendDynamicObjUrusSync");
+        mReplace.put("chat", "UserScriptMessage");
+        mReplace.put("chatBlue", "UserScriptMessage");
+        mReplace.put("chatRed", "UserScriptMessage");
+        mReplace.put("chatScript", "UserScriptProgressMessage");
+        mReplace.put("checkAllianceName", "IsAllianceNameFree");
+        mReplace.put("checkParty", "UserIsPartyReadyCheck");
+        mReplace.put("closeUI", "UserCloseUI");
+        mReplace.put("completeQuest", "QuestRecordSetComplete");
+        mReplace.put("completeQuestNoCheck", "QuestRecordSetComplete");
+        mReplace.put("completeQuestNoRewards", "QuestRecordSetComplete");
+        mReplace.put("consumeItem", "consumeItem");//todo::
+        mReplace.put("createAlliance", "createAlliance");//todo::
+        mReplace.put("createClock", "FieldClock");
+        mReplace.put("createFallingCatcher", "CreateFieldFallingCatcher");
+        mReplace.put("createFieldTextEffect", "OnUserTextEffect");
+        mReplace.put("createStopWatch", "FieldClockStopwatch");
         mReplace.put("createQuestWithQRValue", "QuestRecordExSet");
+        mReplace.put("curNodeEventEnd", "OnInGameCurNodeEventEnd");
+        mReplace.put("deductMesos", "UserDeductMoney");
+        mReplace.put("deleteQuest", "QuestRecordRemove"); //todo:: the first parameter argument for User pUser be removed.
+        mReplace.put("doEventAndSendDelay", "doEventAndSendDelay"); //todo:: this is horse shit, needs to be addressed manually
+        mReplace.put("dropItem", "FieldDropItem");
+        mReplace.put("faceOff(", "OnUserInGameDirectionEvent(InGameDirectionEvent.FaceOff, ");
+        mReplace.put("fadeInOut", "OnUserFadeInOutEffect");
+        mReplace.put("False", "false");
         mReplace.put("forcedAction(", "OnUserInGameDirectionEvent(InGameDirectionEvent.ForcedAction, ");
         mReplace.put("forcedFlip(", "OnUserInGameDirectionEvent(InGameDirectionEvent.ForcedFlip, ");
+        mReplace.put("forcedInput(", "OnUserInGameDirectionEvent(InGameDirectionEvent.ForcedInput, ");
+        mReplace.put("forcedMove(", "OnUserInGameDirectionEvent(InGameDirectionEvent.ForcedMove, ");
+        mReplace.put("gainItem", "InventoryItemExchange");
+        mReplace.put("getChr", "GetUser");
+        mReplace.put("getDay", "GetDay");
+        mReplace.put("getDropInRect", "getDropInRect"); //todo:: probably remove occurrences of this as we process drops from 
+        mReplace.put("getFieldID", "UserGetFieldID");
+        mReplace.put("getMPExpByMobId", "getMPExpByMobId"); //todo:: probably remove occurrences of this because its MP
+        mReplace.put("getMesos", "UserGetMoney");
+        mReplace.put("getMonsterParkCount", "getMonsterParkCount"); //todo:: probably remove occurrences of this because its MP
+        mReplace.put("getNpcScriptInfo", "getNpcScriptInfo"); //todo:: remove this stupid shit
+        mReplace.put("getParty", "getParty"); //todo:: rewrite these to use our party-event handles
+        mReplace.put("getPartyMembersInSameField", "UserGetPartyMemberFieldCount");
+        mReplace.put("getQRValue", "QuestRecordExGet");
+        mReplace.put("getQuantityOfItem", "InventoryGetItemCount");
+        mReplace.put("getRandomIntBelow", "GetRand");
+        mReplace.put("getReactorQuantity", "FieldGetReactorCount");
+        mReplace.put("getReactorState", "FieldGetReactorState");
+        mReplace.put("getReturnField", "GetReturnFieldID");
+        mReplace.put("getSkillByItem", "getSkillByItemID"); //todo:: verify where this should come from
+        mReplace.put("getUnionCoin", "getUnionCoin"); //todo:: remove all occurrences
+        mReplace.put("getUnionLevel", "getUnionLevel"); //todo:: remove all occurrences
+        mReplace.put("getnOptionByCTS", "getnOptionByCTS"); //todo:: modify this argument given
+        mReplace.put("giveAndEquip", "giveAndEquip"); //todo:: remove all occurrences (probably if only for beginner tutorials)
+        mReplace.put("giveCTS", "giveCTS"); //todo:: modify this argument given
+        mReplace.put("giveExp", "UserIncEXP"); 
+        mReplace.put("giveItem", "InventoryItemExchange");
+        mReplace.put("giveMesos", "UserIncMoney");
+        mReplace.put("giveSkill", "UserLearnSkill");
+        mReplace.put("golluxPortalOpen", "FieldGolluxPortalEnable");
+        mReplace.put("hasCTS", "hasCTS"); //todo:: modify this argument given
+        mReplace.put("hasHadQuest", "IsQuestActive");
+        mReplace.put("hasItem", "InventoryIsHoldingItemCount");
+        mReplace.put("hasMobsInField", "FieldMobExists");
+        mReplace.put("hasQuest", "IsQuestInProgress");
+        mReplace.put("hasQuestCompleted", "IsQuestComplete");
+        mReplace.put("hasQuestWithValue", "QuestRecordExExists");
+        mReplace.put("hasSkill", "UserSkillIsLearned");
+        mReplace.put("hasTutor", "hasTutor"); //todo:: figure out wtf tutor is
+        mReplace.put("heal", "UserHealMax");
+        mReplace.put("hideNpcByTemplateId", "FieldNpcViewOrHide");
+        mReplace.put("hideUser(", "OnUserInGameDirectionEvent(InGameDirectionEvent.VansheeMode, ");
+        mReplace.put("hireTutor", "UserHireTutor");
+        mReplace.put("increaseReactorState", "FieldSetReactorState");
+        mReplace.put("isAbleToLevelUpMakingSkill", "isAbleToLevelUpMakingSkill"); //todo::
+        //continue adding here
         mReplace.put("lockInGameUI", "OnSetInGameDirectionMode");
         mReplace.put("moveCamera(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraMove, ");
         mReplace.put("offLayer", "EffectOffLayer");
@@ -291,25 +434,36 @@ public class PythToJS {
         mReplace.put("removeOverlapScreen", "FieldEffectRemoveOverlapDetail");
         mReplace.put("reservedEffectRepeat", "EffectReservedRepeat");
         mReplace.put("sendDelay(", "OnUserInGameDirectionEvent(InGameDirectionEvent.Delay, ");
+        mReplace.put("sendSay", "Say");
+        mReplace.put("sendNext", "SayNext");
         mReplace.put("showNpcSpecialActionByTemplateId", "OnNpcSpecialAction");
         mReplace.put("showEffect(", "OnUserInGameDirectionEvent(InGameDirectionEvent.EffectPlay, ");
         mReplace.put("showFadeTransition", "FieldEffectOverlapDetail");
+        mReplace.put("sm.", "self.");
         mReplace.put("spawnNpc", "FieldSummonNpc");
+        mReplace.put("str(", "(");
+        mReplace.put("True", "true");
         mReplace.put("warp", "RegisterTransferField");
         mReplace.put("zoomCamera(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraZoom, ");
         
-        mReplaceRegex.put("addAP(\\d+)", "UserIncAP(\\d+, true)");
-        mReplaceRegex.put("addLevel(\\d+)", "UserIncLevel(\\d+, true)");
-        mReplaceRegex.put("addMaxHP(\\d+)", "UserIncMHP(\\d+, true)");
-        mReplaceRegex.put("addMaxMP(\\d+)", "UserIncMMP(\\d+, true)");
-        mReplaceRegex.put("addSP(\\d+)", "UserIncSP(\\d+, true)");
-        mReplaceRegex.put("addSp(\\d+)", "UserIncSP(\\d+, true)");
-        mReplaceRegex.put("changeBGM(\"\\w+\", \\d+, \\d+", "FieldEffectChangeBGM(\"\\w+\"");
+        mChatTypeAppend.put("oxChatPlayerAsSpeaker", "User");
+        mChatTypeAppend.put("flipBoxChat", "Flip");
+        mChatTypeAppend.put("flipDialogue", "flipDialogue"); //todo:: this one looks stupid
+        mChatTypeAppend.put("flipDialoguePlayerAsSpeaker", "flipDialoguePlayerAsSpeaker"); //todo:: this one also looks stupid
+        mChatTypeAppend.put("flipNpcByTemplateId", "flipNpcByTemplateId"); //todo:: looks mega stupid
+        mChatTypeAppend.put("flipSpeaker", "flipSpeaker"); //todo:: looks ultra stupid
+        mChatTypeAppend.put("NoEscape", "NoESC");
+        mChatTypeAppend.put("addEscapeButton", "NoESC");
         
-        mParamArgsAdd.put("boxChatPlayerAsSpeaker", User);
-        mParamArgsAdd.put("addEscapeButton", NoESC);
+        mFuncArgsAppend.put("addAP", ", true");
+        mFuncArgsAppend.put("addLevel", ", true");
+        mFuncArgsAppend.put("addMaxHP", ", true");
+        mFuncArgsAppend.put("addMaxMP", ", true");
+        mFuncArgsAppend.put("addSP", ", true");
+        mFuncArgsAppend.put("addSp", ", true");
+        mFuncArgsAppend.put("giveExp", ", true");
+        mFuncArgsAppend.put("giveMesos", ", true");
         
-        mParamArgsAppend.put(User, "User");
-        mParamArgsAppend.put(NoESC, "NoESC");
+        mFuncAppend.put("InGameDirectionEvent.Delay", "self.Wait();");
     }
 }
