@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -9,13 +9,14 @@ import game.network.InPacket;
 import game.scripting.ScriptMan;
 import game.scripting.ScriptMan.MessageType;
 import java.util.LinkedList;
-import packet.ClientCode;
+import packet.opcode.ClientCode;
 import packet.PacketWriteRequest;
 import script.MessageHistory;
 import script.NestedBlockHistory;
 import script.Script;
 import script.ScriptModifier;
 import script.ScriptWriteRequest;
+import scriptmaker.ScriptMakerConfig;
 import util.Logger;
 
 /**
@@ -25,6 +26,7 @@ import util.Logger;
 public class UserScriptMessageAnswer extends PacketWriteRequest {
     
     public int nMsgTypeInput, nModeInput, nSelectionInput;
+    public boolean bResetNotPersist;
     
     public UserScriptMessageAnswer(InPacket iPacket) {
         super(ClientCode.UserScriptMessageAnswer.nCode);
@@ -40,7 +42,7 @@ public class UserScriptMessageAnswer extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
+    public ScriptModifier SetScriptUserInputResult() {
         ScriptModifier pScriptModifier = (Script pScriptMod) -> {
             if (nMsgTypeInput != MessageType.AskInGameDirection) {
                 if (nModeInput >= 0) {
@@ -51,16 +53,18 @@ public class UserScriptMessageAnswer extends PacketWriteRequest {
                             if (pMessageHistory.GetOutput().contains("nRet") || pMessageHistory.GetOutput().contains("nSel")) {
                                 int nResult = pMessageHistory.GetOutput().contains("nSel") ? nSelectionInput : nModeInput;
                                 pScriptMod.GetNestedBlockHistory().SetNestedBlockResult(nResult);
-                                if (util.Config.MessageHistoryDebug) {
+                                if (ScriptMakerConfig.LastMessageHistoryDebug) {
                                     Logger.LogAdmin("SetNestedBlockResult(" + nResult + ") processed for pScriptMod.sScriptName = " + pScriptMod.sScriptName);
                                 }
                             }
                         }
                     }
+                } else {
+                    this.bResetNotPersist = true;
                 }
             } else {
                 if (!pHistory.GetOutput().contains("self.Wait();")) {
-                    pScriptMod.ProcessWriteRequest(new ScriptWriteRequest(pScriptMod.dwField, "self.Wait();", pScriptMod.pTemplate, new LinkedList<>(), pScriptMod.GetStrPaddingIndex()));
+                    pScriptMod.ProcessWriteRequest(new ScriptWriteRequest(pScriptMod.dwField, "self.Wait();", pScriptMod.pTemplate, new LinkedList<>(), pScriptMod.CurrentLinePadding()));
                 }
             }
         };
@@ -68,15 +72,20 @@ public class UserScriptMessageAnswer extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
+    public ScriptModifier CreateScriptTemplateCopy() {
         ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
             if (pScriptCopy.pTemplate != null) {
                 dwField = pScriptCopy.dwField;
                 pHistory = pScriptCopy.pHistory;
                 pTemplate = pScriptCopy.pTemplate;
-                nStrPaddingIndex = pScriptCopy.GetStrPaddingIndex();
+                nStrPaddingIndex = pScriptCopy.CurrentLinePadding();
             }
         };
         return pScriptModifier;
+    }
+
+    @Override
+    public boolean IsScriptResetNotPersist() {
+        return bResetNotPersist;
     }
 }

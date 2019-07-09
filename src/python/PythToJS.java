@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -424,8 +424,21 @@ public class PythToJS {
         mReplace.put("hireTutor", "UserHireTutor");
         mReplace.put("increaseReactorState", "FieldSetReactorState");
         mReplace.put("isAbleToLevelUpMakingSkill", "isAbleToLevelUpMakingSkill"); //todo::
-        //continue adding here
+        mReplace.put("isEquipped", "InventoryIsEquippedItem");
+        mReplace.put("isFinishedEscort", "isFinishedEscort"); //todo:: remove usages of this, looks custom
+        mReplace.put("isPartyLeader", "UserIsPartyBoss");
+        mReplace.put("jobAdvance", "jobAdvance"); //todo:: remove occurrences of this
+        mReplace.put("killMobs", "FieldRemoveAllMob");
+        mReplace.put("killmobs", "FieldRemoveAllMob");
+        mReplace.put("levelUntil", "UserIncLevelSet");
+        mReplace.put("localEmotion", "UserLocalEmotion");
         mReplace.put("lockInGameUI", "OnSetInGameDirectionMode");
+        mReplace.put("moveCameraBack(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraMove, true, ");
+        mReplace.put("moveLayer", "EffectOnOffLayer");
+        mReplace.put("moveNpcByTemplateId", "OnForceMoveByScript"); //todo:: verify that the arguments passed correspond
+        mReplace.put("moveParticleEff", "UserMoveParticleEff");
+        mReplace.put("offSpineScreen", "");
+
         mReplace.put("moveCamera(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraMove, ");
         mReplace.put("offLayer", "EffectOffLayer");
         mReplace.put("onLayer", "EffectOnLayer");

@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/packet/PacketWrapper.java" line="19" mnemonic="6" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1cbd79b9-e677-4870-b73c-b42862c223b6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/packet/client/UserScriptItemUseRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/scriptmaker/ScriptMakerConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/template/QuestTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nbproject/project.properties" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/project.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/FirstUserEnter/queen_summon0.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/check_rootabyss.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/explorationPoint.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/field/UserEnter/explorationPoint.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/oldscroll_use.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/root_camera.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/root_ereb00.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/root_meet.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/root_qrcave.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/root_secret.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/rootabyssTakeItem.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/field/UserEnter/startEreb.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30000s.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30002s.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30003e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30003s.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30004e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30005e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30005s.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30006s.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30007e.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30007s.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/quest/q30008s.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/ClientCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/opcode/ClientCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/LoopbackCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/opcode/LoopbackCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/PacketNullWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/PacketWrapperNull.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/PacketWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/PacketWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/PacketWriteRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/PacketWriteRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/client/UserPortalScriptRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserPortalScriptRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/client/UserQuestRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserQuestRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/client/UserScriptMessageAnswer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserScriptMessageAnswer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/client/UserSelectNpc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserSelectNpc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/ForceMoveByScript.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/ForceMoveByScript.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/InGameCurNodeEventEnd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/InGameCurNodeEventEnd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/NpcSpecialAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/NpcSpecialAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/ScriptMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/ScriptMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/SetField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/SetField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserEffectLocal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserEffectLocal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserInGameDirectionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserInGameDirectionEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserQuestResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserQuestResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserSetInGameDirectionMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserSetInGameDirectionMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserSetStandaloneMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserSetStandaloneMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserTalk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserChat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/Purge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/PurgeDirectory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/PythToJS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/PythToJS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/Compiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/MessageHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/MessageHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/NestedBlockHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/NestedBlockHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/Script.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/Script.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/ScriptFieldObjMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/ScriptFieldObjMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/ScriptModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/ScriptModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/ScriptTemplateMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/ScriptTemplateMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/ScriptWriteRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/ScriptWriteRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scriptmaker/Analyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/scriptmaker/Analyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scriptmaker/Purge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/scriptmaker/PurgeDirectory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/template/AbstractTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/template/AbstractTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/template/DeveloperTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/template/DeveloperTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/template/FieldTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/template/FieldTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/template/NpcTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/template/NpcTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/template/PortalTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/template/PortalTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/template/QuestEndTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/template/QuestEndTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/template/QuestStartTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/template/QuestStartTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/template/ReactorTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/template/ReactorTemplate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Config.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Logger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/StringUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/StringUtil.java" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="auto-script" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/script/ScriptTemplateMap.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3417">
+              <caret line="223" column="59" selection-start-line="223" selection-start-column="59" selection-end-line="223" selection-end-column="59" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/packet/client/UserScriptItemUseRequest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#272#273#0" expanded="true" />
+                <element signature="e#336#337#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/packet/client/UserPortalScriptRequest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="25" column="11" selection-start-line="25" selection-start-column="11" selection-end-line="25" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/packet/loopback/SetField.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1394">
+              <caret line="91" column="39" selection-start-line="91" selection-start-column="39" selection-end-line="91" selection-end-column="39" />
+              <folding>
+                <element signature="e#5643#5644#0" expanded="true" />
+                <element signature="e#5670#5671#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/packet/client/UserSelectNpc.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="40" column="4" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/scriptmaker/ScriptMakerConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="23" column="63" selection-start-line="23" selection-start-column="63" selection-end-line="23" selection-end-column="63" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/packet/client/UserScriptMessageAnswer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1139">
+              <caret line="83" column="31" selection-start-line="83" selection-start-column="31" selection-end-line="83" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/scriptmaker/Analyzer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="40" selection-start-line="40" selection-end-line="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/script/Script.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="935">
+              <caret line="86" column="21" selection-start-line="86" selection-start-column="21" selection-end-line="86" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/packet/loopback/ScriptMessage.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="306">
+              <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>scriptmessage</find>
+      <find>userscriptmessageanswer</find>
+      <find>OnPacketQuestStateDebug</find>
+      <find>CreateScriptModifierOnInput</find>
+      <find>CreateScriptModifierOnEnd</find>
+      <find>sPortalName</find>
+      <find>padding</find>
+      <find>pad</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
+    <dirStrings>
+      <dir>C:\Users\Chris\Desktop\auto-script\src</dir>
+      <dir>C:\Users\Chris\Desktop\auto-script</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/python/PythToJS.java" />
+        <option value="$PROJECT_DIR$/src/packet/ClientCode.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/UserTalk.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/UserChat.java" />
+        <option value="$PROJECT_DIR$/src/packet/LoopbackCode.java" />
+        <option value="$PROJECT_DIR$/src/script/ScriptFieldObjMap.java" />
+        <option value="$PROJECT_DIR$/src/script/ScriptModifier.java" />
+        <option value="$PROJECT_DIR$/src/packet/PacketWriteRequestNull.java" />
+        <option value="$PROJECT_DIR$/src/packet/PacketWrapperWriteRequest.java" />
+        <option value="$PROJECT_DIR$/src/packet/PacketWriteRequest.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/ForceMoveByScript.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/UserEffectLocal.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/UserInGameDirectionEvent.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/UserSetStandaloneMode.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/InGameCurNodeEventEnd.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/Message.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/NpcSpecialAction.java" />
+        <option value="$PROJECT_DIR$/src/packet/PacketWrapperNull.java" />
+        <option value="$PROJECT_DIR$/src/packet/PacketWrapper.java" />
+        <option value="$PROJECT_DIR$/src/template/QuestEndTemplate.java" />
+        <option value="$PROJECT_DIR$/src/template/QuestTemplate.java" />
+        <option value="$PROJECT_DIR$/src/template/QuestStartTemplate.java" />
+        <option value="$PROJECT_DIR$/src/packet/client/UserQuestRequest.java" />
+        <option value="$PROJECT_DIR$/src/util/Config.java" />
+        <option value="$PROJECT_DIR$/src/template/PortalTemplate.java" />
+        <option value="$PROJECT_DIR$/src/script/Compiler.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/UserQuestResult.java" />
+        <option value="$PROJECT_DIR$/src/script/Script.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/ScriptMessage.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/UserSetInGameDirectionMode.java" />
+        <option value="$PROJECT_DIR$/src/packet/opcode/ClientCode.java" />
+        <option value="$PROJECT_DIR$/src/packet/client/UserScriptItemUseRequest.java" />
+        <option value="$PROJECT_DIR$/src/script/ScriptTemplateMap.java" />
+        <option value="$PROJECT_DIR$/src/packet/loopback/SetField.java" />
+        <option value="$PROJECT_DIR$/src/packet/client/UserSelectNpc.java" />
+        <option value="$PROJECT_DIR$/src/scriptmaker/Config.java" />
+        <option value="$PROJECT_DIR$/src/scriptmaker/ScriptDebugConfig.java" />
+        <option value="$PROJECT_DIR$/src/scriptmaker/ScriptLogger.java" />
+        <option value="$PROJECT_DIR$/src/packet/client/UserScriptMessageAnswer.java" />
+        <option value="$PROJECT_DIR$/src/scriptmaker/Analyzer.java" />
+        <option value="$PROJECT_DIR$/src/scriptmaker/ScriptMakerConfig.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/.idea/uiDesigner.xml" />
+        <option value="$PROJECT_DIR$/.idea/artifacts/auto_script_jar.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="344" />
+    <option name="y" value="4" />
+    <option name="width" value="1026" />
+    <option name="height" value="584" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="auto-script" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="auto-script" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="auto-script" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="packet" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="auto-script" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="packet" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="auto-script" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="scriptmaker" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="Game.jar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="Game.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="game" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../reee/scripts" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.build" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="packet.PacketWrapper" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="scriptmaker" />
+      <recent name="packet.header" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.PurgeDirectory">
+    <configuration name="Analyzer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="scriptmaker.Analyzer" />
+      <module name="auto-script" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="scriptmaker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PurgeDirectory" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="scriptmaker.PurgeDirectory" />
+      <module name="auto-script" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="scriptmaker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in auto-script (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="auto-script" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in auto-script" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="auto-script" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.PurgeDirectory" />
+        <item itemvalue="Application.Analyzer" />
+        <item itemvalue="JUnit.All in auto-script (1)" />
+        <item itemvalue="JUnit.All in auto-script" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1cbd79b9-e677-4870-b73c-b42862c223b6" name="Default Changelist" comment="" />
+      <created>1562282442531</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1562282442531</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="All_in_auto-script - 2019.07.07 at 20h 20m 16s.xml">
+      <configuration name="All in auto-script" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_auto-script_(1) - 2019.07.08 at 18h 43m 12s.xml">
+      <configuration name="All in auto-script (1)" configurationId="JUnit" />
+    </history-entry>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4954955" visible="true" weight="0.20272315" />
+      <window_info id="Structure" order="1" sideWeight="0.5009009" side_tool="true" weight="0.2496112" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" sideWeight="0.5045045" side_tool="true" weight="0.16840883" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
+      <window_info anchor="bottom" auto_hide="true" id="Run" order="2" weight="0.3584288" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Dependency Viewer" order="10" weight="0.3289689" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.3289689" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Maven" order="4" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4954955" visible="true" weight="0.19969743" />
+      <window_info id="Structure" order="1" sideWeight="0.5009009" side_tool="true" weight="0.2496112" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" sideWeight="0.5045045" side_tool="true" weight="0.16840883" />
+      <window_info anchor="bottom" id="Dependency Viewer" order="0" weight="0.3289689" />
+      <window_info anchor="bottom" id="Messages" order="1" weight="0.3289689" />
+      <window_info anchor="bottom" id="Message" order="2" />
+      <window_info anchor="bottom" id="Find" order="3" visible="true" weight="0.3289689" />
+      <window_info anchor="bottom" auto_hide="true" id="Run" order="4" weight="0.4680851" />
+      <window_info anchor="bottom" id="Debug" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Maven" order="4" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+    </layout-to-restore>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/python/PythToJS.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="437" column="42" selection-start-line="437" selection-start-column="42" selection-end-line="437" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/dist/lib/Game.jar!/game/network/LoopbackPacket.class" />
+    <entry file="file://$PROJECT_DIR$/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-981" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manifest.mf">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/auto-script.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11">
+          <caret line="13" column="75" selection-start-line="13" selection-start-column="75" selection-end-line="13" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nbproject/project.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-816" />
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../MagatiaSVR/Game/target/Game.jar!/game/network/LoopbackPacket.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="940" column="24" lean-forward="true" selection-start-line="940" selection-start-column="24" selection-end-line="940" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../MagatiaSVR/Game/target/Game.jar!/game/scripting/ScriptSysFunc.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4511" column="40" selection-start-line="4511" selection-start-column="40" selection-end-line="4511" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../MagatiaSVR/Game/target/Game.jar!/game/network/ClientPacket.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/io/FileOutputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="100" selection-start-line="100" selection-end-line="100" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scriptmaker/Analyzer.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/ScriptFieldObjMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="25" column="41" selection-start-line="25" selection-start-column="41" selection-end-line="25" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/UserChat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-12">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/UserEffectLocal.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="55" column="48" selection-start-line="55" selection-start-column="48" selection-end-line="55" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/UserInGameDirectionEvent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="151" column="48" selection-start-line="151" selection-start-column="48" selection-end-line="151" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/UserSetStandaloneMode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="77">
+          <caret line="34" column="48" selection-start-line="34" selection-start-column="48" selection-end-line="34" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/ScriptModifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/InGameCurNodeEventEnd.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="331">
+          <caret line="36" column="58" lean-forward="true" selection-start-line="36" selection-start-column="58" selection-end-line="36" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/Message.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="529">
+          <caret line="87" column="28" selection-start-line="87" selection-start-column="28" selection-end-line="87" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/ForceMoveByScript.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="43" column="54" selection-start-line="43" selection-start-column="30" selection-end-line="43" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/NpcSpecialAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="464">
+          <caret line="55" column="28" selection-start-line="55" selection-start-column="28" selection-end-line="55" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template/QuestTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template/QuestEndTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/PacketWrapperNull.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="28" column="13" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/PacketWriteRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="15" column="87" selection-start-line="15" selection-start-column="87" selection-end-line="15" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/PacketWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="94" column="22" selection-start-line="94" selection-start-column="22" selection-end-line="94" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/UserQuestResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="68" selection-start-line="68" selection-end-line="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="122">
+          <caret line="54" column="32" selection-start-line="54" selection-start-column="32" selection-end-line="54" selection-end-column="32" />
+          <folding>
+            <element signature="e#4976#4977#0" expanded="true" />
+            <element signature="e#5006#5007#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template/AbstractTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-15">
+          <caret line="35" column="19" selection-start-line="35" selection-start-column="19" selection-end-line="35" selection-end-column="19" />
+          <folding>
+            <element signature="e#1035#1036#0" expanded="true" />
+            <element signature="e#1087#1088#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/UserSetInGameDirectionMode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="47" column="31" lean-forward="true" selection-start-line="47" selection-start-column="31" selection-end-line="47" selection-end-column="31" />
+          <folding>
+            <element signature="e#1975#1976#0" expanded="true" />
+            <element signature="e#2001#2002#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/opcode/LoopbackCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="53" column="33" selection-start-line="53" selection-start-column="33" selection-end-line="53" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/opcode/ClientCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="33" column="38" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/client/UserQuestRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="410">
+          <caret line="49" column="13" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template/QuestStartTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="18" column="5" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template/NpcTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/ScriptWriteRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-43">
+          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template/PortalTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/ScriptTemplateMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3417">
+          <caret line="223" column="59" selection-start-line="223" selection-start-column="59" selection-end-line="223" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/client/UserScriptItemUseRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#272#273#0" expanded="true" />
+            <element signature="e#336#337#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/client/UserPortalScriptRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="25" column="11" selection-start-line="25" selection-start-column="11" selection-end-line="25" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/SetField.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1394">
+          <caret line="91" column="39" selection-start-line="91" selection-start-column="39" selection-end-line="91" selection-end-column="39" />
+          <folding>
+            <element signature="e#5643#5644#0" expanded="true" />
+            <element signature="e#5670#5671#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/client/UserSelectNpc.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="40" column="4" selection-start-line="40" selection-start-column="4" selection-end-line="40" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/client/UserScriptMessageAnswer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1139">
+          <caret line="83" column="31" selection-start-line="83" selection-start-column="31" selection-end-line="83" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scriptmaker/Analyzer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="40" selection-start-line="40" selection-end-line="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/Script.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="935">
+          <caret line="86" column="21" selection-start-line="86" selection-start-column="21" selection-end-line="86" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/loopback/ScriptMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/scriptmaker/ScriptMakerConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="23" column="63" selection-start-line="23" selection-start-column="63" selection-end-line="23" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <last-edited>auto-script:jar</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.5" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>auto-script</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

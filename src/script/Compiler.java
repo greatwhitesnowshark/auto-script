@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -11,8 +11,8 @@ import java.util.Map;
 import packet.PacketWrapper;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import packet.ClientCode;
-import packet.LoopbackCode;
+import packet.opcode.ClientCode;
+import packet.opcode.LoopbackCode;
 import template.AbstractTemplate;
 import template.FieldTemplate;
 import template.NpcTemplate;
@@ -29,46 +29,59 @@ public class Compiler {
 
     private static final Map<Integer, Integer> mPacketParsedCount = new LinkedHashMap<>();
     private static final Map<Class<? extends AbstractTemplate>, LinkedList<String>> mScriptCompiledCount = new LinkedHashMap<>();
-    private static Lock pProcessLock = new ReentrantLock();
     private static Script pScript = new Script();
+    private static Lock pLock = new ReentrantLock();
 
     public static void Compile(PacketWrapper pPacket) {
-        pProcessLock.lock();
+        pLock.lock();
         try {
-            //Handles creating a new script template before processing the packet's write-request
-            ScriptModifier pScriptModifier = pPacket.CreateScriptModifier();
+
+            //Handles creating a new template before the write request
+            ScriptModifier pScriptModifier = pPacket.CreateNewScriptTemplate();
             if (pScriptModifier != null) {
-                pScriptModifier.SetScript(pScript);
+                pScriptModifier.SetScript(pScript); //This will set/reset the script's template, determining where to write to
+
+                //Collects the total # and file names of the scripts compiled
                 if (pScript.pTemplate != null) {
                     if (!mScriptCompiledCount.get(pScript.pTemplate.getClass()).contains(pScript.sFileName)) {
                         mScriptCompiledCount.get(pScript.pTemplate.getClass()).add(pScript.sFileName);
                     }
                 }
             }
-            //Handles merging the existing script template to the packet's write-request template
-            pScriptModifier = pPacket.CreateScriptModifierOnMerge();
+
+            //Tries to give pScript's template to the PacketWrapper
+            pScriptModifier = pPacket.CreateScriptTemplateCopy();
             if (pScriptModifier != null) {
                 pScriptModifier.SetScript(pScript);
             }
-            //Handles updating input/response values given from the user; processed via ClientCode handles
-            pScriptModifier = pPacket.CreateScriptModifierOnInput();
+
+            //Tries to insert user-input arguments to pScript's nested-block-history, or executes an independent write request
+            pScriptModifier = pPacket.SetScriptUserInputResult();
             if (pScriptModifier != null) {
                 pScriptModifier.SetScript(pScript);
             }
-            //Handles the actual write-request after template values have been set
+
+            //Handles creating the write request and inserts output into the compiled script file
             ScriptWriteRequest pScriptWriteRequest = pPacket.CreateScriptWriteRequest();
             if (pScriptWriteRequest != null && pScriptWriteRequest.GetTemplate() != null) {
                 pScript.ProcessWriteRequest(pScriptWriteRequest);
             }
-            //Handles resetting the template after a write-request processes - for example, if we know this will be the last action in a script
-            pScriptModifier = pPacket.CreateScriptModifierOnEnd();
-            if (pScriptModifier != null) {
-                pScriptModifier.SetScript(pScript);
+
+            //Handles creating a new script template to be used after this write request is finished executing
+            if (pPacket.IsScriptResetNotPersist()) {
+                pScript.CreateNewTemplate();
+
+                //Queues up the next predicted script, typically a field script
+                pScriptModifier = pPacket.CreateNewScriptTemplateResetNotPersist();
+                if (pScriptModifier != null) {
+                    pScriptModifier.SetScript(pScript);
+                }
             }
+
         } finally {
-            int nCount = mPacketParsedCount.get(pPacket.GetHeader()) != null ? (mPacketParsedCount.get(pPacket.GetHeader()) + 1) : 1;
-            mPacketParsedCount.put(pPacket.GetHeader(), nCount);
-            pProcessLock.unlock();
+            int nCount = mPacketParsedCount.get(pPacket.nCode) != null ? (mPacketParsedCount.get(pPacket.nCode) + 1) : 1;
+            mPacketParsedCount.put(pPacket.nCode, nCount);
+            pLock.unlock();
         }
     }
     
@@ -98,6 +111,10 @@ public class Compiler {
             }
         }
         return sOutputLog;
+    }
+
+    public static Script GetScript() {
+        return pScript;
     }
     
     

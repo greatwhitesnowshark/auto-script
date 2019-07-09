@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,7 +7,7 @@ package packet.loopback;
 
 import game.network.InPacket;
 import java.util.LinkedList;
-import packet.LoopbackCode;
+import packet.opcode.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
 import script.ScriptModifier;
@@ -27,12 +27,13 @@ public class UserSetStandaloneMode extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
+    public ScriptModifier CreateScriptTemplateCopy() {
         ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
             if (pScriptCopy.pTemplate != null) {
                 dwField = pScriptCopy.dwField;
                 pTemplate = pScriptCopy.pTemplate;
-                nStrPaddingIndex = pScriptCopy.GetStrPaddingIndex();
+                pHistory = pScriptCopy.pHistory;
+                nStrPaddingIndex = pScriptCopy.CurrentLinePadding();
             }
         };
         return pScriptModifier;

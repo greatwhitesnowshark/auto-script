@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -20,6 +20,7 @@ import template.QuestEndTemplate;
 import template.QuestStartTemplate;
 import template.ReactorTemplate;
 import template.FieldTemplate;
+import scriptmaker.ScriptMakerConfig;
 import util.Logger;
 
 /**
@@ -108,7 +109,7 @@ public class ScriptTemplateMap {
         pStream.close();
         aTemplate.stream().forEach((pNpcTemplate) -> {
             mTemplate.get(NpcTemplate.class.hashCode()).put(pNpcTemplate.dwTemplateID, pNpcTemplate);
-            if (util.Config.TemplateMapDebug) {
+            if (ScriptMakerConfig.TemplateMapNpcScriptDebug) {
                 Logger.LogReport("pNpcTemplate.dwTemplateID [" + pNpcTemplate.dwTemplateID + "] / pNpcTemplate.sScript [" + pNpcTemplate.sScript + "]");
             }
         });
@@ -123,6 +124,9 @@ public class ScriptTemplateMap {
                     sNpcName = aTemplateInfo[1];
                     if (!mNpcName.containsKey(dwTemplateID)) {
                         mNpcName.put(dwTemplateID, sNpcName);
+                        if (ScriptMakerConfig.TemplateMapNpcNameDebug) {
+                            Logger.LogReport("Npc-Name-to-ID:  dwTemplateID [%d], sNpcName [%s]", dwTemplateID, sNpcName);
+                        }
                     }
                 }
             }
@@ -133,7 +137,6 @@ public class ScriptTemplateMap {
         while (pStream.ready()) {
             sLine = pStream.readLine();
             if (sLine.contains("@")) {
-                //32768@q32768s@null@The Red-Handed Stalker@1530070@1530074
                 aTemplateInfo = sLine.split("@");
                 if (aTemplateInfo.length > 5) {
                     dwTemplateID = Integer.parseInt(aTemplateInfo[0]);
@@ -144,9 +147,15 @@ public class ScriptTemplateMap {
                     nQuestEndNpcID = Integer.parseInt(aTemplateInfo[5]);
                     if (!sStartScript.equals("null")) {
                         aTemplate.add(new QuestStartTemplate(sStartScript, dwTemplateID, nQuestStartNpcID, sQuestName));
+                        if (ScriptMakerConfig.TemplateMapQuestStartScriptDebug) {
+                            Logger.LogReport("QuestStartTemplate:  sStartScript [%s], dwTemplateID [%d], nQuestStartNpcID [%d], sQuestName [%s]", sStartScript, dwTemplateID, nQuestStartNpcID, sQuestName);
+                        }
                     }
                     if (!sEndScript.equals("null")) {
                         aTemplate2.add(new QuestEndTemplate("script\\questEnd\\", sEndScript, dwTemplateID, nQuestEndNpcID, sQuestName));
+                        if (ScriptMakerConfig.TemplateMapQuestEndScriptDebug) {
+                            Logger.LogReport("QuestEndTemplate:  sEndScript [%s], dwTemplateID [%d], nQuestEndNpcID [%d], sQuestName [%s]", sEndScript, dwTemplateID, nQuestEndNpcID, sQuestName);
+                        }
                     }
                 }
             }
@@ -162,7 +171,6 @@ public class ScriptTemplateMap {
             sLine = pStream.readLine().trim();
             if (!sLine.isEmpty()) {
                 if (sLine.contains("<Field>")) {
-                    //<Field> `Maple Road - Inside the Dangerous Forest` [50000]
                     sLine = sLine.replace(" `", "@@").replace("` ", "@@");
                     aTemplateInfo = sLine.split("@@");
                     dwField = aTemplateInfo.length > 2 ? Integer.parseInt(aTemplateInfo[2].trim()) : 0;
@@ -170,10 +178,13 @@ public class ScriptTemplateMap {
                         while (pStream.ready() && !sLine.contains("</Portal>")) {
                             sLine = pStream.readLine();
                             aTemplateInfo = sLine.split(" ");
-                            sPortalName = aTemplateInfo[0];
+                            sPortalName = aTemplateInfo[0].trim();
                             if (aTemplateInfo.length > 1) {
-                                sScript = aTemplateInfo[1];
+                                sScript = aTemplateInfo[1].replaceAll("`", "").trim();
                                 aTemplate.add(new PortalTemplate(sScript, dwField, sPortalName));
+                                if (ScriptMakerConfig.TemplateMapPortalScriptDebug) {
+                                    Logger.LogReport("PortalTemplate:  sScript [%s], dwField [%d], sPortalName [%s]", sScript, dwField, sPortalName);
+                                }
                             }
                         }
                     }
@@ -189,14 +200,9 @@ public class ScriptTemplateMap {
             sLine = pStream.readLine().trim();
             if (!sLine.isEmpty()) {
                 if (sLine.contains("<Field>")) {
-                    //<Field> `Maple Road - Inside the Dangerous Forest` [50000]
                     sLine = sLine.replace(" `", "@@").replace("` ", "@@");
                     aTemplateInfo = sLine.split("@@");
                     dwField = aTemplateInfo.length > 2 ? Integer.parseInt(aTemplateInfo[2].trim().replace("[", "").replace("]", "")) : 0;
-                    if (!mFieldName.containsKey(dwField)) {
-                        String sFieldName = aTemplateInfo[1].replace("`", "");
-                        mFieldName.put(dwField, sFieldName);
-                    }
                     String sType;
                     while (pStream.ready() && !(sLine = pStream.readLine().trim()).contains("</Field>")) {
                         if ((sLine.contains("<UserEnter>") || sLine.contains("<FirstUserEnter>") || sLine.contains("<FieldScript>")) && pStream.ready()) {
@@ -204,6 +210,27 @@ public class ScriptTemplateMap {
                             sLine = pStream.readLine().trim();
                             sScript = sType + "\\" + sLine.replace("`", "");
                             aTemplate.add(new FieldTemplate(sScript, dwField, sType));
+                            if (ScriptMakerConfig.TemplateMapFieldScriptDebug) {
+                                Logger.LogReport("Field-Script:  sType [%s], sScript [%s], dwField [%d]", sType, sScript, dwField);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        pStream.close();
+        pStream = new BufferedReader(new FileReader("script\\FieldID_to_Name.txt"));
+        while (pStream.ready()) {
+            sLine = pStream.readLine().trim().replace("[", "@@");
+            if (sLine.contains(" -  @@")) {
+                aTemplateInfo = sLine.split(" -  @@");
+                int dwFieldID = Integer.parseInt(aTemplateInfo[0]);
+                if (aTemplateInfo.length > 1) {
+                    String sFieldName = aTemplateInfo[1].replace("]", "");
+                    if (!mFieldName.containsKey(dwFieldID)) {
+                        mFieldName.put(dwFieldID, sFieldName);
+                        if (ScriptMakerConfig.TemplateMapFieldNameDebug) {
+                            Logger.LogReport("Field-Name-to-ID:  dwFieldID [%d], sFieldName [%s]", dwFieldID, sFieldName);
                         }
                     }
                 }

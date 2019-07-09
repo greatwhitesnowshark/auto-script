@@ -1,13 +1,13 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package packet.client;
 
 import game.network.InPacket;
-import packet.ClientCode;
-import packet.PacketNullWrapper;
+import packet.opcode.ClientCode;
+import packet.PacketWrapperNull;
 import script.Script;
 import script.ScriptModifier;
 import script.ScriptTemplateMap;
@@ -18,7 +18,7 @@ import template.PortalTemplate;
  *
  * @author Sharky
  */
-public class UserPortalScriptRequest extends PacketNullWrapper {
+public class UserPortalScriptRequest extends PacketWrapperNull {
     
     public final byte nType;
     public final String sPortalName;
@@ -30,7 +30,7 @@ public class UserPortalScriptRequest extends PacketNullWrapper {
     }
     
     @Override
-    public ScriptModifier CreateScriptModifier() {
+    public ScriptModifier CreateNewScriptTemplate() {
         ScriptModifier pScriptModifier = (Script pScript) -> {
             PortalTemplate pPortalTemplate = ScriptTemplateMap.GetPortalTemplate(pScript.dwField, sPortalName);
             if (pPortalTemplate != null) {

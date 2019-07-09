@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -10,7 +10,7 @@ import game.scripting.ScriptSysFunc.InGameDirectionEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.LinkedList;
-import packet.LoopbackCode;
+import packet.opcode.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
 import script.ScriptModifier;
@@ -131,7 +131,7 @@ public class UserInGameDirectionEvent extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifier() {
+    public ScriptModifier CreateNewScriptTemplate() {
         ScriptModifier pScriptModifier = (Script pScript) -> {
             if (pScript.pTemplate == null) {
                 FieldTemplate pFieldTemplate = ScriptTemplateMap.GetUserEnterTemplate(pScript.dwField);
@@ -144,12 +144,13 @@ public class UserInGameDirectionEvent extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
+    public ScriptModifier CreateScriptTemplateCopy() {
         ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
             if (pScriptCopy.pTemplate != null) {
                 dwField = pScriptCopy.dwField;
                 pTemplate = pScriptCopy.pTemplate;
-                nStrPaddingIndex = pScriptCopy.GetStrPaddingIndex();
+                pHistory = pScriptCopy.pHistory;
+                nStrPaddingIndex = pScriptCopy.CurrentLinePadding();
             }
         };
         return pScriptModifier;

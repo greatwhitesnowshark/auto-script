@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="auto-script:jar">
+    <output-path>$PROJECT_DIR$/dist</output-path>
+    <root id="archive" name="auto-script.jar">
+      <element id="module-output" name="auto-script" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../MagatiaSVR/Util/target/Util.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../MagatiaSVR/Game/target/Game.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/dist/lib/netty-all.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

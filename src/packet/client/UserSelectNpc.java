@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,24 +7,26 @@ package packet.client;
 
 import game.network.InPacket;
 import java.awt.Point;
-import packet.ClientCode;
-import packet.PacketNullWrapper;
+import packet.opcode.ClientCode;
+import packet.PacketWrapperNull;
 import script.Script;
 import script.ScriptFieldObjMap;
 import script.ScriptModifier;
 import script.ScriptTemplateMap;
 import script.ScriptWriteRequest;
 import template.NpcTemplate;
+import scriptmaker.ScriptMakerConfig;
+import util.Logger;
 
 /**
  *
  * @author Sharky
  */
-public class UserSelectNpc extends PacketNullWrapper {
+public class UserSelectNpc extends PacketWrapperNull {
     
     public final int dwNpcObjectID;
     public final Point ptPos;
-    public ScriptModifier pScriptMod = null;
+    public boolean bResetNotPersist = false;
     
     public UserSelectNpc(InPacket iPacket) {
         super(ClientCode.UserSelectNpc.nCode);
@@ -33,20 +35,31 @@ public class UserSelectNpc extends PacketNullWrapper {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        return pScriptMod;
+    public boolean IsScriptResetNotPersist() {
+        return bResetNotPersist;
     }
     
     @Override
-    public ScriptModifier CreateScriptModifier() {
+    public ScriptModifier CreateNewScriptTemplate() {
         ScriptModifier pScriptModifier = (Script pScript) -> {
-            NpcTemplate pNpcTemplate = ScriptTemplateMap.GetNpcTemplate(ScriptFieldObjMap.GetNpcTemplateID(dwNpcObjectID));
-            if (pNpcTemplate != null) {
-                pScript.CreateNewTemplate(new ScriptWriteRequest(pScript.dwField, pNpcTemplate), true);
-            } else {
-                pScriptMod = (Script pScriptReset) -> {
-                    pScript.CreateNewTemplate(null);
-                };
+            int nNpcID = ScriptFieldObjMap.GetNpcTemplateID(dwNpcObjectID);
+            if (nNpcID > 0) {
+                NpcTemplate pNpcTemplate = ScriptTemplateMap.GetNpcTemplate(nNpcID);
+                if (pNpcTemplate != null) {
+                    pScript.CreateNewTemplate(new ScriptWriteRequest(pScript.dwField, pNpcTemplate), true);
+                    if (ScriptMakerConfig.OnPacketUserSelectNpcDebug) {
+                        String sNpcName = ScriptTemplateMap.GetNpcName(nNpcID);
+                        if (sNpcName == null || sNpcName.isEmpty()) {
+                            sNpcName = "No-Name-Found";
+                        }
+                        Logger.LogReport("UserSelectNpc:  Script [%s],  Npc-Name [%s],  ID [%d]", pNpcTemplate.sScript, sNpcName, nNpcID);
+                    }
+                } else {
+                    this.bResetNotPersist = true;
+                    if (ScriptMakerConfig.OnPacketUserSelectNpcDebug) {
+                        Logger.LogError("UserSelectNpc:-  no script template could be found for Npc-ID [%d]", nNpcID);
+                    }
+                }
             }
         };
         return pScriptModifier;

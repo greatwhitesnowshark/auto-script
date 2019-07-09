@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -10,7 +10,7 @@ import game.scripting.ScriptMan;
 import game.scripting.ScriptMan.MessageType;
 import java.util.LinkedList;
 import java.util.List;
-import packet.LoopbackCode;
+import packet.opcode.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
 import script.ScriptModifier;
@@ -43,6 +43,8 @@ public class ScriptMessage extends PacketWriteRequest {
             this.nMsgType = iPacket.DecodeByte();
             this.bParam = iPacket.DecodeShort();
             this.eColor = iPacket.DecodeByte();
+
+            //todo:: double-check and update this if needed, for the cases below
             switch (nMsgType) {
                 case MessageType.Say:
                     if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
@@ -63,22 +65,11 @@ public class ScriptMessage extends PacketWriteRequest {
                     break;
 
                 case MessageType.AskYesNo:
-                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
-                        this.nSpeakerTemplateID = iPacket.DecodeInt();
-                    }
-                    this.sText = iPacket.DecodeString();
-                    break;
 
                 case MessageType.AskMenu:
-                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
-                        this.nSpeakerTemplateID = iPacket.DecodeInt();
-                    }
-                    this.sText = iPacket.DecodeString();
-                    break;
 
                 case MessageType.AskAccept:
-                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0)
-                    {
+                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
                         this.nSpeakerTemplateID = iPacket.DecodeInt();
                     }
                     this.sText = iPacket.DecodeString();
@@ -270,19 +261,22 @@ public class ScriptMessage extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
+    public ScriptModifier CreateScriptTemplateCopy() {
         ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
             if (pScriptCopy.pTemplate != null) {
                 dwField = pScriptCopy.dwField;
                 pTemplate = pScriptCopy.pTemplate;
-                nStrPaddingIndex = pScriptCopy.GetStrPaddingIndex();
+                pHistory = pScriptCopy.pHistory;
+                nStrPaddingIndex = pScriptCopy.CurrentLinePadding();
             }
         };
         return pScriptModifier;
     }
 
+    //todo:: finish the cases below, some are incomplete
     @Override
     public ScriptWriteRequest CreateScriptWriteRequest() {
+        ScriptWriteRequest pWriteRequest = null;
         if (pTemplate != null && !sText.isEmpty()) {
             List<String> lConditionalText = new LinkedList<>();
             String sOutput = "";
@@ -411,8 +405,8 @@ public class ScriptMessage extends PacketWriteRequest {
                     return null;
             }
             sOutput += (", " + nSpeakerTemplateID + ");");
-            return new ScriptWriteRequest(dwField, sOutput, pTemplate, lConditionalText, nStrPaddingIndex);
+            pWriteRequest = new ScriptWriteRequest(dwField, sOutput, pTemplate, lConditionalText, nStrPaddingIndex);
         }
-        return null;
+        return pWriteRequest;
     }
 }

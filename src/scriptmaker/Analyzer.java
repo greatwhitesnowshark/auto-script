@@ -1,14 +1,15 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package scriptmaker;
 
+import game.network.ClientPacket;
 import game.network.InPacket;
 import io.netty.buffer.Unpooled;
 import packet.PacketWrapper;
-import packet.LoopbackCode;
+import packet.opcode.LoopbackCode;
 import script.ScriptTemplateMap;
 import script.Compiler;
 import java.awt.Color;
@@ -21,14 +22,24 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import packet.ClientCode;
+import packet.opcode.ClientCode;
 import util.Logger;
 
 /**
  *
  * @author Sharky
+ * @todo:  Portal scripts aren't currently being padded correctly throughout the conditional flow-blocks
+ *         Add handling for item scripts
+ *         Need to determine when the script is transferring your field or when its a user doing it
+ *         Need to end Field Scripts at the end of the direction node
+ *         Need to add UserEffectLocal and FieldEffect packets
+ *         Need to update ScriptMessage switch/case section
+ *         Need to verify if the quest result packets should be in fact coming from the field scripts
+ *         Need to make sure that when SetField happens, there will be a new case label created for it if one does not exist
  */
 public class Analyzer extends javax.swing.JFrame {
+
+    public static final int INCREMENT_CACHED_KEY_VALUE = 2;
     
     /**
      * Creates new form Analyzer
@@ -114,7 +125,8 @@ public class Analyzer extends javax.swing.JFrame {
         if (jFileChooser1.getSelectedFiles() != null && jFileChooser1.getSelectedFiles().length > 0) {
             //Add content to the window.
             for (File pFile : jFileChooser1.getSelectedFiles()) {
-                
+                Compiler.GetScript().ClearSessionQuestID();
+
                 try (DataInputStream pDataInputStream = new DataInputStream(new FileInputStream(pFile))) {
                     long tCur = tPacketTime = System.currentTimeMillis();
                     System.out.print(String.format("Processing file `%s`.....", pFile.getName()));
@@ -151,6 +163,9 @@ public class Analyzer extends javax.swing.JFrame {
                                 pPacketWrapper = pCode.pDecodePacket.ReadPacket(iPacket);
                             }
                         } else {
+                            if ((nHeader - INCREMENT_CACHED_KEY_VALUE) >= ClientPacket.BeginUser.Get() && (nHeader - INCREMENT_CACHED_KEY_VALUE) < ClientPacket.Count.Get()) {
+                                nHeader += INCREMENT_CACHED_KEY_VALUE;
+                            }
                             ClientCode pCode = ClientCode.GetClient(nHeader);
                             if (pCode != null) {
                                 pPacketWrapper = pCode.pDecodePacket.ReadPacket(iPacket);
@@ -222,8 +237,6 @@ public class Analyzer extends javax.swing.JFrame {
         s += (long) (dis.readByte() & 0xFF) << 56;
         return s;
     }
-    
-    
     
     private static String ReadString(DataInputStream dis) throws IOException {
         int size = dis.readByte();

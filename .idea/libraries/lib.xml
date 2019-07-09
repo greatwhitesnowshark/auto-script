@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/lib/Util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/netty-all.jar!/" />
+      <root url="jar://$PROJECT_DIR$/dist/lib/Game.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

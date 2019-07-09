@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -7,13 +7,9 @@ package packet.loopback;
 
 import game.network.InPacket;
 import java.util.LinkedList;
-import packet.LoopbackCode;
+import packet.opcode.LoopbackCode;
 import packet.PacketWriteRequest;
-import script.Script;
-import script.ScriptFieldObjMap;
-import script.ScriptWriteRequest;
-import script.ScriptModifier;
-import script.ScriptTemplateMap;
+import script.*;
 import template.FieldTemplate;
 
 /**
@@ -23,7 +19,7 @@ import template.FieldTemplate;
 public class SetField extends PacketWriteRequest {
     
     public byte nPortal;
-    public boolean bOnTransferSameField;
+    public boolean bIsUserRespawn, bIsSkippedFieldTransfer, bIsFieldScriptTemplate;
     public String sFieldName;
     public FieldTemplate pFieldTemplate;
     
@@ -54,35 +50,64 @@ public class SetField extends PacketWriteRequest {
             this.dwField = iPacket.DecodeInt();
         }
         this.sFieldName = ScriptTemplateMap.GetFieldName(dwField);
-        FieldTemplate pTemplateEnter;
-        if ((pTemplateEnter = ScriptTemplateMap.GetFirstUserEnterTemplate(dwField)) == null) {
-            if ((pTemplateEnter = ScriptTemplateMap.GetUserEnterTemplate(dwField)) == null) {
-                pTemplateEnter = ScriptTemplateMap.GetFieldScript(dwField);
+        FieldTemplate pUserFieldTemplate;
+        if ((pUserFieldTemplate = ScriptTemplateMap.GetFirstUserEnterTemplate(dwField)) == null) {
+            if ((pUserFieldTemplate = ScriptTemplateMap.GetUserEnterTemplate(dwField)) == null) {
+                pUserFieldTemplate = ScriptTemplateMap.GetFieldScript(dwField);
             }
         }
-        this.pFieldTemplate = pTemplateEnter;
-        this.bOnTransferSameField = false;
+        this.pFieldTemplate = pUserFieldTemplate;
+        this.bIsSkippedFieldTransfer = false;
+        this.bIsFieldScriptTemplate = false;
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnEnd() {
-        if (!bOnTransferSameField) {
-            ScriptModifier pScriptModifier = (Script pScript) -> {
-                pScript.CreateNewTemplate(new ScriptWriteRequest(dwField, pFieldTemplate), true);
-                ScriptFieldObjMap.ResetMap();
+    public ScriptModifier CreateScriptTemplateCopy() {
+        ScriptModifier pScriptModifier = null;
+        if (!bIsUserRespawn) {
+            pScriptModifier = (Script pScriptCopy) -> {
+                if (pScriptCopy != null && pScriptCopy.GetTemplate() != null) {
+                    if (pScriptCopy.dwField == dwField) {
+                        this.bIsUserRespawn = true;
+                    }
+                    pScriptCopy.dwField = dwField;
+                    pScriptCopy.sFieldName = ScriptTemplateMap.GetFieldName(dwField);
+                    pHistory = pScriptCopy.pHistory;
+                    pTemplate = pScriptCopy.pTemplate;
+                    nStrPaddingIndex = pScriptCopy.CurrentLinePadding();
+                    if (pScriptCopy.GetTemplate().IsFieldTemplate()) {
+                        this.bIsFieldScriptTemplate = true;
+                        MessageHistory pMsgHistory = pScriptCopy.GetMessageHistory();
+                        if (pMsgHistory != null && pMsgHistory.GetOutput() != null) {
+                            if (pMsgHistory.GetOutput().contains("dwField = pField.dwField;")) {
+                                this.bIsSkippedFieldTransfer = true;
+                                return;
+                            }
+                        }
+                    } else if (pScriptCopy.GetTemplate().IsQuestTemplate()) {
+                        MessageHistory pMsgHistory = pScriptCopy.GetMessageHistory();
+                        if (pMsgHistory != null && pMsgHistory.GetOutput() != null) {
+                            if (pMsgHistory.GetOutput().contains("QuestRecordSetState")) {
+                                this.bIsSkippedFieldTransfer = true;
+                                return;
+                            }
+                        }
+                    }
+                }
             };
-            return pScriptModifier;
         }
-        return null;
+        return !bIsSkippedFieldTransfer ? pScriptModifier : null;
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnInput() {
-        if (!bOnTransferSameField) {
+    public ScriptModifier SetScriptUserInputResult() {
+        if (!bIsUserRespawn) {
             ScriptModifier pScriptModifier = (Script pScriptMod) -> {
                 if (pScriptMod.pTemplate != null) {
                     if (pScriptMod.GetNestedBlockHistory() != null) {
-                        pScriptMod.GetNestedBlockHistory().SetNestedBlockResult(dwField);
+                        if (pScriptMod.aHistoryNestedBlock.size() == 1) {
+                            pScriptMod.GetNestedBlockHistory().SetNestedBlockResult(dwField);
+                        }
                     }
                 }
             };
@@ -92,38 +117,30 @@ public class SetField extends PacketWriteRequest {
     }
 
     @Override
-    public ScriptModifier CreateScriptModifierOnMerge() {
-        if (!bOnTransferSameField) {
-            ScriptModifier pScriptModifier = (Script pScriptCopy) -> {
-                if (pScriptCopy != null) {
-                    dwField = pScriptCopy.dwField;
-                    pHistory = pScriptCopy.pHistory;
-                    pTemplate = pScriptCopy.pTemplate;
-                    nStrPaddingIndex = pScriptCopy.GetStrPaddingIndex();
+    public ScriptWriteRequest CreateScriptWriteRequest() {
+        if (pTemplate != null) {
+            if (!bIsUserRespawn) {
+                String sOutput = "pTarget.OnTransferField(" + dwField + ", " + nPortal + "); //to: \"" + ScriptTemplateMap.GetFieldName(dwField) + "\"";
+                if (bIsSkippedFieldTransfer || bIsFieldScriptTemplate) {
+                    sOutput = "//" + sOutput;
                 }
-            };
-            return pScriptModifier;
+                return new ScriptWriteRequest(dwField, sOutput, pTemplate, new LinkedList<>(), nStrPaddingIndex);
+            }
         }
         return null;
     }
 
     @Override
-    public ScriptWriteRequest CreateScriptWriteRequest() {
-        if (!bOnTransferSameField && pTemplate != null) {
-            String sOutput = "pTarget.OnTransferField(" + dwField + ", " + nPortal + "); //to: \"" + sFieldName + "\"";
-            return new ScriptWriteRequest(dwField, sOutput, pTemplate, new LinkedList<>(), nStrPaddingIndex);
-        }
-        return null;
-    }
-    
-    @Override
-    public ScriptModifier CreateScriptModifier() {
-        ScriptModifier pScriptModifier = (Script pScriptMod) -> {
-            if (pScriptMod.dwField == dwField) {
-                bOnTransferSameField = true;
-            }
-            pScriptMod.dwField = dwField;
+    public ScriptModifier CreateNewScriptTemplateResetNotPersist() {
+        ScriptModifier pScriptModifier = (Script pScript) -> {
+            pScript.CreateNewTemplate(new ScriptWriteRequest(dwField, pFieldTemplate), true);
+            ScriptFieldObjMap.ResetMap();
         };
-        return !bOnTransferSameField ? pScriptModifier : null;
+        return pScriptModifier;
+    }
+
+    @Override
+    public boolean IsScriptResetNotPersist() {
+        return true;
     }
 }

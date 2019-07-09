@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -8,7 +8,7 @@ package script;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import packet.LoopbackCode;
+import packet.opcode.LoopbackCode;
 
 /**
  *
@@ -23,7 +23,8 @@ public class ScriptFieldObjMap {
     }
     
     public static int GetNpcTemplateID(int dwID) {
-        return mTemplate.get(LoopbackCode.NpcEnterField.nCode).get(dwID);
+        LinkedHashMap<Integer, Integer> mMap = mTemplate.get(LoopbackCode.NpcEnterField.nCode);
+        return mMap != null && mMap.containsKey(dwID) ? mMap.get(dwID) : -1;
     }
     
     public static int GetReactorTemplateID(int dwID) {

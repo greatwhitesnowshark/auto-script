@@ -1,5 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
+ * To change this license opcode, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -11,5 +11,5 @@ package script;
  */
 public interface ScriptModifier {
     
-    public void SetScript(Script pScript);
+    void SetScript(Script pScript);
 }

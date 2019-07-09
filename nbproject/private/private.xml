@@ -3,17 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/SetField.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/client/UserScriptMessageAnswer.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/ScriptTemplateMap.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/loopback/UserTalk.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/client/UserSelectNpc.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/util/StringUtil.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/Script.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/Compiler.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/main/Analyzer.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/util/Config.java</file>
-            <file>file:/C:/Users/Chris/Desktop/auto-script/src/script/ScriptWriteRequest.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/python/PythToJS.java</file>
+            <file>file:/C:/Users/Chris/Desktop/auto-script/src/packet/ClientCode.java</file>
         </group>
     </open-files>
 </project-private>
