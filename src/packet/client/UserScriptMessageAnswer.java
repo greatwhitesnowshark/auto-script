@@ -16,7 +16,7 @@ import script.NestedBlockHistory;
 import script.Script;
 import script.ScriptModifier;
 import script.ScriptWriteRequest;
-import scriptmaker.ScriptMakerConfig;
+import scriptmaker.Config;
 import util.Logger;
 
 /**
@@ -53,7 +53,7 @@ public class UserScriptMessageAnswer extends PacketWriteRequest {
                             if (pMessageHistory.GetOutput().contains("nRet") || pMessageHistory.GetOutput().contains("nSel")) {
                                 int nResult = pMessageHistory.GetOutput().contains("nSel") ? nSelectionInput : nModeInput;
                                 pScriptMod.GetNestedBlockHistory().SetNestedBlockResult(nResult);
-                                if (ScriptMakerConfig.LastMessageHistoryDebug) {
+                                if (Config.bMessageHistoryPrevLog) {
                                     Logger.LogAdmin("SetNestedBlockResult(" + nResult + ") processed for pScriptMod.sScriptName = " + pScriptMod.sScriptName);
                                 }
                             }

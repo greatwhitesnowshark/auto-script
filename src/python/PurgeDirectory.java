@@ -5,6 +5,8 @@
  */
 package python;
 
+import util.Logger;
+
 import java.io.File;
 
 /**
@@ -17,14 +19,16 @@ public class PurgeDirectory {
     public static String sNpcDirectory = "npc\\",
                          sQuestDirectory = "quest\\",
                          sPortalDirectory = "portal\\",
+                         sItemScriptDirectory = "item\\",
                          sReactorDirectory = "reactor\\",
                          sDeveloperDirectory = "developer\\",
+                         sFieldDirectory = "field\\",
                          sFieldScriptDirectory = "field\\fieldscript\\",
                          sUserEnterDirectory = "field\\userenter\\",
                          sFirstUserEnterDirectory = "field\\firstuserenter\\";
     
     public static void main(String[] args) {
-        DeleteFromDirectory(new String[] {sNpcDirectory, sQuestDirectory, sPortalDirectory, sReactorDirectory, sDeveloperDirectory, sFieldScriptDirectory, sUserEnterDirectory, sFirstUserEnterDirectory});
+        DeleteFromDirectory(new String[] {sNpcDirectory, sQuestDirectory, sPortalDirectory, sItemScriptDirectory, sReactorDirectory, sDeveloperDirectory, sFieldDirectory, sFieldScriptDirectory, sUserEnterDirectory, sFirstUserEnterDirectory});
     }
     
     public static void DeleteFromDirectory(String... aDir) {
@@ -36,7 +40,9 @@ public class PurgeDirectory {
                         pFile.delete();
                     }
                 }
+                Logger.LogReport("Purging directory - " + sPath + "...");
             }
         }
+        Logger.LogReport("-All directories purged.");
     }
 }

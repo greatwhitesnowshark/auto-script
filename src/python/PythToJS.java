@@ -21,6 +21,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import scriptmaker.Config;
 import util.StringUtil;
 
 /**
@@ -30,17 +32,21 @@ import util.StringUtil;
 public class PythToJS {
     
     public static final Map<String, LinkedList<String>> mScriptLines = Collections.synchronizedMap(new HashMap<>());
-    public static final Map<String, String> mReplace = new LinkedHashMap<>();
-    public static final Map<String, String> mFuncArgsAppend = new LinkedHashMap<>();
-    public static final Map<String, String> mChatTypeAppend = new LinkedHashMap<>();
-    public static final Map<String, String> mDebugFuncName = new HashMap<>();
-    public static final Map<String, String> mFuncAppend = new HashMap<>();
-    public static final List<String> aParamArgs = new LinkedList<>();
+    public static final Map<String, String> mReplace = new LinkedHashMap<>(); //all text-to-text replacements
+    public static final Map<String, String> mFuncArgsAppend = new LinkedHashMap<>(); //appends arguments to funcs - "myFunc(arg1)->myFunc(arg1, true)"
+    //public static final Map<String, String> mChatTypeAppend = new LinkedHashMap<>(); //todo:: consider using this after we recode SetModifyFlag func
+    public static final Map<String, LinkedList<String>> mDebugFuncName = new HashMap<>(); //debugging variables, (Key-Function, Value-Files)
+    public static final Map<Integer, LinkedList<String>> mDebugFuncNameCount = new LinkedHashMap<>(); //(Key-# of Files, Value-List of Functions)
+    public static final Map<String, String> mFuncAppend = new HashMap<>(); //adds lines after specific patterns are read
+    public static final List<String> aFuncSkipped = new LinkedList<>(); //skips over things found here
+    public static final List<String> aFileSkip = new LinkedList<>(); //records a list of skipped files due to syntax errors
+    public static int nCreatedScriptCount = 0, nSkippedScriptCount = 0;
         
 
     public static void main(String[] args) {
         try {
-            String sDirectory = "C:\\Users\\Chris\\Desktop\\Swordie\\scripts";
+            String sDirectory = "C:\\Users\\Chris\\Desktop\\Swordie\\scripts_new";
+
             Files.walk(Paths.get(sDirectory)).forEach((pFile) -> {
                 if (!pFile.toFile().isDirectory()) {
                     try {
@@ -54,25 +60,78 @@ public class PythToJS {
             });
             
             sDirectory = "C:\\Users\\Chris\\Desktop\\Swordie\\scripts_javascript\\";
+
             for (String sFileName : mScriptLines.keySet()) {
-                try (BufferedWriter pWriter = new BufferedWriter(new FileWriter(sDirectory + sFileName))) {
-                    LinkedList<String> aScriptLines = mScriptLines.get(sFileName);
-                    for (String sLine : aScriptLines) {
-                        pWriter.write(sLine); 
-                        pWriter.newLine();
+                if (!aFileSkip.contains(sFileName.split("\\\\")[1])) {
+                    try (BufferedWriter pWriter = new BufferedWriter(new FileWriter(sDirectory + sFileName))) {
+                        LinkedList<String> aScriptLines = mScriptLines.get(sFileName);
+
+                        for (String sLine : aScriptLines) {
+                            pWriter.write(sLine);
+                            pWriter.newLine();
+                        }
+                    }
+                    nCreatedScriptCount++;
+                } else {
+                    nSkippedScriptCount++;
+                }
+            }
+
+            Object[] aSortedKey = null;
+            StringBuilder sCompactView = new StringBuilder("<CompactViewOutput>"), sExpandedView = new StringBuilder("<ExpandedViewOutput>");
+
+            if (!mDebugFuncName.isEmpty()) {
+                aSortedKey = mDebugFuncName.keySet().toArray();
+                Arrays.sort(aSortedKey);
+
+                sCompactView.append("\r\n<These are the [" + aSortedKey.length + "] methods that are currently unaccounted for:> \r\n");
+                sExpandedView.append("\r\n<These are the [" + aSortedKey.length + "] methods that are currently unaccounted for (with file references):> \r\n");
+
+                for (Object o : aSortedKey) {
+                    String sDebug = (String) o;
+                    int nCount = mDebugFuncName.get(sDebug).size();
+
+                    if (!mDebugFuncNameCount.containsKey(nCount)) {
+                        mDebugFuncNameCount.put(nCount, new LinkedList<>());
+                    }
+
+                    LinkedList<String> lFunc = mDebugFuncNameCount.get(nCount);
+
+                    if (!lFunc.contains(sDebug)) {
+                        lFunc.add(sDebug);
                     }
                 }
-                Logger.logMsg(Logger.INFO, "Created new script - `" + sFileName + "`");
-            }
-            
-            if (!mDebugFuncName.isEmpty()) {
-                Object[] aSortedKey = mDebugFuncName.keySet().toArray();
-                Arrays.sort(aSortedKey);
-                System.out.println("These are the [" + aSortedKey.length + "] methods that are currently unaccounted for: \r\n");
-                for (Object sDebug : aSortedKey) {
-                    System.out.println("\t- " + sDebug + " //" + mDebugFuncName.get((String) sDebug));
+
+                Object[] aSortedKeyCount = mDebugFuncNameCount.keySet().toArray();
+                Arrays.sort(aSortedKeyCount);
+
+                for (int i = aSortedKeyCount.length - 1; i >= 0; i--) {
+                    Object o = aSortedKeyCount[i];
+                    Integer nCount = (Integer) o;
+
+                    sExpandedView.append("\r\nFunctions located in " + nCount + " files each: (" + mDebugFuncNameCount.get(nCount).size() + " functions total)");
+
+                    for (String sFunc : mDebugFuncNameCount.get(nCount)) {
+                        sCompactView.append("\r\n\t:: " + sFunc + " ...number of occurrences: " + nCount);
+                        sExpandedView.append("\r\n\t:: " + sFunc.substring(sFunc.indexOf(".") + 1));
+
+                        for (String sFileInfo : mDebugFuncName.get(sFunc)) {
+                            sExpandedView.append("\r\n\t\t- " + sFileInfo);
+                        }
+                    }
                 }
             }
+
+            sCompactView.append("\r\n</CompactViewOutput>\r\n");
+            sExpandedView.append("\r\n</ExpandedViewOutput>\r\n");
+
+            System.out.println(sCompactView.toString());
+            System.out.println("\r\n" + sExpandedView.toString());
+
+            if (aSortedKey != null) System.out.println("Total number of unaccounted methods/funcs:  " + aSortedKey.length);
+            System.out.println("Total number of created scripts:  " + nCreatedScriptCount);
+            System.out.println("Total number of skipped scripts: " + nSkippedScriptCount);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,7 +213,7 @@ public class PythToJS {
         return sScriptLine;
     }
     
-    public static final String ConvertChatTypeAppend(String sScriptLine) {
+    /*public static final String ConvertChatTypeAppend(String sScriptLine) {
         if (sScriptLine.contains("self.Say") || sScriptLine.contains("self.Ask")) {
             if (!aParamArgs.isEmpty() && sScriptLine.contains("(")) {
                 String sAppend = "";
@@ -165,7 +224,7 @@ public class PythToJS {
             }
         }
         return sScriptLine;
-    }
+    }*/
     
     public static final String ConvertSemicolon(String sScriptLine) {
         if (!sScriptLine.contains("//") && sScriptLine.trim().charAt(sScriptLine.trim().length() -1) != '{') {
@@ -205,6 +264,13 @@ public class PythToJS {
         if (sScriptLine.contains("sm.dispose") || sScriptLine.contains("sm.diposse") || sScriptLine.contains("sm.disose")) {
             return true;
         } else {
+            for (String sKey : aFuncSkipped) {
+                if (sScriptLine.contains(sKey)) {
+                    return true;
+                }
+            }
+        }
+        /*} else {
             for (String sKey : mChatTypeAppend.keySet()) {
                 if (sScriptLine.contains(sKey)) {
                     String sAppend = mChatTypeAppend.get(sKey);
@@ -214,7 +280,7 @@ public class PythToJS {
                     return true;
                 }
             }
-        }
+        }*/
         return false;
     }
     
@@ -246,13 +312,38 @@ public class PythToJS {
     }
     
     public static final void LogDebugInfo(String sScriptLine, String sFileName) {
+        String sDebugFuncName = "";
         if (sScriptLine.contains("self.") && Character.isLowerCase(sScriptLine.charAt(sScriptLine.indexOf(".") + 1)) && sScriptLine.contains("(")) {
             String sDebug = sScriptLine.substring(sScriptLine.indexOf("self."));
             if (sDebug.contains("(")) {
-                String sDebugFuncName = sDebug.substring(0, sDebug.indexOf("("));
-                if (!mDebugFuncName.keySet().contains(sDebugFuncName)) {
-                    mDebugFuncName.put(sDebugFuncName, sFileName);
+                sDebugFuncName = sDebug.substring(0, sDebug.indexOf("("));
+
+            }
+        } else if (sScriptLine.contains("sm.")) {
+            String sDebug = sScriptLine.substring(sScriptLine.indexOf("sm."));
+            if (sDebug.contains("(")) {
+                sDebugFuncName = sDebug.substring(0, sDebug.indexOf("("));
+                if (mReplace.containsKey(sDebugFuncName)) {
+                    sDebugFuncName = "";
                 }
+            }
+        }
+        if (!sDebugFuncName.isEmpty()) {LinkedList<String> aFileInfo;
+            if (!mDebugFuncName.keySet().contains(sDebugFuncName)) {
+                aFileInfo = new LinkedList<>();
+                aFileInfo.add(sFileName);
+            } else {
+                aFileInfo = mDebugFuncName.get(sDebugFuncName);
+                if (!aFileInfo.contains(sFileName)) {
+                    aFileInfo.add(sFileName);
+                }
+            }
+            mDebugFuncName.put(sDebugFuncName, aFileInfo);
+            String sFileInfoName = sFileName.contains(".py") ? sFileName.replace(".py", ".js")
+                    : !sFileName.contains(".") ? sFileName.concat(".js")
+                    : sFileName;
+            if (!aFileSkip.contains(sFileInfoName)) {
+                aFileSkip.add(sFileInfoName);
             }
         }
     }
@@ -260,7 +351,6 @@ public class PythToJS {
     public static final void ConvertPythToJS(File pFile) throws IOException {
         LinkedList<String> aScriptLines = new LinkedList<>();
         try (BufferedReader pReader = new BufferedReader(new FileReader(pFile))) {
-            aParamArgs.clear();
             int nBlockPadding = -1;
             while (pReader.ready()) {
                 String sScriptLine = pReader.readLine();
@@ -282,14 +372,14 @@ public class PythToJS {
                             String sAppend = pReader.readLine().trim();
                             sAppend = ConvertComments(sAppend);
                             if (sAppend.length() > 1 && sAppend.contains(("\""))) {
-                                sScriptLine = ConvertMergeWithNextLine(sScriptLine, sAppend);
+                                sScriptLine = ConvertMergeWithNextLine(sScriptLine, sAppend); //todo:: verify this holds up
                             } else {
                                 break;
                             }
                         }
                         sScriptLine = ConvertFuncArgsAppend(sScriptLine);
                         sScriptLine = ConvertReplaceFunc(sScriptLine);
-                        sScriptLine = ConvertChatTypeAppend(sScriptLine);
+                        //sScriptLine = ConvertChatTypeAppend(sScriptLine);
                         sScriptLine = ConvertSemicolon(sScriptLine);
                         aScriptLines.add(sScriptLine);
                         String sFuncAppend = GetFuncAppend(sScriptLine);
@@ -329,7 +419,8 @@ public class PythToJS {
         pBuilder.append(sText);
         return pBuilder.toString();
     }
-    
+
+
     static {
         
         mReplace.put("addAP", "UserIncAP");
@@ -362,8 +453,8 @@ public class PythToJS {
         mReplace.put("completeQuest", "QuestRecordSetComplete");
         mReplace.put("completeQuestNoCheck", "QuestRecordSetComplete");
         mReplace.put("completeQuestNoRewards", "QuestRecordSetComplete");
-        mReplace.put("consumeItem", "consumeItem");//todo::
-        mReplace.put("createAlliance", "createAlliance");//todo::
+        mReplace.put("consumeItem", "UserStatChangeItemUseRequest");
+        //mReplace.put("createAlliance", "createAlliance");//todo::
         mReplace.put("createClock", "FieldClock");
         mReplace.put("createFallingCatcher", "CreateFieldFallingCatcher");
         mReplace.put("createFieldTextEffect", "OnUserTextEffect");
@@ -371,8 +462,8 @@ public class PythToJS {
         mReplace.put("createQuestWithQRValue", "QuestRecordExSet");
         mReplace.put("curNodeEventEnd", "OnInGameCurNodeEventEnd");
         mReplace.put("deductMesos", "UserDeductMoney");
-        mReplace.put("deleteQuest", "QuestRecordRemove"); //todo:: the first parameter argument for User pUser be removed.
-        mReplace.put("doEventAndSendDelay", "doEventAndSendDelay"); //todo:: this is horse shit, needs to be addressed manually
+        mReplace.put("deleteQuest", "QuestRecordRemove");
+        //mReplace.put("doEventAndSendDelay", "doEventAndSendDelay"); //todo:: this is horse shit, needs to be addressed manually
         mReplace.put("dropItem", "FieldDropItem");
         mReplace.put("faceOff(", "OnUserInGameDirectionEvent(InGameDirectionEvent.FaceOff, ");
         mReplace.put("fadeInOut", "OnUserFadeInOutEffect");
@@ -384,13 +475,13 @@ public class PythToJS {
         mReplace.put("gainItem", "InventoryItemExchange");
         mReplace.put("getChr", "GetUser");
         mReplace.put("getDay", "GetDay");
-        mReplace.put("getDropInRect", "getDropInRect"); //todo:: probably remove occurrences of this as we process drops from 
+        //mReplace.put("getDropInRect", "getDropInRect"); //todo:: probably remove occurrences of this as we process drops from
         mReplace.put("getFieldID", "UserGetFieldID");
-        mReplace.put("getMPExpByMobId", "getMPExpByMobId"); //todo:: probably remove occurrences of this because its MP
+        //mReplace.put("getMPExpByMobId", "getMPExpByMobId"); //todo:: probably remove occurrences of this because its MP
         mReplace.put("getMesos", "UserGetMoney");
-        mReplace.put("getMonsterParkCount", "getMonsterParkCount"); //todo:: probably remove occurrences of this because its MP
-        mReplace.put("getNpcScriptInfo", "getNpcScriptInfo"); //todo:: remove this stupid shit
-        mReplace.put("getParty", "getParty"); //todo:: rewrite these to use our party-event handles
+        //mReplace.put("getMonsterParkCount", "getMonsterParkCount"); //todo:: probably remove occurrences of this because its MP
+        //mReplace.put("getNpcScriptInfo", "getNpcScriptInfo"); //todo:: remove this stupid shit
+        //mReplace.put("getParty", "getParty"); //todo:: rewrite these to use our party-event handles
         mReplace.put("getPartyMembersInSameField", "UserGetPartyMemberFieldCount");
         mReplace.put("getQRValue", "QuestRecordExGet");
         mReplace.put("getQuantityOfItem", "InventoryGetItemCount");
@@ -398,18 +489,18 @@ public class PythToJS {
         mReplace.put("getReactorQuantity", "FieldGetReactorCount");
         mReplace.put("getReactorState", "FieldGetReactorState");
         mReplace.put("getReturnField", "GetReturnFieldID");
-        mReplace.put("getSkillByItem", "getSkillByItemID"); //todo:: verify where this should come from
-        mReplace.put("getUnionCoin", "getUnionCoin"); //todo:: remove all occurrences
-        mReplace.put("getUnionLevel", "getUnionLevel"); //todo:: remove all occurrences
-        mReplace.put("getnOptionByCTS", "getnOptionByCTS"); //todo:: modify this argument given
-        mReplace.put("giveAndEquip", "giveAndEquip"); //todo:: remove all occurrences (probably if only for beginner tutorials)
-        mReplace.put("giveCTS", "giveCTS"); //todo:: modify this argument given
+        //mReplace.put("getSkillByItem", "getSkillByItemID"); //todo:: verify where this should come from
+        //mReplace.put("getUnionCoin", "getUnionCoin"); //todo:: remove all occurrences
+        //mReplace.put("getUnionLevel", "getUnionLevel"); //todo:: remove all occurrences
+        //mReplace.put("getnOptionByCTS", "getnOptionByCTS"); //todo:: modify this argument given
+        //mReplace.put("giveAndEquip", "giveAndEquip"); //todo:: remove all occurrences (probably if only for beginner tutorials)
+        //mReplace.put("giveCTS", "giveCTS"); //todo:: modify this argument given
         mReplace.put("giveExp", "UserIncEXP"); 
         mReplace.put("giveItem", "InventoryItemExchange");
         mReplace.put("giveMesos", "UserIncMoney");
         mReplace.put("giveSkill", "UserLearnSkill");
         mReplace.put("golluxPortalOpen", "FieldGolluxPortalEnable");
-        mReplace.put("hasCTS", "hasCTS"); //todo:: modify this argument given
+        //mReplace.put("hasCTS", "hasCTS"); //todo:: modify this argument given
         mReplace.put("hasHadQuest", "IsQuestActive");
         mReplace.put("hasItem", "InventoryIsHoldingItemCount");
         mReplace.put("hasMobsInField", "FieldMobExists");
@@ -417,57 +508,114 @@ public class PythToJS {
         mReplace.put("hasQuestCompleted", "IsQuestComplete");
         mReplace.put("hasQuestWithValue", "QuestRecordExExists");
         mReplace.put("hasSkill", "UserSkillIsLearned");
-        mReplace.put("hasTutor", "hasTutor"); //todo:: figure out wtf tutor is
+        //mReplace.put("hasTutor", "hasTutor"); //todo:: figure out wtf tutor is
         mReplace.put("heal", "UserHealMax");
         mReplace.put("hideNpcByTemplateId", "FieldNpcViewOrHide");
         mReplace.put("hideUser(", "OnUserInGameDirectionEvent(InGameDirectionEvent.VansheeMode, ");
         mReplace.put("hireTutor", "UserHireTutor");
         mReplace.put("increaseReactorState", "FieldSetReactorState");
-        mReplace.put("isAbleToLevelUpMakingSkill", "isAbleToLevelUpMakingSkill"); //todo::
+        //mReplace.put("isAbleToLevelUpMakingSkill", "isAbleToLevelUpMakingSkill"); //todo::
         mReplace.put("isEquipped", "InventoryIsEquippedItem");
-        mReplace.put("isFinishedEscort", "isFinishedEscort"); //todo:: remove usages of this, looks custom
+        //mReplace.put("isFinishedEscort", "isFinishedEscort"); //todo:: remove usages of this, looks custom
         mReplace.put("isPartyLeader", "UserIsPartyBoss");
-        mReplace.put("jobAdvance", "jobAdvance"); //todo:: remove occurrences of this
+        //mReplace.put("jobAdvance", "jobAdvance"); //todo:: remove occurrences of this
         mReplace.put("killMobs", "FieldRemoveAllMob");
         mReplace.put("killmobs", "FieldRemoveAllMob");
         mReplace.put("levelUntil", "UserIncLevelSet");
         mReplace.put("localEmotion", "UserLocalEmotion");
         mReplace.put("lockInGameUI", "OnSetInGameDirectionMode");
+        mReplace.put("moveCamera(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraMove, ");
         mReplace.put("moveCameraBack(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraMove, true, ");
         mReplace.put("moveLayer", "EffectOnOffLayer");
         mReplace.put("moveNpcByTemplateId", "OnForceMoveByScript"); //todo:: verify that the arguments passed correspond
         mReplace.put("moveParticleEff", "UserMoveParticleEff");
-        mReplace.put("offSpineScreen", "");
-
-        mReplace.put("moveCamera(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraMove, ");
         mReplace.put("offLayer", "EffectOffLayer");
+        mReplace.put("spineScreen", "FieldEffectSpineScreen");
+        mReplace.put("offSpineScreen", "FieldEffectOffSpineScreen");
         mReplace.put("onLayer", "EffectOnLayer");
+        mReplace.put("openDimensionalMirror", "UserOpenUIDimensionalMirror");//todo:: TEST & see if/how this works with AskSlideMenu
+        mReplace.put("openNodestone", "ConsumeNodestone");
+        mReplace.put("openNpc", "UserEnforceNpcChat");
+        mReplace.put("openUI", "UserOpenUI");
+        mReplace.put("patternInputRequest(", "OnUserInGameDirectionEvent(InGameDirectionEvent.PatternInputRequest, ");
+        mReplace.put("playExclSoundWithDownBGM", "EffectPlayExclSoundWithDownBGM");
         mReplace.put("playSound", "EffectSound");
+        //mReplace.put("playVideoByScript", "playVideoByScript"); //todo:: wtf is this, likely remove all occurrences
+        mReplace.put("progressMessageFont", "SendProgressMessageFont");
+        mReplace.put("removeCTS", "UserRemoveBuff"); //todo:: probably need to change arguments if they used objects for CTS
         mReplace.put("removeAdditionalEffect(", "OnUserInGameDirectionEvent(InGameDirectionEvent.RemoveAdditionalEffect");
+        mReplace.put("removeMobByTemplateId", "FieldRemoveMob");
+        mReplace.put("removeNpc", "FieldVanishNpc");
         mReplace.put("removeOverlapScreen", "FieldEffectRemoveOverlapDetail");
+        mReplace.put("removeReactor", "FieldRemoveAllReactor");
+        mReplace.put("removeSkill", "UserRemoveSkill");
+        mReplace.put("reservedEffect", "EffectReserved");
         mReplace.put("reservedEffectRepeat", "EffectReservedRepeat");
-        mReplace.put("sendDelay(", "OnUserInGameDirectionEvent(InGameDirectionEvent.Delay, ");
+        mReplace.put("resetNpcSpecialActionByTemplateId", "NpcResetSpecialAction");
+        mReplace.put("resetParam", "ResetModifyFlag");
+        //mReplace.put("rideVehicle", "rideVehicle"); //todo:: cbf
+        mReplace.put("sayMonologue(", "OnUserInGameDirectionEvent(InGameDirectionEvent.Monologue, ");
+        mReplace.put("sendAskAccept", "AskAccept");
+        mReplace.put("sendAskAvatar", "AskAvatar");
+        mReplace.put("sendAskMenuNext", "AskMenuNoESC");
+        mReplace.put("sendAskNumber", "AskNumber");
+        mReplace.put("sendAskSelectMenu", "AskMenu");
+        mReplace.put("sendAskText", "AskText");
+        mReplace.put("sendAskYesNo", "AskYesNo");
+        mReplace.put("sendPrev", "Say");
         mReplace.put("sendSay", "Say");
         mReplace.put("sendNext", "SayNext");
-        mReplace.put("showNpcSpecialActionByTemplateId", "OnNpcSpecialAction");
+        mReplace.put("sendDelay(", "OnUserInGameDirectionEvent(InGameDirectionEvent.Delay, ");
+        mReplace.put("setAP", "UserSetAP");
+        mReplace.put("setCameraOnNpc(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraZoom, ");
+        mReplace.put("setDEX", "UserSetDex");
+        mReplace.put("setDeathCount", "UserSetDeathCount");
+        mReplace.put("setFieldColour", "setFieldColour");
+        //mReplace.put("setFuncKeyByScript", "UserSetFuncMapKey");
+        mReplace.put("setHp", "UserSetHP");
+        mReplace.put("setINT", "UserSetINT");
+        //mReplace.put("setInstanceInfo", "setInstanceInfo"); //todo:: remove all occurrences
+        //mReplace.put("setInstanceTime", "setInstanceTime"); //todo:: remove all occurrences
+        //mReplace.put("setInstanceTimer", "setInstanceTimer"); //todo:: remove all occurrences
+        //mReplace.put("setJob", "setJob"); //todo:: examine and probably remove all occurrences as we handle this differently
+        mReplace.put("setLUK", "UserSetLUK");
+        mReplace.put("setLevel", "UserIncLevelSet");
+        //mReplace.put("setMapTaggedObjectVisible", "setMapTaggedObjectVisible"); //look at this one
+        mReplace.put("setMaxHp", "UserSetMHP");
+        mReplace.put("setMaxMp", "UserSetMMP");
+        mReplace.put("setMp", "UserSetMP");
+        mReplace.put("setQRValue", "QuestRecordExSet");
+        mReplace.put("setReturnField", "UserSetReturnFieldID");
+        mReplace.put("setSpeakerID", "SetNPCTemplateID");
+        mReplace.put("setInnerOverrideSpeakerTemplateID", "SetNPCTemplateID");
+        mReplace.put("setSpeakerType", "SetNPCType");
+        mReplace.put("setColor", "SetNPCColor");
+        mReplace.put("setSTR", "UserSetSTR");
+        mReplace.put("setUnionCoin", "UserSetUnionCoin");
+        mReplace.put("showBalloonMsg", "UserBalloonMsg");
+        //mReplace.put("showBalloonMsgOnNpc", "showBalloonMsgOnNpc"); //todo::
+        //mReplace.put("showEffectOnPosition", "showEffectOnPosition"); //todo::
+        //mReplace.put("showEffectToField", "showEffectToField"); //todo::
         mReplace.put("showEffect(", "OnUserInGameDirectionEvent(InGameDirectionEvent.EffectPlay, ");
+        mReplace.put("showNpcSpecialActionByTemplateId", "OnNpcSpecialAction");
         mReplace.put("showFadeTransition", "FieldEffectOverlapDetail");
         mReplace.put("sm.", "self.");
         mReplace.put("spawnNpc", "FieldSummonNpc");
+        mReplace.put("startQuest", "QuestRecordTryStartAct");
         mReplace.put("str(", "(");
+        mReplace.put("systemMessage", "UserScriptMessage");
         mReplace.put("True", "true");
         mReplace.put("warp", "RegisterTransferField");
         mReplace.put("zoomCamera(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraZoom, ");
-        
-        mChatTypeAppend.put("oxChatPlayerAsSpeaker", "User");
-        mChatTypeAppend.put("flipBoxChat", "Flip");
-        mChatTypeAppend.put("flipDialogue", "flipDialogue"); //todo:: this one looks stupid
-        mChatTypeAppend.put("flipDialoguePlayerAsSpeaker", "flipDialoguePlayerAsSpeaker"); //todo:: this one also looks stupid
-        mChatTypeAppend.put("flipNpcByTemplateId", "flipNpcByTemplateId"); //todo:: looks mega stupid
-        mChatTypeAppend.put("flipSpeaker", "flipSpeaker"); //todo:: looks ultra stupid
-        mChatTypeAppend.put("NoEscape", "NoESC");
-        mChatTypeAppend.put("addEscapeButton", "NoESC");
-        
+        mReplace.put("oxChatPlayerAsSpeaker(", "SetModifyFlag(0x22");
+        mReplace.put("flipBoxChat(", "SetModifyFlag(0x28");
+        mReplace.put("flipDialogue(", "SetModifyFlag(0x4");
+        mReplace.put("flipDialoguePlayerAsSpeaker(", "SetModifyFlag(0x10");
+        mReplace.put("flipSpeaker(", "SetModifyFlag(0x8");
+        mReplace.put("setParam", "SetModifyFlag");
+
+
+        //These methods get passed before the FuncReplaceConvert so using swordie-func names
         mFuncArgsAppend.put("addAP", ", true");
         mFuncArgsAppend.put("addLevel", ", true");
         mFuncArgsAppend.put("addMaxHP", ", true");
@@ -476,7 +624,14 @@ public class PythToJS {
         mFuncArgsAppend.put("addSp", ", true");
         mFuncArgsAppend.put("giveExp", ", true");
         mFuncArgsAppend.put("giveMesos", ", true");
-        
+        mFuncArgsAppend.put("sendPrev", ", true");
+
+        //Adds necessary actions as subsequent lines on the discovery of a given pattern-key
         mFuncAppend.put("InGameDirectionEvent.Delay", "self.Wait();");
+
+        //This adds "skip" function that will ignore certain lines based on a given pattern-key
+        //These lines will need to be stored and reviewed, anything with Import will need flagging for constant class conversions
+        aFuncSkipped.add("import");
+
     }
 }

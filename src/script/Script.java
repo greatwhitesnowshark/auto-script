@@ -26,7 +26,7 @@ import template.QuestEndTemplate;
 import template.QuestStartTemplate;
 import template.ReactorTemplate;
 import template.FieldTemplate;
-import scriptmaker.ScriptMakerConfig;
+import scriptmaker.Config;
 import util.Logger;
 import util.StringUtil;
 
@@ -263,7 +263,7 @@ public class Script {
                                     if (pNestedBlock.IsNestedBlockFound(sLine)) {
                                         nNestedBlockCount++;
                                         if (nNestedBlockCount == aHistoryNestedBlock.size()) {
-                                            if (ScriptMakerConfig.LastMessageHistoryDebug) {
+                                            if (Config.bMessageHistoryPrevLog) {
                                                 Logger.LogError("[TRUE] nNestedBlockCount == aHistoryNestedBlock.size() [" + nNestedBlockCount + "]");
                                                 Logger.LogError("Found nested block - ");
                                                 Logger.LogAdmin("        - sLine:  " + sLine + ", CountStringPadding = " + StringUtil.CountStringPaddingTab(sLine));
@@ -291,7 +291,7 @@ public class Script {
                                 if (aHistoryNestedBlock.size() > 0) {
                                     bFoundEndOfBlock = sLine.contains("}");
                                     if (bFoundEndOfBlock) {
-                                        pWriteRequest.SetOutput((ScriptMakerConfig.LastMessageHistoryDebug ? (pWriteRequest.GetOutput() + "//(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
+                                        pWriteRequest.SetOutput((Config.bMessageHistoryPrevLog ? (pWriteRequest.GetOutput() + "//(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
                                         lScriptLines.add(pWriteRequest.GetOutput());
                                         if (pWriteRequest.GetNestedBlockOutput().size() > 0) {
                                             pWriteRequest.GetNestedBlockOutput().stream().forEach((s) -> {
@@ -306,7 +306,7 @@ public class Script {
                                 } else {
                                     if (!pReader.ready()) {
                                         lScriptLines.add(sLine);
-                                        pWriteRequest.SetOutput((ScriptMakerConfig.LastMessageHistoryDebug ? (pWriteRequest.GetOutput() + "//(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
+                                        pWriteRequest.SetOutput((Config.bMessageHistoryPrevLog ? (pWriteRequest.GetOutput() + "//(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
                                         lScriptLines.add(pWriteRequest.GetOutput());
                                         if (pWriteRequest.GetNestedBlockOutput().size() > 0) {
                                             pWriteRequest.GetNestedBlockOutput().stream().forEach((s) -> {
@@ -330,7 +330,7 @@ public class Script {
                 if (!bWriteRequestComplete) { 
                     //Pop the last line "written" in the queue, add the missing Target-Conditional we couldn't find and replace the last line back to the end
                     sLine = lScriptLines.remove(lScriptLines.size() - 1);
-                    pWriteRequest.SetOutput((ScriptMakerConfig.LastMessageHistoryDebug ? (pWriteRequest.GetOutput() + " //(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
+                    pWriteRequest.SetOutput((Config.bMessageHistoryPrevLog ? (pWriteRequest.GetOutput() + " //(previous-line) " + sMessageHistory) : pWriteRequest.GetOutput()));
                     if (GetNestedBlockHistory().sTargetText.contains("case ") && GetNestedBlockHistory().sTargetText.contains(":")) {
                         lScriptLines.add("\r\n" + GetNestedBlockHistory().sTargetText);
                     } else {

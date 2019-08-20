@@ -9,7 +9,7 @@ import game.network.InPacket;
 import packet.opcode.LoopbackCode;
 import packet.PacketWrapperNull;
 import script.ScriptWriteRequest;
-import scriptmaker.ScriptMakerConfig;
+import scriptmaker.Config;
 import util.Logger;
 
 /**
@@ -29,7 +29,7 @@ public class UserChat extends PacketWrapperNull {
     
     @Override
     public ScriptWriteRequest CreateScriptWriteRequest() {
-        if (ScriptMakerConfig.OnPacketUserTalkDebug) {
+        if (Config.bUserTalkLog) {
             Logger.LogAdmin("UserChat: " + sMsg + "");
         }
         return null;

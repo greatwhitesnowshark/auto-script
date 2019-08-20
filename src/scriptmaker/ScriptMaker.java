@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import packet.opcode.ClientCode;
 import util.Logger;
+import static util.PacketUtil.*;
 
 /**
  *
@@ -37,20 +38,32 @@ import util.Logger;
  *         Need to verify if the quest result packets should be in fact coming from the field scripts
  *         Need to make sure that when SetField happens, there will be a new case label created for it if one does not exist
  */
-public class Analyzer extends javax.swing.JFrame {
+public class ScriptMaker extends javax.swing.JFrame {
 
-    public static final int INCREMENT_CACHED_KEY_VALUE = 2;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFileChooser jFileChooser1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JSeparator jSeparator1;
+    // End of variables declaration//GEN-END:variables
+    private static final int INCREMENT_CACHED_KEY_VALUE = 2;
     
     /**
-     * Creates new form Analyzer
+     * Creates new form ScriptMaker
      */
-    public Analyzer() {
+    public ScriptMaker() {
         try {
             ScriptTemplateMap.GetInstance().LoadTemplateMap();
         } catch (IOException e) {
             e.printStackTrace();
         }
         initComponents();
+    }
+
+    public static void main(String args[]) {
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new ScriptMaker().setVisible(true);
+        });
     }
 
     /**
@@ -190,7 +203,7 @@ public class Analyzer extends javax.swing.JFrame {
         }
         
         //Create the new window
-        JFrame frame = new JFrame("Sniff Analyzer");
+        JFrame frame = new JFrame("Sniff ScriptMaker");
         //Add Content
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JScrollPane jScrollPane = new JScrollPane(jLog);
@@ -200,64 +213,4 @@ public class Analyzer extends javax.swing.JFrame {
         frame.pack();
         frame.setVisible(true);
     }//GEN-LAST:event_jFileChooser1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new Analyzer().setVisible(true);
-        });
-    }
-    
-    //Credit to: Swordie devs for read- methods, muchas gracias ~~
-    private static short ReadShort(DataInputStream dis) throws IOException {
-        short s = (short) (dis.readByte() & 0xFF);
-        s += (dis.readByte() & 0xFF) << 8;
-        return s;
-    }
-
-    private static int ReadInt(DataInputStream dis) throws IOException {
-        int s = (dis.readByte() & 0xFF);
-        s += (dis.readByte() & 0xFF) << 8;
-        s += (dis.readByte() & 0xFF) << 16;
-        s += (dis.readByte() & 0xFF) << 24;
-        return s;
-    }
-
-    private static long ReadLong(DataInputStream dis) throws IOException {
-        long s = (dis.readByte() & 0xFF);
-        s += (dis.readByte() & 0xFF) << 8;
-        s += (dis.readByte() & 0xFF) << 16;
-        s += (dis.readByte() & 0xFF) << 24;
-        s += (long) (dis.readByte() & 0xFF) << 32;
-        s += (long) (dis.readByte() & 0xFF) << 40;
-        s += (long) (dis.readByte() & 0xFF) << 48;
-        s += (long) (dis.readByte() & 0xFF) << 56;
-        return s;
-    }
-    
-    private static String ReadString(DataInputStream dis) throws IOException {
-        int size = dis.readByte();
-        byte[] arr = new byte[size];
-        for (int i = 0; i < size; i++) {
-            arr[i] = dis.readByte();
-        }
-        return new String(arr);
-    }
-
-    private static byte[] ReadArr(DataInputStream dis, int size) throws IOException {
-        byte[] arr = new byte[size];
-        for (int i = 0; i < size; i++) {
-            arr[i] = dis.readByte();
-        }
-        return arr;
-    }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JFileChooser jFileChooser1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JSeparator jSeparator1;
-    // End of variables declaration//GEN-END:variables
 }

@@ -1,0 +1,11 @@
+Known Bugs - 
+
+	- Need to add handling for Item Scripts
+	- Need to determine when the script is transferring your field or when its a user doing it
+	- Need to end Field Scripts at the end of the direction node
+	- Need to add UserEffectLocal and FieldEffect packets
+	- Need to update ScriptMessage switch/case section
+	- Need to verify if the quest result packets should be in fact coming from the field scripts
+	- Could use a better way of determining when a script concludes, just in general. Maybe look for another packet tag
+	- Could use some clean-up code for the '...' if any debug booleans are set to true
+	- 

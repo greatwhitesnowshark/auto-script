@@ -20,7 +20,7 @@ import template.QuestEndTemplate;
 import template.QuestStartTemplate;
 import template.ReactorTemplate;
 import template.FieldTemplate;
-import scriptmaker.ScriptMakerConfig;
+import scriptmaker.Config;
 import util.Logger;
 
 /**
@@ -109,7 +109,7 @@ public class ScriptTemplateMap {
         pStream.close();
         aTemplate.stream().forEach((pNpcTemplate) -> {
             mTemplate.get(NpcTemplate.class.hashCode()).put(pNpcTemplate.dwTemplateID, pNpcTemplate);
-            if (ScriptMakerConfig.TemplateMapNpcScriptDebug) {
+            if (Config.bTemplateMapNpcScript) {
                 Logger.LogReport("pNpcTemplate.dwTemplateID [" + pNpcTemplate.dwTemplateID + "] / pNpcTemplate.sScript [" + pNpcTemplate.sScript + "]");
             }
         });
@@ -124,7 +124,7 @@ public class ScriptTemplateMap {
                     sNpcName = aTemplateInfo[1];
                     if (!mNpcName.containsKey(dwTemplateID)) {
                         mNpcName.put(dwTemplateID, sNpcName);
-                        if (ScriptMakerConfig.TemplateMapNpcNameDebug) {
+                        if (Config.bTemplateMapNpcName) {
                             Logger.LogReport("Npc-Name-to-ID:  dwTemplateID [%d], sNpcName [%s]", dwTemplateID, sNpcName);
                         }
                     }
@@ -147,13 +147,13 @@ public class ScriptTemplateMap {
                     nQuestEndNpcID = Integer.parseInt(aTemplateInfo[5]);
                     if (!sStartScript.equals("null")) {
                         aTemplate.add(new QuestStartTemplate(sStartScript, dwTemplateID, nQuestStartNpcID, sQuestName));
-                        if (ScriptMakerConfig.TemplateMapQuestStartScriptDebug) {
+                        if (Config.bTemplateMapQuestStartScript) {
                             Logger.LogReport("QuestStartTemplate:  sStartScript [%s], dwTemplateID [%d], nQuestStartNpcID [%d], sQuestName [%s]", sStartScript, dwTemplateID, nQuestStartNpcID, sQuestName);
                         }
                     }
                     if (!sEndScript.equals("null")) {
                         aTemplate2.add(new QuestEndTemplate("script\\questEnd\\", sEndScript, dwTemplateID, nQuestEndNpcID, sQuestName));
-                        if (ScriptMakerConfig.TemplateMapQuestEndScriptDebug) {
+                        if (Config.bTemplateMapQuestEndScript) {
                             Logger.LogReport("QuestEndTemplate:  sEndScript [%s], dwTemplateID [%d], nQuestEndNpcID [%d], sQuestName [%s]", sEndScript, dwTemplateID, nQuestEndNpcID, sQuestName);
                         }
                     }
@@ -182,7 +182,7 @@ public class ScriptTemplateMap {
                             if (aTemplateInfo.length > 1) {
                                 sScript = aTemplateInfo[1].replaceAll("`", "").trim();
                                 aTemplate.add(new PortalTemplate(sScript, dwField, sPortalName));
-                                if (ScriptMakerConfig.TemplateMapPortalScriptDebug) {
+                                if (Config.bTemplateMapPortalScript) {
                                     Logger.LogReport("PortalTemplate:  sScript [%s], dwField [%d], sPortalName [%s]", sScript, dwField, sPortalName);
                                 }
                             }
@@ -210,7 +210,7 @@ public class ScriptTemplateMap {
                             sLine = pStream.readLine().trim();
                             sScript = sType + "\\" + sLine.replace("`", "");
                             aTemplate.add(new FieldTemplate(sScript, dwField, sType));
-                            if (ScriptMakerConfig.TemplateMapFieldScriptDebug) {
+                            if (Config.bTemplateMapFieldScript) {
                                 Logger.LogReport("Field-Script:  sType [%s], sScript [%s], dwField [%d]", sType, sScript, dwField);
                             }
                         }
@@ -229,7 +229,7 @@ public class ScriptTemplateMap {
                     String sFieldName = aTemplateInfo[1].replace("]", "");
                     if (!mFieldName.containsKey(dwFieldID)) {
                         mFieldName.put(dwFieldID, sFieldName);
-                        if (ScriptMakerConfig.TemplateMapFieldNameDebug) {
+                        if (Config.bTemplateMapFieldName) {
                             Logger.LogReport("Field-Name-to-ID:  dwFieldID [%d], sFieldName [%s]", dwFieldID, sFieldName);
                         }
                     }

@@ -11,7 +11,7 @@ import java.io.File;
  *
  * @author Sharky
  */
-public class PurgeDirectory {
+public class DirectoryPurge {
     
     public static String sNpcDirectory = "script\\npc\\",
                          sQuestDirectory = "script\\quest\\",

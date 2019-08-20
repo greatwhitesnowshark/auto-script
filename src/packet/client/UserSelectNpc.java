@@ -15,7 +15,7 @@ import script.ScriptModifier;
 import script.ScriptTemplateMap;
 import script.ScriptWriteRequest;
 import template.NpcTemplate;
-import scriptmaker.ScriptMakerConfig;
+import scriptmaker.Config;
 import util.Logger;
 
 /**
@@ -47,7 +47,7 @@ public class UserSelectNpc extends PacketWrapperNull {
                 NpcTemplate pNpcTemplate = ScriptTemplateMap.GetNpcTemplate(nNpcID);
                 if (pNpcTemplate != null) {
                     pScript.CreateNewTemplate(new ScriptWriteRequest(pScript.dwField, pNpcTemplate), true);
-                    if (ScriptMakerConfig.OnPacketUserSelectNpcDebug) {
+                    if (Config.bUserSelectNpcLog) {
                         String sNpcName = ScriptTemplateMap.GetNpcName(nNpcID);
                         if (sNpcName == null || sNpcName.isEmpty()) {
                             sNpcName = "No-Name-Found";
@@ -56,7 +56,7 @@ public class UserSelectNpc extends PacketWrapperNull {
                     }
                 } else {
                     this.bResetNotPersist = true;
-                    if (ScriptMakerConfig.OnPacketUserSelectNpcDebug) {
+                    if (Config.bUserSelectNpcLog) {
                         Logger.LogError("UserSelectNpc:-  no script template could be found for Npc-ID [%d]", nNpcID);
                     }
                 }

@@ -16,7 +16,7 @@ import script.ScriptWriteRequest;
 import template.QuestEndTemplate;
 import template.QuestStartTemplate;
 import template.QuestTemplate;
-import scriptmaker.ScriptMakerConfig;
+import scriptmaker.Config;
 import util.Logger;
 
 /**
@@ -34,7 +34,7 @@ public class UserQuestRequest extends PacketWrapperNull {
         this.nQuestID = iPacket.DecodeInt();
         this.bOpening = nQuestState == ScriptSysFunc.QuestRequestType.OpeningScript;
         this.bComplete = nQuestState == ScriptSysFunc.QuestRequestType.CompleteScript;
-        if (ScriptMakerConfig.OnPacketUserQuestRequestDebug) {
+        if (Config.bUserQuestRequestLog) {
             if (this.bOpening || this.bComplete) {
                 QuestTemplate pQuestTemplate = this.bOpening ? ScriptTemplateMap.GetQuestStartTemplate(this.nQuestID) : ScriptTemplateMap.GetQuestEndTemplate(this.nQuestID);
                 if (pQuestTemplate != null) {
