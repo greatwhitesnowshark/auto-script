@@ -22,35 +22,37 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import scriptmaker.Config;
 import util.StringUtil;
 
 /**
  *
  * @author Sharky - Really more of "swordie-python" to JS
  */
-public class PythToJS {
+public class PythonToJavascript {
     
     public static final Map<String, LinkedList<String>> mScriptLines = Collections.synchronizedMap(new HashMap<>());
     public static final Map<String, String> mReplace = new LinkedHashMap<>(); //all text-to-text replacements
     public static final Map<String, String> mFuncArgsAppend = new LinkedHashMap<>(); //appends arguments to funcs - "myFunc(arg1)->myFunc(arg1, true)"
-    //public static final Map<String, String> mChatTypeAppend = new LinkedHashMap<>(); //todo:: consider using this after we recode SetModifyFlag func
     public static final Map<String, LinkedList<String>> mDebugFuncName = new HashMap<>(); //debugging variables, (Key-Function, Value-Files)
     public static final Map<Integer, LinkedList<String>> mDebugFuncNameCount = new LinkedHashMap<>(); //(Key-# of Files, Value-List of Functions)
     public static final Map<String, String> mFuncAppend = new HashMap<>(); //adds lines after specific patterns are read
-    public static final List<String> aFuncSkipped = new LinkedList<>(); //skips over things found here
+    public static final Map<String, String> mReplacePythonKeyword = new LinkedHashMap<>(); //all python keyword-to-text replacements
+    public static final Map<String, LinkedList<String[]>> mPythonKeywordFileInfo = new LinkedHashMap<>(); //records file and line information about unknown syntax
     public static final List<String> aFileSkip = new LinkedList<>(); //records a list of skipped files due to syntax errors
     public static int nCreatedScriptCount = 0, nSkippedScriptCount = 0;
-        
 
     public static void main(String[] args) {
         try {
+            boolean bPrintCompactView = true,
+                    bPrintExpandedView = true,
+                    bPrintSyntaxErrView = true,
+                    bPrintConstantsView = true;
             String sDirectory = "C:\\Users\\Chris\\Desktop\\Swordie\\scripts_new";
 
             Files.walk(Paths.get(sDirectory)).forEach((pFile) -> {
                 if (!pFile.toFile().isDirectory()) {
                     try {
-                        ConvertPythToJS(pFile.toFile());
+                        ConvertPythonToJavascript(pFile.toFile());
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -78,7 +80,10 @@ public class PythToJS {
             }
 
             Object[] aSortedKey = null;
-            StringBuilder sCompactView = new StringBuilder("<CompactViewOutput>"), sExpandedView = new StringBuilder("<ExpandedViewOutput>");
+            StringBuilder sCompactView = new StringBuilder("<CompactView - overview of functions not accounted for yet>"),
+                    sExpandedView = new StringBuilder("<ExpandedView - same as CompactView but contains file references>"),
+                    sFuncSkipped = new StringBuilder("<SyntaxErrView - overview of keywords relating to python not accounted for yet>"),
+                    sConstantsView = new StringBuilder("<ImportConstantsView - overview of imports/constant-classes not accounted for yet>");
 
             if (!mDebugFuncName.isEmpty()) {
                 aSortedKey = mDebugFuncName.keySet().toArray();
@@ -113,22 +118,78 @@ public class PythToJS {
 
                     for (String sFunc : mDebugFuncNameCount.get(nCount)) {
                         sCompactView.append("\r\n\t:: " + sFunc + " ...number of occurrences: " + nCount);
-                        sExpandedView.append("\r\n\t:: " + sFunc.substring(sFunc.indexOf(".") + 1));
+                        sExpandedView.append("\r\n\r\n\t\t:: " + sFunc);
 
                         for (String sFileInfo : mDebugFuncName.get(sFunc)) {
-                            sExpandedView.append("\r\n\t\t- " + sFileInfo);
+                            sExpandedView.append("\r\n\r\n\t\t\t\t- " + sFileInfo);
                         }
                     }
                 }
             }
 
-            sCompactView.append("\r\n</CompactViewOutput>\r\n");
-            sExpandedView.append("\r\n</ExpandedViewOutput>\r\n");
+            Map<String, LinkedList<String[]>> mConstants = new LinkedHashMap<>();
+            if (!mPythonKeywordFileInfo.isEmpty()) {
+                List<String> aFileCount = new LinkedList<>();
+                for (String sKeyword : mPythonKeywordFileInfo.keySet()) {
+                    for (String[] aFileInfo : mPythonKeywordFileInfo.get(sKeyword)) {
+                        if (!aFileCount.contains(aFileInfo[0])) {
+                            aFileCount.add(aFileInfo[0]);
+                        }
+                    }
+                }
+                sFuncSkipped.append("\r\n<These are the files that utilize python keywords ........ " + aFileCount.size() + " files>\r\n");
+                for (String sKeyword : mPythonKeywordFileInfo.keySet()) {
+                    LinkedList<String[]> lFileInfo = mPythonKeywordFileInfo.get(sKeyword);
+                    if (lFileInfo != null && !lFileInfo.isEmpty()) {
+                        sFuncSkipped.append("\r\n\r\n\t:: [keyword '" + sKeyword + "']  occurrences: " + lFileInfo.size() + "\r\n");
+                        for (String[] aFileInfo : lFileInfo) {
+                            String sFileName = aFileInfo[0];
+                            String sLine = aFileInfo[1].trim();
+                            String[] aConstantInfo = new String[] {sFileName, sLine};
+                            sFuncSkipped.append("\r\n\t\t\t- " + sFileName + "  \r\n\t\t\t\t\t- " + sLine);
+                            if (sLine.contains("import ") && sLine.contains("from ")) {
+                                String[] aSplit = sLine.split(" ");
+                                if (aSplit != null && aSplit.length > 3) {
+                                    String sConstant = aSplit[1] + "." + aSplit[3];
+                                    if (sConstant.contains(";")) {
+                                        sConstant = sConstant.replace(";", "");
+                                    }
+                                    if (!mConstants.containsKey(sConstant)) {
+                                        mConstants.put(sConstant, new LinkedList<>());
+                                    }
+                                    LinkedList<String[]> aConstantFileInfo = mConstants.get(sConstant);
+                                    if (!aConstantFileInfo.contains(aConstantInfo)) {
+                                        aConstantFileInfo.add(aConstantInfo);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
-            System.out.println(sCompactView.toString());
-            System.out.println("\r\n" + sExpandedView.toString());
+            if (!mConstants.isEmpty()) {
+                sConstantsView.append("\r\n<These are the imported classes/constants that need to be transferred over..... " + mConstants.size() + " classes>\r\n");
+                for (String sConstant : mConstants.keySet()) {
+                    sConstantsView.append("\r\n\r\n\t\t:: " + sConstant + "  .....number of file occurrences: " + mConstants.get(sConstant).size() + "\r\n");
+                    for (String[] aFileInfo : mConstants.get(sConstant)) {
+                        sConstantsView.append("\r\n\t\t\t\t- (" + aFileInfo[0] + ") " + aFileInfo[1]);
+                    }
+                }
+            }
+
+            sCompactView.append("\r\n</CompactView>\r\n");
+            sExpandedView.append("\r\n</ExpandedView>\r\n");
+            sFuncSkipped.append("\r\n</SyntaxErrView>\r\n");
+            sConstantsView.append("\r\n</ImportConstantsView>\r\n");
+
+            if (bPrintCompactView) System.out.println(sCompactView.toString());
+            if (bPrintExpandedView) System.out.println("\r\n" + sExpandedView.toString());
+            if (bPrintSyntaxErrView) System.out.println("\r\n" + sFuncSkipped.toString());
+            if (bPrintConstantsView) System.out.println("\r\n" + sConstantsView.toString());
 
             if (aSortedKey != null) System.out.println("Total number of unaccounted methods/funcs:  " + aSortedKey.length);
+            if (!mConstants.isEmpty()) System.out.println("Total number of constants classes/enums to import: " + mConstants.size());
             System.out.println("Total number of created scripts:  " + nCreatedScriptCount);
             System.out.println("Total number of skipped scripts: " + nSkippedScriptCount);
 
@@ -141,8 +202,8 @@ public class PythToJS {
         if (!sScriptLine.isEmpty()) {
             if (sScriptLine.trim().charAt(0) == '#') {
                 sScriptLine = sScriptLine.replace("#", "// ");
-            } else if (sScriptLine.contains(" # ")) {
-                sScriptLine = sScriptLine.replace(" # ", (!sScriptLine.contains("{") && !sScriptLine.contains(":") ? "; // " : " // "));
+            } else if (sScriptLine.contains(" #")) {
+                sScriptLine = sScriptLine.replace(" #", (!sScriptLine.contains("{") && !sScriptLine.contains(":") ? "; // " : " // "));
             }
             if (GetBlockPaddingChar(sScriptLine, false) < 4) {
                 sScriptLine = sScriptLine.trim();
@@ -213,19 +274,6 @@ public class PythToJS {
         return sScriptLine;
     }
     
-    /*public static final String ConvertChatTypeAppend(String sScriptLine) {
-        if (sScriptLine.contains("self.Say") || sScriptLine.contains("self.Ask")) {
-            if (!aParamArgs.isEmpty() && sScriptLine.contains("(")) {
-                String sAppend = "";
-                for (String s : aParamArgs) {
-                    sAppend += s;
-                }
-                sScriptLine = sScriptLine.replace("(", (sAppend + "("));
-            }
-        }
-        return sScriptLine;
-    }*/
-    
     public static final String ConvertSemicolon(String sScriptLine) {
         if (!sScriptLine.contains("//") && sScriptLine.trim().charAt(sScriptLine.trim().length() -1) != '{') {
             sScriptLine += ";";
@@ -251,7 +299,7 @@ public class PythToJS {
         return sScriptLine.substring(0, nLineSubstr) + (nAppendSubstr == 0 ? " " : "") + sAppend.substring(nAppendSubstr);
     }
     
-    public static final String GetFuncAppend(String sScriptLine) {
+    public static final String GetAdditionalScriptLine(String sScriptLine) {
         for (String sKey : mFuncAppend.keySet()) {
             if (sScriptLine.contains(sKey)) {
                 return mFuncAppend.get(sKey);
@@ -261,27 +309,7 @@ public class PythToJS {
     }
     
     public static final boolean IsSkippedLine(String sScriptLine) {
-        if (sScriptLine.contains("sm.dispose") || sScriptLine.contains("sm.diposse") || sScriptLine.contains("sm.disose")) {
-            return true;
-        } else {
-            for (String sKey : aFuncSkipped) {
-                if (sScriptLine.contains(sKey)) {
-                    return true;
-                }
-            }
-        }
-        /*} else {
-            for (String sKey : mChatTypeAppend.keySet()) {
-                if (sScriptLine.contains(sKey)) {
-                    String sAppend = mChatTypeAppend.get(sKey);
-                    if (!aParamArgs.contains(sAppend)) {
-                        aParamArgs.add(sAppend);
-                    }
-                    return true;
-                }
-            }
-        }*/
-        return false;
+        return sScriptLine.contains("sm.dispose") || sScriptLine.contains("sm.diposse") || sScriptLine.contains("sm.disose");
     }
     
     public static final boolean IsClosingBracketInsert(String sScriptLine, int nBlockPadding) {
@@ -310,21 +338,177 @@ public class PythToJS {
         int nTabPad = StringUtil.CountStringPaddingTab(sScriptLine);
         return nCharPad > nTabPad * 4 ? nCharPad : nTabPad * 4;
     }
+
+    public static final String ConvertPythonSingleKeyword(String sKeyword, String sLineSegment, String sScriptLine) {
+        String sKeywordSetDebug = "";
+        String sLineCompare = sLineSegment;
+        switch (sKeyword) {
+            case "global":
+                sLineSegment = sLineSegment.replace("global ", "").replace(";", " = 0;");
+                break;
+            case "None":
+                while (sLineSegment.contains("is not None")) {
+                    sLineSegment = sLineSegment.replace("is not None", "!= null");
+                }
+                while (sLineSegment.contains("is None")) {
+                    sLineSegment = sLineSegment.replace("is None", "== null");
+                }
+                while (sLineSegment.contains(" = None")) {
+                    sLineSegment = sLineSegment.replace(" = None", " = null");
+                }
+                break;
+            case "not":
+                if (sLineSegment.contains("not ") && sLineSegment.contains(" == ")) {
+                    String[] aLineSplit = sLineSegment.substring(sLineSegment.indexOf("not ")).split(" ");
+                    if (aLineSplit.length > 2) {
+                        String sExpression = aLineSplit[2];
+                        if (sExpression.equals("==")) {
+                            while (sLineSegment.contains("not ") && sLineSegment.contains("==")) {
+                                sLineSegment = sLineSegment.replace("not ", "");
+                                sLineSegment = sLineSegment.replace("==", "!=");
+                            }
+                        }
+                    }
+                }
+                while (sLineSegment.contains("not ")) {
+                    sLineSegment = sLineSegment.replace("not ", "!");
+                }
+                break;
+            case "def":
+                while (sLineSegment.contains("def ")) {
+                    sLineSegment = sLineSegment.replace("def ", "function ");
+                }
+                if (sLineSegment.contains(")) {")) {
+                    sLineSegment = sLineSegment.replace(")) {", ") {");
+                }
+                break;
+            case "len(":
+                while (sLineSegment.contains("len(")) {
+                    String sLineSegmentPrefix = sLineSegment.substring(0, sLineSegment.indexOf("len("));
+                    int nIdxStart = sLineSegment.indexOf("len("), nIdxEnd = nIdxStart;
+                    int nOpenPCount = 0;
+                    int nClosedPCount = 0;
+                    for (int i = nIdxStart; i < sLineSegment.length(); i++, nIdxEnd++) {
+                        char c = sLineSegment.charAt(i);
+                        if (c == '(') {
+                            nOpenPCount++;
+                        } else if (c == ')') {
+                            nClosedPCount++;
+                            if (nClosedPCount == nOpenPCount) {
+                                sLineSegmentPrefix += ".length";
+                                break;
+                            }
+                        }
+                        sLineSegmentPrefix += c;
+                    }
+                    sLineSegmentPrefix += sLineSegment.substring(nIdxEnd+1);
+                    sLineSegmentPrefix = sLineSegmentPrefix.replace("len(", "");
+                    sLineSegment = sLineSegmentPrefix;
+                }
+                break;
+            default:
+                while (sLineSegment.contains(sKeyword)) {
+                    if (mReplacePythonKeyword.get(sKeyword).equals(sKeyword)) {
+                        break;
+                    }
+                    sLineSegment = sLineSegment.replace(sKeyword, mReplacePythonKeyword.get(sKeyword));
+                }
+                break;
+        }
+        if (!sKeywordSetDebug.isEmpty() && sKeyword.equals(sKeywordSetDebug) && !sLineCompare.equals(sLineSegment)) {
+            System.out.println("[keyword '" + sKeyword + "' debug]");
+            System.out.println("\tsLineCompare: " + sLineCompare);
+            System.out.println("\tsLineSegment: " + sLineSegment + "\r\n");
+        }
+        return sLineSegment;
+    }
+
+    public static final String ConvertPythonKeywordLogInfo(String sLineSegment, String sScriptLine, String sFileName, int nLineNumber) {
+        for (String sKeyword : mReplacePythonKeyword.keySet()) {
+            if ((sLineSegment.contains(sKeyword) || (sKeyword.contains("(") && sLineSegment.contains(" " + sKeyword))) && !(sLineSegment.contains("(\"") || sLineSegment.contains("\")"))) {
+                int nIdxKeyword = sLineSegment.indexOf(sKeyword);
+                if (nIdxKeyword > 0 && (sLineSegment.charAt(nIdxKeyword-1) != ' ' && sLineSegment.charAt(nIdxKeyword-1) != '(' && sLineSegment.charAt(nIdxKeyword-1) != '\t')) {
+                    String sLineSegmentSuffix = sLineSegment.substring(nIdxKeyword + sKeyword.length());
+                    if (sLineSegment.length() > nIdxKeyword + sKeyword.length() && (sLineSegmentSuffix.contains(" " + sKeyword) || sLineSegmentSuffix.contains("(" + sKeyword))) {
+                        System.out.println("\r\n[MANUAL-FIX SYNTAX OCCURRENCE] [" + sKeyword + "]  " + sScriptLine);
+                        System.out.println("\t\tat File -  " + sFileName + "\r\n");
+                    }
+                    continue;
+                }
+                sLineSegment = ConvertPythonSingleKeyword(sKeyword, sLineSegment, sScriptLine);
+                if (sLineSegment.contains(sKeyword)) {
+                    if (!mPythonKeywordFileInfo.containsKey(sKeyword)) {
+                        mPythonKeywordFileInfo.put(sKeyword, new LinkedList<>());
+                    }
+                    LinkedList<String[]> lFileInfo = mPythonKeywordFileInfo.get(sKeyword);
+                    if (!lFileInfo.contains(new String[]{sFileName, sScriptLine + " [at line " + nLineNumber + "]"})) {
+                        lFileInfo.add(new String[]{sFileName, sScriptLine + " [at line " + nLineNumber + "]"});
+                    }
+                    mPythonKeywordFileInfo.put(sKeyword, lFileInfo);
+                }
+            }
+        }
+        return sLineSegment;
+    }
+
+    public static final String ConvertPythonKeyword(String sScriptLine, String sFileName, int nLineNumber) {
+        String sLine = "";
+        String sLineComments = sScriptLine.contains("//") ? sScriptLine.substring(sScriptLine.indexOf("//")) : "";
+        String sLineCommentsTrimmed = sScriptLine.contains("//") ? sScriptLine.substring(0, sScriptLine.indexOf("//")) : sScriptLine;
+        String[] aLineSplitInterleaveQuotes = sLineCommentsTrimmed.contains("\"") ? sLineCommentsTrimmed.split("\"") : new String[] {};
+        if (aLineSplitInterleaveQuotes.length > 0) {
+            for (int i = 0; i < aLineSplitInterleaveQuotes.length; i++) {
+                String sLineSegment = aLineSplitInterleaveQuotes[i];
+                if (i % 2 == 0) {
+                    sLineSegment = ConvertPythonKeywordLogInfo(sLineSegment, sScriptLine, sFileName, nLineNumber);
+                }
+                sLine += sLineSegment;
+                if (i != aLineSplitInterleaveQuotes.length - 1) {
+                    sLine += "\"";
+                }
+            }
+            if (!sLineComments.isEmpty()) {
+                sLine += sLineComments;
+            }
+        } else {
+            if (!sLineCommentsTrimmed.isEmpty()) {
+                sScriptLine = ConvertPythonKeywordLogInfo(sLineCommentsTrimmed, sScriptLine, sFileName, nLineNumber);
+                sScriptLine += sLineComments;
+            }
+            sLine += sScriptLine;
+        }
+        if (sLine.contains("import ") && sLine.contains("from ")) {
+            sLine = "";
+        }
+        return sLine;
+    }
     
     public static final void LogDebugInfo(String sScriptLine, String sFileName) {
         String sDebugFuncName = "";
-        if (sScriptLine.contains("self.") && Character.isLowerCase(sScriptLine.charAt(sScriptLine.indexOf(".") + 1)) && sScriptLine.contains("(")) {
-            String sDebug = sScriptLine.substring(sScriptLine.indexOf("self."));
-            if (sDebug.contains("(")) {
-                sDebugFuncName = sDebug.substring(0, sDebug.indexOf("("));
-
-            }
-        } else if (sScriptLine.contains("sm.")) {
-            String sDebug = sScriptLine.substring(sScriptLine.indexOf("sm."));
-            if (sDebug.contains("(")) {
-                sDebugFuncName = sDebug.substring(0, sDebug.indexOf("("));
-                if (mReplace.containsKey(sDebugFuncName)) {
-                    sDebugFuncName = "";
+        if (sScriptLine.contains(".")) {
+            int nIndex = sScriptLine.indexOf(".");
+            if (sScriptLine.length() > nIndex + 1) {
+                String s = sScriptLine.substring(sScriptLine.indexOf('.'));
+                if (Character.isLowerCase(sScriptLine.charAt(nIndex + 1)) ||
+                        (s.contains("(") && mReplace.containsValue(s.substring(0, s.indexOf('('))))) {
+                    int nIdxMiddle = sScriptLine.indexOf('.');
+                    int nIdxStart = nIdxMiddle;
+                    for (int i = nIdxMiddle; i >= 0; i--) {
+                        if (sScriptLine.charAt(i) == ' ') {
+                            nIdxStart = i+1;
+                            break;
+                        }
+                    }
+                    if (nIdxStart != nIdxMiddle) {
+                        String sDebug = sScriptLine.substring(nIdxStart);
+                        if (sDebug.contains("(")) {
+                            int nIdxEnd = sDebug.indexOf("(");
+                            sDebugFuncName = sDebug.substring(0, nIdxEnd);
+                            if (mDebugFuncName.containsKey(sDebugFuncName)) {
+                                sDebugFuncName = "";
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -348,10 +532,10 @@ public class PythToJS {
         }
     }
     
-    public static final void ConvertPythToJS(File pFile) throws IOException {
+    public static final void ConvertPythonToJavascript(File pFile) throws IOException {
         LinkedList<String> aScriptLines = new LinkedList<>();
         try (BufferedReader pReader = new BufferedReader(new FileReader(pFile))) {
-            int nBlockPadding = -1;
+            int nBlockPadding = -1, nLineNumber = 1;
             while (pReader.ready()) {
                 String sScriptLine = pReader.readLine();
                 if (!sScriptLine.trim().isEmpty()) {
@@ -379,16 +563,19 @@ public class PythToJS {
                         }
                         sScriptLine = ConvertFuncArgsAppend(sScriptLine);
                         sScriptLine = ConvertReplaceFunc(sScriptLine);
-                        //sScriptLine = ConvertChatTypeAppend(sScriptLine);
                         sScriptLine = ConvertSemicolon(sScriptLine);
-                        aScriptLines.add(sScriptLine);
-                        String sFuncAppend = GetFuncAppend(sScriptLine);
-                        if (!sFuncAppend.isEmpty()) {
-                            int nPadding = GetBlockPaddingChar(sScriptLine, false);
-                            aScriptLines.add(ToPaddedString(sFuncAppend, nPadding));
+                        sScriptLine = ConvertPythonKeyword(sScriptLine, pFile.getName(), nLineNumber);
+                        if (!sScriptLine.isEmpty()) {
+                            aScriptLines.add(sScriptLine);
+                            String sAdditionalScriptLine = GetAdditionalScriptLine(sScriptLine);
+                            if (!sAdditionalScriptLine.isEmpty()) {
+                                int nPadding = GetBlockPaddingChar(sScriptLine, false);
+                                aScriptLines.add(ToPaddedString(sAdditionalScriptLine, nPadding));
+                            }
                         }
-                        LogDebugInfo(sScriptLine, pFile.getName());
+                        nLineNumber++;
                     }
+                    LogDebugInfo(sScriptLine, pFile.getName());
                 }
             }
             while (nBlockPadding >= 0) {
@@ -422,6 +609,29 @@ public class PythToJS {
 
 
     static {
+
+        mReplacePythonKeyword.put("None", "");//not done
+        mReplacePythonKeyword.put("and", "&&");
+        mReplacePythonKeyword.put("assert", "assert");//not done
+        mReplacePythonKeyword.put("class", "class");//not done
+        mReplacePythonKeyword.put("def", "");
+        mReplacePythonKeyword.put("del", "del");//not done
+        mReplacePythonKeyword.put("except", "except");//not done
+        mReplacePythonKeyword.put("finally", "finally");//not done
+        //mReplacePythonKeyword.put("from", "from");//not done
+        mReplacePythonKeyword.put("global", "global");//not done
+        mReplacePythonKeyword.put("import", "import");//not done
+        mReplacePythonKeyword.put("lambda", "lambda");//not done //add to skipped
+        mReplacePythonKeyword.put("len(", "len(");//not done
+        mReplacePythonKeyword.put("list(", "list(");//not done //add to skipped
+        mReplacePythonKeyword.put("map(", "map(");//not done //add to skipped
+        mReplacePythonKeyword.put("nonlocal", "nonlocal");//not done
+        mReplacePythonKeyword.put("not", "");
+        mReplacePythonKeyword.put("pass", "pass");//not done
+        mReplacePythonKeyword.put("raise", "raise");//not done
+        mReplacePythonKeyword.put("try", "try");//not done
+        mReplacePythonKeyword.put("with", "with");//not done
+        mReplacePythonKeyword.put("yield", "yield");//not done
         
         mReplace.put("addAP", "UserIncAP");
         mReplace.put("addDamageSkin", "UserSaveDamageSkin");
@@ -435,6 +645,7 @@ public class PythToJS {
         mReplace.put("addPopupSay", "UserAddPopupSay");
         mReplace.put("addPopUpSay", "UserAddPopupSay");
         mReplace.put("addQRValue", "QuestRecordSet");
+        mReplace.put("updateQRValue", "QuestRecordSet");
         mReplace.put("balloonMsg", "UserBalloonMsg");
         mReplace.put("blind", "FieldEffectBlind");
         mReplace.put("bgmVolume", "FieldEffectBGMVolumeOnly");
@@ -463,6 +674,7 @@ public class PythToJS {
         mReplace.put("curNodeEventEnd", "OnInGameCurNodeEventEnd");
         mReplace.put("deductMesos", "UserDeductMoney");
         mReplace.put("deleteQuest", "QuestRecordRemove");
+        mReplace.put("delta", "dlta"); //sharky note:: for python keyword 'del'
         //mReplace.put("doEventAndSendDelay", "doEventAndSendDelay"); //todo:: this is horse shit, needs to be addressed manually
         mReplace.put("dropItem", "FieldDropItem");
         mReplace.put("faceOff(", "OnUserInGameDirectionEvent(InGameDirectionEvent.FaceOff, ");
@@ -542,6 +754,7 @@ public class PythToJS {
         mReplace.put("playSound", "EffectSound");
         //mReplace.put("playVideoByScript", "playVideoByScript"); //todo:: wtf is this, likely remove all occurrences
         mReplace.put("progressMessageFont", "SendProgressMessageFont");
+        mReplace.put("randomInt", "rndInt"); //sharky note:: so that the 'and' python keyword doesn't pick this shit up
         mReplace.put("removeCTS", "UserRemoveBuff"); //todo:: probably need to change arguments if they used objects for CTS
         mReplace.put("removeAdditionalEffect(", "OnUserInGameDirectionEvent(InGameDirectionEvent.RemoveAdditionalEffect");
         mReplace.put("removeMobByTemplateId", "FieldRemoveMob");
@@ -607,13 +820,54 @@ public class PythToJS {
         mReplace.put("True", "true");
         mReplace.put("warp", "RegisterTransferField");
         mReplace.put("zoomCamera(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraZoom, ");
-        mReplace.put("oxChatPlayerAsSpeaker(", "SetModifyFlag(0x22");
-        mReplace.put("flipBoxChat(", "SetModifyFlag(0x28");
-        mReplace.put("flipDialogue(", "SetModifyFlag(0x4");
-        mReplace.put("flipDialoguePlayerAsSpeaker(", "SetModifyFlag(0x10");
-        mReplace.put("flipSpeaker(", "SetModifyFlag(0x8");
+        mReplace.put("zoomCameraNoResponse(", "OnUserInGameDirectionEvent(InGameDirectionEvent.CameraZoom, ");
+        mReplace.put("oxChatPlayerAsSpeaker(", "SetModifyFlag(SpeakerTypeID.ScenarioIlluChat, SpeakerTypeID.NpcReplacedByUser");
+        mReplace.put("flipBoxChat(", "SetModifyFlag(SpeakerTypeID.ScenarioIlluChat, SpeakerTypeID.FlipImage");
+        mReplace.put("flipDialogue(", "SetModifyFlag(SpeakerTypeID.NpcReplayedByNpc");
+        mReplace.put("flipDialoguePlayerAsSpeaker(", "SetModifyFlag(SpeakerTypeID.FlipImage, SpeakerTypeID.NpcReplacedByUser");
+        mReplace.put("flipSpeaker(", "SetModifyFlag(SpeakerTypeID.FlipImage");
+        mReplace.put("setPlayerAsSpeaker(", "SetModifyFlag(SpeakerTypeID.NpcReplacedByUser");
+        mReplace.put("removeEscapeButton(", "SetModifyFlag(SpeakerTypeID.NoESC");
+        mReplace.put("setBoxChat(", "SetModifyFlag(SpeakerTypeID.ScenarioIlluChat");
+        mReplace.put("addEscapeButton(", "ResetModifyFlag(SpeakerTypeID.NoESC");
+        mReplace.put("flipBoxChatPlayerNoEscape", "SetModifyFlag(SpeakerTypeID.ScenarioIlluChat, SpeakerTypeID.FlipImage, SpeakerTypeID.NpcReplacedByUser, SpeakerTypeID.NoESC");
+        mReplace.put("sendAskSlideMenu", "AskSlideMenu");
         mReplace.put("setParam", "SetModifyFlag");
-
+        mReplace.put("showFieldEffect", "EffectScreenAutoLetterBox");
+        mReplace.put("flipNpcByTemplateId", "SetForceFlip");
+        mReplace.put("spawnMob", "FieldSummonMob");
+        mReplace.put("setJob", "UserJob");
+        mReplace.put("setMapTaggedObjectVisible", "UserSetMapTaggedObjectVisible");
+        mReplace.put("speechBalloon", "UserSpeechBalloonEffect");
+        mReplace.put("jobAdvance", "UserJobAdvance");
+        mReplace.put("getParty", "UserGetPartyData");
+        mReplace.put("giveAndEquip", "UserEquipNewItem");
+        mReplace.put("teleportToPortal", "UserTeleport");
+        mReplace.put("showWeatherNotice", "UserWeatherEffectNotice");
+        mReplace.put("getnOptionByCTS", "UserGetNOption");
+        mReplace.put("invokeForParty", "UserExecFuncForParty"); //(Has TODO: Sharky Shit for the actual invoking of func)
+        mReplace.put("rideVehicle", "UserRideVehicle");
+        mReplace.put("setFieldColour", "EffectColorChange");
+        mReplace.put("teleportInField", "UserTeleportPosition");
+        mReplace.put("tutorAutomatedMsg", "UserTutorialMsg"); //(Must exec UserHireTutor first)
+        mReplace.put("setFieldGrey", "EffectGrayScale");
+        mReplace.put("showObjectFieldEffect", "EffectObject");
+        mReplace.put("showWeatherNoticeToField", "FieldWeatherEffectNotice");
+        mReplace.put("giveCTS", "UserGiveCTS");
+        mReplace.put("setFuncKeyByScript", "UserSetFuncKey");
+        mReplace.put("showEffectToField", "FieldEffectUOL");
+        mReplace.put("showHP", "MobShowHP");
+        mReplace.put("useItem", "UserGiveBuff");
+        mReplace.put("getOffFieldEffectFromWz", "EffectTopScreenDelayed");
+        mReplace.put("showFieldBackgroundEffect", "EffectScreenDelayed");
+        mReplace.put("spawnMobOnChar", "FieldSummonMobOnChar");
+        mReplace.put("getDropInRect", "FieldFindDropInRect");
+        mReplace.put("getPartySize", "UserGetPartyMemberCount");
+        mReplace.put("hasCTS", "UserHasCTS");
+        mReplace.put("showOffFieldEffect", "EffectTopScreenDelayed");
+        mReplace.put("spawnMobWithAppearType", "FieldSummonMob");
+        mReplace.put("tutorCustomMsg", "UserTutorialMsg"); //(Must exec UserHireTutor first)
+        mReplace.put("getSkillByItem", "UserGetSkillByItemID");
 
         //These methods get passed before the FuncReplaceConvert so using swordie-func names
         mFuncArgsAppend.put("addAP", ", true");
@@ -629,9 +883,7 @@ public class PythToJS {
         //Adds necessary actions as subsequent lines on the discovery of a given pattern-key
         mFuncAppend.put("InGameDirectionEvent.Delay", "self.Wait();");
 
-        //This adds "skip" function that will ignore certain lines based on a given pattern-key
-        //These lines will need to be stored and reviewed, anything with Import will need flagging for constant class conversions
-        aFuncSkipped.add("import");
+
 
     }
 }
