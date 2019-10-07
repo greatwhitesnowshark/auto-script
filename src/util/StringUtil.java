@@ -19,6 +19,15 @@ public class StringUtil {
         sLinePadded.append(sLine);
         return sLinePadded.toString();
     }
+
+    public static String TrimWhitespaceFromEnd(String sLine) {
+        if (!sLine.isEmpty()) {
+            while (sLine.length() > 0 && sLine.charAt(sLine.length() - 1) == ' ') {
+                sLine = sLine.substring(0, sLine.length() - 1);
+            }
+        }
+        return sLine;
+    }
     
     public static int CountStringPaddingChar(String sLine) {
         int nPadding = 0;

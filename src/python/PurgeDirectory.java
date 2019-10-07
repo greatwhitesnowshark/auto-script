@@ -14,8 +14,7 @@ import java.io.File;
  * @author Sharky
  */
 public class PurgeDirectory {
-    
-    public static String sDirectory = "C:\\Users\\Chris\\Desktop\\Swordie\\scripts_javascript\\";
+
     public static String sNpcDirectory = "npc\\",
                          sQuestDirectory = "quest\\",
                          sPortalDirectory = "portal\\",
@@ -33,7 +32,7 @@ public class PurgeDirectory {
     
     public static void DeleteFromDirectory(String... aDir) {
         for (String sPath : aDir) {
-            File pDirectory = new File(sDirectory + sPath);
+            File pDirectory = new File(PythonToJavascript.sJavascriptDirectory + sPath);
             if (pDirectory.isDirectory()) {
                 for(File pFile: pDirectory.listFiles()) {
                     if (!pFile.isDirectory()) {

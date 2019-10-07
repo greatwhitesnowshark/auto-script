@@ -10,6 +10,8 @@ import game.scripting.ScriptMan;
 import game.scripting.ScriptMan.MessageType;
 import java.util.LinkedList;
 import java.util.List;
+
+import game.scripting.ScriptSysFunc;
 import packet.opcode.LoopbackCode;
 import packet.PacketWriteRequest;
 import script.Script;
@@ -22,7 +24,7 @@ import util.Logger;
  * @author Sharky
  */
 public class ScriptMessage extends PacketWriteRequest {
-    
+
     private int nSpeakerTypeID, nSpeakerTemplateID, nMsgType, tWait, nMin, nMax, nDefault, nQuizResult, tRemain,
             nQuizType, dwQuizAnswer, nQuizCorrect, nQuizRemain, nDlgType, nDefaultSelect, nNpcID, nFaceIndex, nFaceIndex2, bIsLeft;
     private short bParam, nCol, nLine, nBgIdx, nFontSize = 0;
@@ -30,7 +32,7 @@ public class ScriptMessage extends PacketWriteRequest {
     private String sText = "", sDefaultText = "", sTitle = "", sProblemText = "", sHintText = "";
     private int[] aCode = new int[0];
     private String[] aImage = new String[0], aPath = new String[0];
-    
+
     public ScriptMessage(InPacket iPacket) {
         super(LoopbackCode.ScriptMessage.nCode);
         try {
@@ -47,7 +49,7 @@ public class ScriptMessage extends PacketWriteRequest {
             //todo:: double-check and update this if needed, for the cases below
             switch (nMsgType) {
                 case MessageType.Say:
-                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                    if ((this.bParam & ScriptSysFunc.SpeakerTypeID.NpcReplayedByNpc) > 0) {
                         this.nSpeakerTemplateID = iPacket.DecodeInt();
                     }
                     this.sText = iPacket.DecodeString();
@@ -69,14 +71,14 @@ public class ScriptMessage extends PacketWriteRequest {
                 case MessageType.AskMenu:
 
                 case MessageType.AskAccept:
-                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                    if ((this.bParam & ScriptSysFunc.SpeakerTypeID.NpcReplayedByNpc) > 0) {
                         this.nSpeakerTemplateID = iPacket.DecodeInt();
                     }
                     this.sText = iPacket.DecodeString();
                     break;
 
                 case MessageType.AskText:
-                    if ((bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                    if ((bParam & ScriptSysFunc.SpeakerTypeID.NpcReplayedByNpc) > 0) {
                         this.nSpeakerTemplateID = iPacket.DecodeInt();
                     }
                     this.sText = iPacket.DecodeString();
@@ -153,7 +155,7 @@ public class ScriptMessage extends PacketWriteRequest {
                     break;
 
                 case MessageType.AskBoxText:
-                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                    if ((this.bParam & ScriptSysFunc.SpeakerTypeID.NpcReplayedByNpc) > 0) {
                         this.nSpeakerTemplateID = iPacket.DecodeInt();
                     }
                     this.sText = iPacket.DecodeString();
@@ -191,7 +193,7 @@ public class ScriptMessage extends PacketWriteRequest {
                 case MessageType.AskAcceptDualIllustration:
                 case MessageType.AskMenuIllustration:
                 case MessageType.AskMenuDualIllustration:
-                    if ((this.bParam & ScriptMan.SpeakerTypeID.NpcReplayedByNpc) > 0) {
+                    if ((this.bParam & ScriptSysFunc.SpeakerTypeID.NpcReplayedByNpc) > 0) {
                         this.nSpeakerTemplateID = iPacket.DecodeInt();
                     }
                     this.sText = iPacket.DecodeString();
@@ -233,7 +235,7 @@ public class ScriptMessage extends PacketWriteRequest {
                     this.aCode = new int[nSize];
                     for (int i = 0; i < nSize; i++) {
                         this.aCode[i] = iPacket.DecodeInt();
-                    }   
+                    }
                     break;
 
                 case MessageType.AskAngelicBuster:
@@ -285,7 +287,7 @@ public class ScriptMessage extends PacketWriteRequest {
                 case MessageType.Say:
                     sOutput = bParam == 2 || bParam == 3 ? ("self.SayUser(\"" + sText + "\", true") : ("self.Say(\"" + sText + "\", true");
                     break;
-                    
+
                 case MessageType.SayImage:
                     String sImage = "";
                     for (int i = 0; i < aImage.length; i++) {
@@ -296,14 +298,14 @@ public class ScriptMessage extends PacketWriteRequest {
                         sOutput += ("self.SayImage(\"" + sImage + "\"");
                     }
                     break;
-                    
+
                 case MessageType.AskYesNo:
                     sOutput += (bParam == 2 || bParam == 3) ? "nRet = self.AskYesNoUser(\"" + sText + "\"" : "nRet = self.AskYesNo(\"" + sText + "\"";
                     lConditionalText.add("if (nRet == 0) {");
                     lConditionalText.add("} else if (nRet == 1) {");
                     lConditionalText.add("}");
                     break;
-                    
+
                 case MessageType.AskMenu:
                     sOutput += "nSel = self.AskMenu(\"" + sText + "\"";
                     String[] aSelection = sText.replace("\\r\\n", "@").split("@");
@@ -329,21 +331,21 @@ public class ScriptMessage extends PacketWriteRequest {
                         }
                     }
                     break;
-                    
+
                 case MessageType.AskAccept:
                     sOutput += "nRet = self.AskAccept(\"" + sText + "\"";
                     lConditionalText.add("if (nRet == 0) {");
                     lConditionalText.add("} else if (nRet == 1) {");
                     lConditionalText.add("}");
                     break;
-                    
+
                 case MessageType.AskText:
                     sOutput += "sInput = self.AskText(\"" + sText + "\", \"Type answer here\", 1, 99";
                     lConditionalText.add("if (sInput == \"\") {");
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");
                     break;
-                    
+
                 case MessageType.AskNumber:
                     sOutput += "nInput = self.AskNumber(\"" + sText + "\", 0, 0, 254";
                     lConditionalText.add("nResult = -1;");
@@ -351,21 +353,21 @@ public class ScriptMessage extends PacketWriteRequest {
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");
                     break;
-                    
+
                 case MessageType.AskQuiz:
                     sOutput += "nInput = self.AskQuiz(\"" + sText + "\", \"" + sTitle + "\", \"" + sProblemText + "\", \"" + sHintText + "\", " + nMin + ", " + nMax + ", " + tRemain + "";
                     lConditionalText.add("if (nInput ==  /*[INSERT ANSWER]*/-1) {");
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");
                     break;
-                    
+
                 case MessageType.AskSpeedQuiz:
                     sOutput += "nInput = self.AskSpeedQuiz(\"" + sText + "\", " + nQuizType + ", " + dwQuizAnswer + ", " + nQuizCorrect + ", " + nQuizRemain + ", " + tRemain + "";
                     lConditionalText.add("if (nInput == /*[INSERT ANSWER]*/-1) {");
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");
                     break;
-                    
+
                 case MessageType.AskAvatar:
                 case MessageType.Unknown2:
                     String sCode = "aCode = [";
@@ -378,7 +380,7 @@ public class ScriptMessage extends PacketWriteRequest {
                     sCode += "];\r\n";
                     sOutput += "nSel = self.AskAvatar(\"" + sText + "\", " + sCode;
                     break;
-                    
+
                 case MessageType.AskSlideMenu:
                     sOutput += "nSel = script.AskSlideMenu(\"" + sText + "\", " + nDefaultSelect + ", " + nDlgType;
                     break;
