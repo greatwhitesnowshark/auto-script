@@ -7,11 +7,13 @@ import java.util.Map;
  *
  * @author Sharky
  */
-public class FunctionAppend {
+public class FunctionAppend extends Modifier {
 
-    public static final Map<String, String> mFunctionArgumentAppend = new LinkedHashMap<>(); //appends arguments to funcs - "myFunc(arg1)->myFunc(arg1, true)"
+    public static FunctionAppend pInstance = new FunctionAppend();
+    public static Map<String, String> mFunctionArgumentAppend = new LinkedHashMap<>(); //appends arguments to funcs - "myFunc(arg1)->myFunc(arg1, true)"
 
-    public static final String ConvertFunctionAppend(String sScriptLine) {
+    @Override
+    public String Convert(String sScriptLine) {
         for (String sLine : mFunctionArgumentAppend.keySet()) {
             if (sScriptLine.contains(sLine)) {
                 if (sScriptLine.contains(")") && !sScriptLine.contains(mFunctionArgumentAppend.get(sLine))) {
@@ -23,8 +25,10 @@ public class FunctionAppend {
         return sScriptLine;
     }
 
-    public static final void InitFunctionArgumentAppendMap() {
+
+    static {
         //These methods get passed before the FuncReplaceConvert so using swordie-func names
+
         mFunctionArgumentAppend.put("addAP",", true");
         mFunctionArgumentAppend.put("addLevel",", true");
         mFunctionArgumentAppend.put("addMaxHP",", true");
@@ -35,5 +39,6 @@ public class FunctionAppend {
         mFunctionArgumentAppend.put("giveExp",", true");
         mFunctionArgumentAppend.put("giveMesos",", true");
         mFunctionArgumentAppend.put("sendPrev",", true");
+
     }
 }

@@ -3,9 +3,8 @@ package python;
 import java.io.*;
 import java.util.*;
 
-import static python.FunctionKeyword.*;
+import static python.FunctionKeyword.mFunctionKeywordReplace;
 import static python.FunctionKeywordPython.mPythonKeywordToFileLine;
-import static python.StringModifier.*;
 import static python.PythonToJavascript.*;
 
 /**
@@ -14,13 +13,14 @@ import static python.PythonToJavascript.*;
  */
 public class DebugInfo {
 
-    public static final LinkedHashMap<String, String> mWhileLoopDebug = new LinkedHashMap<>(); //all instances where a while loop or a for-each loop is used for manual referencing
-    public static final Map<String, LinkedList<String>> mFunctionToFileSkip = new HashMap<>(); //debugging variables, (Key-Function, Value-Files)
-    public static final Map<Integer, LinkedList<String>> mNumInstancesToFunctionSkip = new LinkedHashMap<>(); //(Key-# of Files, Value-List of Functions)
-    public static final List<String> aFilesSkip = new LinkedList<>(); //records a list of skipped files due to alien functions
-    public static int nCreatedScripts = 0, nSkippedScripts = 0; //tracks the # of total created and skipped scripts
+    public static List<String> aFilesSkip = new LinkedList<>(); //records a list of skipped files due to alien functions
+    public LinkedHashMap<String, String> mWhileLoopDebug = new LinkedHashMap<>(); //all instances where a while loop or a for-each loop is used for manual referencing
+    public Map<String, LinkedList<String>> mFunctionToFileSkip = new HashMap<>(); //debugging variables, (Key-Function, Value-Files)
+    public Map<Integer, LinkedList<String>> mNumInstancesToFunctionSkip = new LinkedHashMap<>(); //(Key-# of Files, Value-List of Functions)
+    public Modifier pModifier = new StringModifier();
+    public int nCreatedScripts = 0, nSkippedScripts = 0; //tracks the # of total created and skipped scripts
 
-    public static final void LogDebugInfo(String sScriptLine, String sFileName) {
+    public void LogDebugInfo(String sScriptLine, String sFileName) {
         String sLine = sScriptLine;
         String[] aLineSplitInterleaveQuotes = sScriptLine.contains("\"") ? sScriptLine.split("\"") : new String[] {};
         if (aLineSplitInterleaveQuotes.length > 0) {
@@ -37,15 +37,15 @@ public class DebugInfo {
         }
     }
 
-    public static final void LogWhileLoopInfo(String sLineSegment, String sScriptLine, String sFileName) {
+    public void LogWhileLoopInfo(String sLineSegment, String sScriptLine, String sFileName) {
         if (sLineSegment.contains("while (") || (sLineSegment.contains("for") && sLineSegment.contains("in"))) {
             if (!mWhileLoopDebug.containsKey(sFileName)) {
-                mWhileLoopDebug.put(sFileName, " '" + sScriptLine.trim() + "'  GetAdditionalVariableForLoop() --> '" + GetIteratorIncrementInsertForLoop(sScriptLine) + "'");
+                mWhileLoopDebug.put(sFileName, " '" + sScriptLine.trim() + "'  GetAdditionalVariableForLoop() --> '" + pModifier.GetIteratorIncrementInsertForLoop(sScriptLine) + "'");
             }
         }
     }
 
-    public static final void LogDebugFunctionInfo(String sLine, String sFileName) {
+    public void LogDebugFunctionInfo(String sLine, String sFileName) {
         String sDebugFuncName;
         while (sLine.contains(".")) {
             int nIndex = sLine.indexOf('.');
@@ -117,7 +117,7 @@ public class DebugInfo {
         }
     }
 
-    public static final void PrintDebugInfoOutput() throws IOException {
+    public void PrintDebugInfoOutput() throws IOException {
         for (String sFileName : mScriptLines.keySet()) {
             if (!aFilesSkip.contains(sFileName.substring(0, sFileName.indexOf(".")))) {
                 try (BufferedWriter pWriter = new BufferedWriter(new FileWriter(sJavascriptDirectory + sFileName))) {
@@ -136,7 +136,7 @@ public class DebugInfo {
         StringBuilder sFunctionToFileView = new StringBuilder("<Function-to-Instances View>  overview/list of remaining alien functions and their number of instances"),
                 sFunctionToFileLineView = new StringBuilder("<Function-to-File View>  overview/list of remaining alien functions and their file references"),
                 sPythonKeywordToFileView = new StringBuilder("<Python-Keyword-to-File View>  overview/list of alien functions that relate to python's syntax keywords"),
-                sStaticImportsView = new StringBuilder("<Static-Imports View>  overview/listing of every singular call to an alien imported object or static class"),
+                sStaticImportsView = new StringBuilder("<Static-Imports View>  overview/listing of every singular call to an alien imported object or class"),
                 sSkippedFileView = new StringBuilder("<Skipped-Files View>  overview/listing of every skipped file that wasn't created due to unknown handling");
 
         if (!mFunctionToFileSkip.isEmpty()) {
@@ -303,14 +303,15 @@ public class DebugInfo {
             util.Logger.LogReport("(" + sFile + ") - " + mWhileLoopDebug.get(sFile));
         }
         if (!mWhileLoopDebug.isEmpty()) System.out.println("\r\n");
-        if (bAlienFunctionView) System.out.println(sFunctionToFileView.toString());
-        if (bAlienFunctionFileView) System.out.println("\r\n" + sFunctionToFileLineView.toString());
-        if (bSyntaxErrorView) System.out.println("\r\n" + sPythonKeywordToFileView.toString());
-        if (bAlienImportView && !mAlienImportClassCall.isEmpty()) System.out.println("\r\n" + sStaticImportsView.toString());
+        if (bFunctionToInstancesView) System.out.println(sFunctionToFileView.toString());
+        if (bFunctionToFileView) System.out.println("\r\n" + sFunctionToFileLineView.toString());
+        if (bPythonKeywordFileView) System.out.println("\r\n" + sPythonKeywordToFileView.toString());
+        if (bStaticImportsView && !mAlienImportClassCall.isEmpty()) System.out.println("\r\n" + sStaticImportsView.toString());
         if (bSkippedScriptView && !aFilesSkip.isEmpty()) System.out.println("\r\n" + sSkippedFileView.toString());
         if (!mAlienImportClass.isEmpty()) System.out.println("Total number of constants classes/enums to import.......... " + mAlienImportClass.size());
         if (aSortedKey != null) System.out.println("Total number of alien/unknown functions.................... " + aSortedKey.length);
         System.out.println("Total number of created scripts............................ " + nCreatedScripts);
         System.out.println("Total number of skipped scripts............................ " + nSkippedScripts);
+        System.out.println();
     }
 }

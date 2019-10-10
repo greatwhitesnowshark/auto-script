@@ -12,10 +12,10 @@ import static python.DebugInfo.aFilesSkip;
  */
 public class FunctionKeywordPython {
 
-    public static final Map<String, String> mFunctionPythonKeywordReplace = new LinkedHashMap<>(); //all python keyword-to-text replacements
-    public static final Map<String, LinkedList<String[]>> mPythonKeywordToFileLine = new LinkedHashMap<>(); //records file and line information about unknown syntax
+    public static Map<String, String> mFunctionPythonKeywordReplace = new LinkedHashMap<>(); //all python keyword-to-text replacements
+    public static Map<String, LinkedList<String[]>> mPythonKeywordToFileLine = new LinkedHashMap<>(); //records file and line information about unknown syntax
 
-    public static final String ConvertPythonSingleKeyword(String sKeyword, String sLineSegment, String sScriptLine) {
+    public static String ConvertPythonSingleKeyword(String sKeyword, String sLineSegment, String sScriptLine) {
         String sKeywordSetDebug = "";
         String sLineCompare = sLineSegment;
         switch (sKeyword) {
@@ -99,7 +99,7 @@ public class FunctionKeywordPython {
         return sLineSegment;
     }
 
-    public static final String ConvertPythonKeywordLogInfo(String sLineSegment, String sScriptLine, String sFileName, int nLineNumber) {
+    public static String ConvertPythonKeywordLogInfo(String sLineSegment, String sScriptLine, String sFileName, int nLineNumber) {
         for (String sKeyword : mFunctionPythonKeywordReplace.keySet()) {
             if ((sLineSegment.contains(sKeyword) || (sKeyword.contains("(") && sLineSegment.contains(" " + sKeyword))) && !(sLineSegment.contains("(\"") || sLineSegment.contains("\")"))) {
                 int nIdxKeyword = sLineSegment.indexOf(sKeyword);
@@ -130,7 +130,7 @@ public class FunctionKeywordPython {
         return sLineSegment;
     }
 
-    public static final String ConvertPythonKeyword(String sScriptLine, String sFileName, int nLineNumber) {
+    public static String ConvertPythonKeyword(String sScriptLine, String sFileName, int nLineNumber) {
         String sLine = "";
         String sLineComments = sScriptLine.contains("//") ? sScriptLine.substring(sScriptLine.indexOf("//")) : "";
         String sLineCommentsTrimmed = sScriptLine.contains("//") ? sScriptLine.substring(0, sScriptLine.indexOf("//")) : sScriptLine;
@@ -159,7 +159,9 @@ public class FunctionKeywordPython {
         return sLine;
     }
 
-    public static final void InitPythonKeywordReplaceMap() {
+
+    static {
+
         mFunctionPythonKeywordReplace.put("None", "");//not done
         mFunctionPythonKeywordReplace.put("and", "&&");
         mFunctionPythonKeywordReplace.put("assert", "assert");//not done
@@ -182,5 +184,6 @@ public class FunctionKeywordPython {
         mFunctionPythonKeywordReplace.put("try", "try");//not done
         mFunctionPythonKeywordReplace.put("with", "with");//not done
         mFunctionPythonKeywordReplace.put("yield", "yield");//not done
+
     }
 }

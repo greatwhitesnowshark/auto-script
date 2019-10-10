@@ -7,11 +7,13 @@ import java.util.List;
  *
  * @author Sharky
  */
-public class ForceComment {
+public class ForceComment extends Modifier {
 
-    public static final List<String> aForceCommentLine = new LinkedList<>(); //ignores a read line if it contains specific text
+    public static ForceComment pInstance = new ForceComment();
+    public static List<String> aForceCommentLine = new LinkedList<>(); //ignores a read line if it contains specific text
 
-    public static final String ConvertForceComment(String sScriptLine) {
+    @Override
+    public String Convert(String sScriptLine) {
         for (String sKeyword : aForceCommentLine) {
             if (sScriptLine.contains(sKeyword)) {
                 return ("//" + sScriptLine);
@@ -20,12 +22,15 @@ public class ForceComment {
         return sScriptLine;
     }
 
-    public static final void InitForceCommentLineList() {
+
+    static {
+
         aForceCommentLine.add(".setInstanceTime");
         aForceCommentLine.add("field.setProperty");
         aForceCommentLine.add("waitForMobDeath");
         aForceCommentLine.add("field.hasProperty");
         aForceCommentLine.add("field.getProperty");
         aForceCommentLine.add(".getAvatarData().getCharacterStat().setSubJob");
+
     }
 }

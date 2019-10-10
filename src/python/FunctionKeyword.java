@@ -7,11 +7,13 @@ import java.util.Map;
  *
  * @author Sharky
  */
-public class FunctionKeyword {
+public class FunctionKeyword extends Modifier {
 
-    public static final Map<String, String> mFunctionKeywordReplace = new LinkedHashMap<>(); //all text-to-text replacements
+    public static FunctionKeyword pInstance = new FunctionKeyword();
+    public static Map<String, String> mFunctionKeywordReplace = new LinkedHashMap<>(); //all text-to-text replacements
 
-    public static final String ConvertFunctionKeyword(String sScriptLine, String sFileName) {
+    @Override
+    public String Convert(String sScriptLine) {
         boolean bCheck = false;//sFileName.contains("GiantBoss_field") && sScriptLine.contains("Effect.img");
         if (bCheck) util.Logger.LogReport("[BEFORE] " + sScriptLine);
         boolean bAddEndQuote = sScriptLine.charAt(sScriptLine.length() - 1) == '\"';
@@ -91,7 +93,9 @@ public class FunctionKeyword {
         return sLine;
     }
 
-    public static final void InitFunctionKeywordReplaceMap() {
+
+    static {
+
         mFunctionKeywordReplace.put("self.showEffect(","self.OnUserInGameDirectionEvent(InGameDirectionEvent.EffectPlay, ");
         mFunctionKeywordReplace.put("sm.showEffect(","self.OnUserInGameDirectionEvent(InGameDirectionEvent.EffectPlay, ");
         mFunctionKeywordReplace.put("addAP","UserIncAP");
