@@ -1,4 +1,4 @@
-package python;
+package python.handle;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,9 +7,9 @@ import java.util.Map;
  *
  * @author Sharky
  */
-public class FunctionKeyword extends Modifier {
+public class KeywordReplace extends AbstractHandler {
 
-    public static FunctionKeyword pInstance = new FunctionKeyword();
+    public static KeywordReplace pInstance = new KeywordReplace();
     public static Map<String, String> mFunctionKeywordReplace = new LinkedHashMap<>(); //all text-to-text replacements
 
     @Override
@@ -96,6 +96,8 @@ public class FunctionKeyword extends Modifier {
 
     static {
 
+        mFunctionKeywordReplace.put("parentID", "self.GetTemplateID()");
+        mFunctionKeywordReplace.put("self.GetTemplateID", "self.GetTemplateID");
         mFunctionKeywordReplace.put("self.showEffect(","self.OnUserInGameDirectionEvent(InGameDirectionEvent.EffectPlay, ");
         mFunctionKeywordReplace.put("sm.showEffect(","self.OnUserInGameDirectionEvent(InGameDirectionEvent.EffectPlay, ");
         mFunctionKeywordReplace.put("addAP","UserIncAP");
@@ -152,6 +154,7 @@ public class FunctionKeyword extends Modifier {
         mFunctionKeywordReplace.put("getDay","GetDay");
         mFunctionKeywordReplace.put("getFieldID","UserGetFieldID");
         mFunctionKeywordReplace.put("getMesos","UserGetMoney");
+        mFunctionKeywordReplace.put("partyIsQuestInProgress", "UserPartyIsQuestInProgress");
         mFunctionKeywordReplace.put("getPartyMembersInSameField","UserGetPartyMemberFieldCount");
         mFunctionKeywordReplace.put("getQRValue","QuestRecordExGet");
         mFunctionKeywordReplace.put("getQuantityOfItem","InventoryGetItemCount");
@@ -166,10 +169,11 @@ public class FunctionKeyword extends Modifier {
         mFunctionKeywordReplace.put("golluxPortalOpen","FieldGolluxPortalEnable");
         mFunctionKeywordReplace.put("hasHadQuest","IsQuestActive");
         mFunctionKeywordReplace.put("hasItem","InventoryIsHoldingItemCount");
+        mFunctionKeywordReplace.put("field.getLifeByTemplateId", "FieldGetMobByID");
         mFunctionKeywordReplace.put("hasMobsInField","FieldMobExists");
-        mFunctionKeywordReplace.put("hasQuest","IsQuestInProgress");
-        mFunctionKeywordReplace.put("hasQuestCompleted","IsQuestComplete");
         mFunctionKeywordReplace.put("hasQuestWithValue","QuestRecordExExists");
+        mFunctionKeywordReplace.put("hasQuestCompleted","IsQuestComplete");
+        mFunctionKeywordReplace.put("hasQuest","IsQuestInProgress");
         mFunctionKeywordReplace.put("hasSkill","UserSkillIsLearned");
         mFunctionKeywordReplace.put("hasTutor","UserHasHireTutor");
         mFunctionKeywordReplace.put("heal","UserHealMax");
@@ -225,7 +229,7 @@ public class FunctionKeyword extends Modifier {
         mFunctionKeywordReplace.put("sendAskYesNo","AskYesNo");
         mFunctionKeywordReplace.put("sendPrev","Say");
         mFunctionKeywordReplace.put("sendSay","Say");
-        mFunctionKeywordReplace.put("sendNext","SayNext");
+        mFunctionKeywordReplace.put("sendNext","Say");
         mFunctionKeywordReplace.put("sendDelay(","OnUserInGameDirectionEvent(InGameDirectionEvent.Delay, ");
         mFunctionKeywordReplace.put("setAP","UserSetAP");
         mFunctionKeywordReplace.put("setCameraOnNpc(","OnUserInGameDirectionEvent(InGameDirectionEvent.CameraZoom, ");
@@ -254,6 +258,7 @@ public class FunctionKeyword extends Modifier {
         mFunctionKeywordReplace.put("showFadeTransition","FieldEffectOverlapDetail");
         mFunctionKeywordReplace.put("spawnNpc","FieldSummonNpc");
         mFunctionKeywordReplace.put("startQuest","QuestRecordTryStartAct");
+        mFunctionKeywordReplace.put("int(", "parseInt(");
         mFunctionKeywordReplace.put("str(","(");
         mFunctionKeywordReplace.put("systemMessage","UserScriptMessage");
         mFunctionKeywordReplace.put("True","true");
@@ -280,6 +285,7 @@ public class FunctionKeyword extends Modifier {
         mFunctionKeywordReplace.put("showFieldEffect","EffectScreenAutoLetterBox");
         mFunctionKeywordReplace.put("flipNpcByTemplateId","SetForceFlip");
         mFunctionKeywordReplace.put("flipBSetModifyFlag(","SetModifyFlag(SpeakerTypeID.ScenarioIlluChat, SpeakerTypeID.FlipImage");
+        mFunctionKeywordReplace.put("spawnMobWithAppearType","FieldSummonMob");
         mFunctionKeywordReplace.put("spawnMob","FieldSummonMob");
         mFunctionKeywordReplace.put("setJob","UserJob");
         mFunctionKeywordReplace.put("setMapTaggedObjectVisible","UserSetMapTaggedObjectVisible");
@@ -312,7 +318,6 @@ public class FunctionKeyword extends Modifier {
         mFunctionKeywordReplace.put("getPartySize","UserGetPartyMemberCount");
         mFunctionKeywordReplace.put("hasCTS","UserHasCTS");
         mFunctionKeywordReplace.put("showOffFieldEffect","EffectTopScreenDelayed");
-        mFunctionKeywordReplace.put("spawnMobWithAppearType","FieldSummonMob");
         mFunctionKeywordReplace.put("tutorCustomMsg","UserTutorialMsg"); //Must exec HireTutor first
         mFunctionKeywordReplace.put("getSkillByItem","UserGetSkillByItemID");
         mFunctionKeywordReplace.put("from net.swordie.ms.enums import WeatherEffNoticeType","WeatherEffectNoticeType = Java.type(\"game.field.WeatherEffectNoticeType\")");
@@ -353,6 +358,7 @@ public class FunctionKeyword extends Modifier {
         mFunctionKeywordReplace.put("chr.getUnion().getUnionRank","self.UserGetUnionRank");
         mFunctionKeywordReplace.put("chr.setSpToCurrentJob","self.UserIncSP");
         mFunctionKeywordReplace.put("SayImage","SayImage");
+        mFunctionKeywordReplace.put("getUnionCoin", "UserGetAvailableUnionCoin");
         mFunctionKeywordReplace.put("getUnionCharacterCount","UserGetUnionCharacterCount");
         mFunctionKeywordReplace.put("getUnionLevel","UserGetUnionLevel");
         mFunctionKeywordReplace.put("rewards[Math.floor","rewards[Math.floor");
@@ -363,10 +369,62 @@ public class FunctionKeyword extends Modifier {
         mFunctionKeywordReplace.put("isAdventurerPirate", "IsPirate");
         mFunctionKeywordReplace.put("isAdventurerWarrior", "IsWarrior");
         mFunctionKeywordReplace.put("isAdventurerThief", "IsThief");
+        mFunctionKeywordReplace.put("sendChat", "UserScriptMessage");
+        mFunctionKeywordReplace.put("Math.floor", "Math.floor");
+        mFunctionKeywordReplace.put("CharacterTemporaryStat.Morph", "CharacterTemporaryStat.Morph");
+        mFunctionKeywordReplace.put("CharacterTemporaryStat.PAD", "CharacterTemporaryStat.PAD");
+        mFunctionKeywordReplace.put("CharacterTemporaryStat.RideVehicle", "CharacterTemporaryStat.RideVehicle");
+        mFunctionKeywordReplace.put("from net.swordie.ms.client.character.skills.temp import CharacterTemporaryStat", "");
+        mFunctionKeywordReplace.put("GameConstants.ARKARIUM_QUEST", "99994");
+        mFunctionKeywordReplace.put("GameConstants.DOJO_DUMMY_DURATION", "10");
+        mFunctionKeywordReplace.put("GameConstants.DOJO_SPAWM_BOSS_DELAY", "3");
+        mFunctionKeywordReplace.put("GameConstants.EASY_HILLA_QUEST", "99995");
+        mFunctionKeywordReplace.put("GameConstants.EASY_HORNTAIL_QUEST", "99996");
+        mFunctionKeywordReplace.put("GameConstants.EVAN_INTRO", "99992");
+        mFunctionKeywordReplace.put("GameConstants.EVAN_INTRO2", "99993");
+        mFunctionKeywordReplace.put("from net.swordie.ms.constants import GameConstants", "");
+        mFunctionKeywordReplace.put("GreyFieldType.Background", "1");
+        mFunctionKeywordReplace.put("GreyFieldType.FieldScript", "0");
+        mFunctionKeywordReplace.put("GreyFieldType.NPC", "4");
+        mFunctionKeywordReplace.put("from net.swordie.ms.world.field.fieldeffect import GreyFieldType", "");
+        mFunctionKeywordReplace.put("ItemConstants.NODESTONE", "2436324");
+        mFunctionKeywordReplace.put("from net.swordie.ms.constants import ItemConstants", "");
+        mFunctionKeywordReplace.put("from net.swordie.ms.constants import JobConstants", "");
+        mFunctionKeywordReplace.put("from net.swordie.ms.enums import ObtacleAtomEnum", "");
+        mFunctionKeywordReplace.put("from net.swordie.ms.life.npc.NpcScriptInfo import Param", "");
+        mFunctionKeywordReplace.put("QuestConstants.FIFTH_JOB_QUEST", "1465");
+        mFunctionKeywordReplace.put("QuestConstants.SILENT_CRUSADE_WANTED_TAB_1", "1648");
+        mFunctionKeywordReplace.put("QuestConstants.SILENT_CRUSADE_WANTED_TAB_2", "1649");
+        mFunctionKeywordReplace.put("QuestConstants.SILENT_CRUSADE_WANTED_TAB_3", "1650");
+        mFunctionKeywordReplace.put("QuestConstants.SILENT_CRUSADE_WANTED_TAB_4", "1651");
+        mFunctionKeywordReplace.put("from net.swordie.ms.constants import QuestConstants", "");
+        mFunctionKeywordReplace.put("from net.swordie.ms.constants import SkillConstants", "");
+        mFunctionKeywordReplace.put("UIType.BLOCKBUSTER_SELECT_UI", "1103");
+        mFunctionKeywordReplace.put("UIType.EVOLVING_SYSTEM", "100");
+        mFunctionKeywordReplace.put("UIType.PARTYSEARCH", "21");
+        mFunctionKeywordReplace.put("UIType.UI_DIMENSION_LIBRARY", "179");
+        mFunctionKeywordReplace.put("UIType.UI_GROWTH_HELPER", "202");
+        mFunctionKeywordReplace.put("UIType.UI_MAKING_SKILL", "42");
+        mFunctionKeywordReplace.put("UIType.UI_PLATFORM_STAGE_SELECT", "1112");
+        mFunctionKeywordReplace.put("UIType.UI_TOWERRANK", "208");
+        mFunctionKeywordReplace.put("UIType.UNION_BOARD", "1148");
+        mFunctionKeywordReplace.put("UIType.V_NODES", "1131");
+        mFunctionKeywordReplace.put("from net.swordie.ms.enums import UIType", "");
+        mFunctionKeywordReplace.put("WzConstants.EFFECT_CLEAR", "\"Map/EffectTW.img/arisan/clear\"");
+        mFunctionKeywordReplace.put("WzConstants.EFFECT_DOJO_CLEAR", "\"Map/Effect.img/dojang/end/clear\"");
+        mFunctionKeywordReplace.put("WzConstants.EFFECT_MONSTER_PARK_CLEAR", "\"Map/Effect.img/monsterPark/clear\"");
+        mFunctionKeywordReplace.put("WzConstants.EFFECT_MONSTER_PARK_FINAL_STAGE", "\"Map/Effect.img/monsterPark/stageEff/final\"");
+        mFunctionKeywordReplace.put("WzConstants.EFFECT_MONSTER_PARK_STAGE", "\"Map/Effect.img/monsterPark/stageEff/stage\"");
+        mFunctionKeywordReplace.put("WzConstants.EFFECT_MONSTER_PARK_STAGE_NUMBER", "\"Map/Effect.img/monsterPark/stageEff/number/\"");
+        mFunctionKeywordReplace.put("WzConstants.ICON_EXP", "\"#fUI/UIWindow2.img/QuestIcon/8/0#\"");
+        mFunctionKeywordReplace.put("WzConstants.ICON_OBTAINED", "\"#fUI/UIWindow2.img/QuestIcon/4/0#\"");
+        mFunctionKeywordReplace.put("from net.swordie.ms.constants import WzConstants", "");
+        mFunctionKeywordReplace.put("from net.swordie.ms.scripts import ScriptType", "");
+        mFunctionKeywordReplace.put("CharacterTemporaryStat.", "Java.type(\"base.user.stat.CharacterTemporaryStat\").");
         mFunctionKeywordReplace.put("chr.addNodeShards", "self.UserIncNodeShard");
         mFunctionKeywordReplace.put("chr.getNodeShards", "self.UserGetNodeShard");
         mFunctionKeywordReplace.put("chr.addSkill", "self.UserLearnSkill");
-        mFunctionKeywordReplace.put("chr.getId", "self.UserGetCharacterID()");
+        mFunctionKeywordReplace.put("chr.getId", "self.UserGetCharacterID");
         mFunctionKeywordReplace.put("TextEffectType.BlackFadedBrush.getVal", "1");
         mFunctionKeywordReplace.put("sm.","self."); //try to keep this one at the bottom so its switched out last
 

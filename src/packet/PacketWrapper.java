@@ -24,7 +24,7 @@ public abstract class PacketWrapper {
      * This will find the appropriate values to set to a new Script template, reset pScript's values accordingly -
      * and will then execute pScript.CreateNewScript(...)
      *
-     * @return A Script Modifier that will execute CreateNewScript(...) on the given pScript object or,
+     * @return A Script AbstractHandler that will execute CreateNewScript(...) on the given pScript object or,
      *         NULL - if it is going to use the current template attached to pScript
      */
     public abstract ScriptModifier CreateNewScriptTemplate();
@@ -36,7 +36,7 @@ public abstract class PacketWrapper {
      * This will find and store the needed values from pScript's template into the PacketWriteRequest -
      * these values will be used by the PacketWriteRequest to create appropriate output to the script
      *
-     * @return A Script Modifier that will share information from pScript's template to this PacketWriteRequest object or,
+     * @return A Script AbstractHandler that will share information from pScript's template to this PacketWriteRequest object or,
      *         NULL - if pScript's template is newly created and/or this PacketWriteRequest already has the values needed for output
      */
     public abstract ScriptModifier CreateScriptTemplateCopy();
@@ -49,7 +49,7 @@ public abstract class PacketWrapper {
      *      1) Insert result arguments into pScript's template history for conditional blocks (ex: `if (nSel == X) ...`), or
      *      2) Will execute an independent ScriptWriteRequest to pScript, in order to insert an action (ex: self.Wait() ...)
      *
-     * @return A Script Modifier that will insert conditional branch arguments to direct output control-flow for this PacketWriteRequest, or
+     * @return A Script AbstractHandler that will insert conditional branch arguments to direct output control-flow for this PacketWriteRequest, or
      *         NULL - if the packet received has no arguments or actions to be inserted
      */
     public abstract ScriptModifier SetScriptUserInputResult();
@@ -69,7 +69,7 @@ public abstract class PacketWrapper {
      * This will set pScript's template to the next assumed template's value - in the case of field scripts, it ensures that there
      * will be an active/valid template attached to pScript to output any monitored packet action directly after SetField
      *
-     * @return A Script Modifier that will reset/queue a new script template, but after this PacketWriteRequest execution is done, or
+     * @return A Script AbstractHandler that will reset/queue a new script template, but after this PacketWriteRequest execution is done, or
      *         NULL - if a new script should not be created after this PacketWriteRequest execution
      */
     public abstract ScriptModifier CreateNewScriptTemplateResetNotPersist();

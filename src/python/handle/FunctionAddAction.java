@@ -1,4 +1,4 @@
-package python;
+package python.handle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,9 +7,9 @@ import java.util.Map;
  *
  * @author Sharky
  */
-public class FunctionInsert extends Modifier {
+public class FunctionAddAction extends AbstractHandler {
 
-    public static FunctionInsert pInstance = new FunctionInsert();
+    public static FunctionAddAction pInstance = new FunctionAddAction();
     public static Map<String, String> mFunctionFollowInsert = new HashMap<>(); //adds lines after specific patterns are read
 
     @Override

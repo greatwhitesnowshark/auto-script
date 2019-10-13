@@ -5,6 +5,10 @@
  */
 package python;
 
+import python.handle.*;
+import python.output.OutputLogger;
+import python.output.SortFieldScript;
+import python.output.SortFieldScript.FieldScriptType;
 import util.Pointer;
 
 import java.io.*;
@@ -13,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static python.FunctionKeywordPython.*;
+import static python.handle.SyntaxModifier.*;
 
 /**
  *
@@ -38,9 +42,9 @@ public class PythonToJavascript {
 
     public static final Map<String, LinkedList<String>> mScriptLines = Collections.synchronizedMap(new HashMap<>()); //stores copies of files and their lines
 
-    public DebugInfo pDebug;
+    public OutputLogger pDebug;
 
-    public Modifier pModifier;
+    public AbstractHandler pBlockModifier;
 
     public Path pDirPath;
 
@@ -48,8 +52,8 @@ public class PythonToJavascript {
 
 
     public PythonToJavascript() {
-        this.pDebug = new DebugInfo();
-        this.pModifier = new StringModifier();
+        this.pDebug = new OutputLogger();
+        this.pBlockModifier = new BlockHandler();
         this.tTimestamp = System.currentTimeMillis();
         this.tRunningTimestamp = 0;
         this.pDirPath = null;
@@ -57,14 +61,17 @@ public class PythonToJavascript {
 
 
     public static void main(String[] args) {
+        SortFieldScript.SortFieldScriptMap();
         PythonToJavascript pPythtoJS = new PythonToJavascript();
         try {
             Pointer<Integer> pCount = new Pointer<>(0);
             Files.walk(Paths.get(sPythonDirectory)).forEach((pFile) -> {
                 if (!pFile.toFile().isDirectory()) {
                     try {
-                        pPythtoJS.ConvertPythonToJavascript(pFile.toFile());
-                        pCount.setElement(pCount.element() + 1);
+                        if (pFile.toFile().getName().contains(".py")) {
+                            pPythtoJS.ConvertPythonToJavascript(pFile.toFile());
+                            pCount.setElement(pCount.element() + 1);
+                        }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -96,6 +103,12 @@ public class PythonToJavascript {
                 :   pFile.getCanonicalPath().contains("field") ? "field\\"
                 :   pFile.getCanonicalPath().contains("item") ? "item\\"
                 :   "invalid\\";
+        if (sPath.contains("field\\")) {
+            FieldScriptType t = SortFieldScript.GetFieldScriptType(pFile.getName());
+            if (t != FieldScriptType.NotSorted) {
+                sPath += t.name() + "\\";
+            }
+        }
         sPath += pFile.getName();
         String sFileNameJavascript = sPath.contains(".py") ? sPath.replace(".py", ".js")
                 :   !sPath.contains(".js") ? sPath + ".js"
@@ -104,79 +117,83 @@ public class PythonToJavascript {
                 :   !sPath.contains(".py") ? sPath + ".py"
                 :   sPath;
         LinkedList<String> aScriptLines = new LinkedList<>();
-        pModifier = new StringModifier();
+        pBlockModifier = new BlockHandler();
         try (BufferedReader pReader = new BufferedReader(new FileReader(pFile))) {
             int nBlockPadding = -1, nLineNumber = 1, nArrayIndex = -1;
             String sClosingBracketAdditionalLine = "";
             while (pReader.ready()) {
                 String sScriptLine = pReader.readLine();
                 if (!sScriptLine.trim().isEmpty()) {
-                    if (!pModifier.IsSkippedLine(sScriptLine)) {
-                        pModifier = ForceComment.pInstance;
-                        sScriptLine = pModifier.Convert(sScriptLine);
+                    if (!pBlockModifier.IsSkippedLine(sScriptLine)) {
+                        pBlockModifier = KeywordIgnore.pInstance;
+                        sScriptLine = pBlockModifier.Convert(sScriptLine);
                         if (sScriptLine.trim().indexOf("//") != 0) {
-                            if (pModifier.IsOpenArrayBracket(sScriptLine)) {
+                            if (pBlockModifier.IsOpenArrayBracket(sScriptLine)) {
                                 nArrayIndex++;
-                            } else if (pModifier.IsCloseArrayBracket(sScriptLine)) {
+                            } else if (pBlockModifier.IsCloseArrayBracket(sScriptLine)) {
                                 nArrayIndex--;
                             }
-                            sScriptLine = pModifier.ConvertComments(sScriptLine, nArrayIndex >= 0);
-                            sScriptLine = pModifier.ConvertIfElseStatements(sScriptLine);
-                            if (pModifier.IsCorrectPaddingForClosingBracket(sScriptLine, nBlockPadding)) {
+                            sScriptLine = pBlockModifier.ConvertComments(sScriptLine, nArrayIndex >= 0);
+                            sScriptLine = pBlockModifier.ConvertIfElseStatements(sScriptLine);
+                            if (pBlockModifier.IsCorrectPaddingForClosingBracket(sScriptLine, nBlockPadding)) {
                                 if (nBlockPadding > 0) {
-                                    while (nBlockPadding >= pModifier.GetLinePaddingByNumChar(sScriptLine, false) && nBlockPadding > 0) {
+                                    while (nBlockPadding >= pBlockModifier.GetLinePaddingByNumChar(sScriptLine) && nBlockPadding >= 0) {
                                         if (!sClosingBracketAdditionalLine.isEmpty()) {
-                                            aScriptLines.add(pModifier.ToPaddedString(sClosingBracketAdditionalLine, nBlockPadding + 4));
+                                            aScriptLines.add(pBlockModifier.ToPaddedString(sClosingBracketAdditionalLine, nBlockPadding + 4));
                                             sClosingBracketAdditionalLine = "";
                                         }
-                                        aScriptLines.add(pModifier.ToPaddedString("}", nBlockPadding));
+                                        aScriptLines.add(pBlockModifier.ToPaddedString("}", nBlockPadding));
                                         nBlockPadding -= 4;
                                     }
-                                    nBlockPadding = -1;
+                                    if (nBlockPadding < -1) {
+                                        nBlockPadding = -1;
+                                    }
                                 } else {
-                                    if (nBlockPadding == pModifier.GetLinePaddingByNumChar(sScriptLine, false)) {
+                                    if (nBlockPadding == pBlockModifier.GetLinePaddingByNumChar(sScriptLine)) {
                                         if (!sClosingBracketAdditionalLine.isEmpty()) {
-                                            aScriptLines.add(pModifier.ToPaddedString(sClosingBracketAdditionalLine, nBlockPadding + 4));
+                                            aScriptLines.add(pBlockModifier.ToPaddedString(sClosingBracketAdditionalLine, nBlockPadding + 4));
                                             sClosingBracketAdditionalLine = "";
                                         }
-                                        aScriptLines.add(pModifier.ToPaddedString("}", nBlockPadding));
+                                        aScriptLines.add(pBlockModifier.ToPaddedString("}", nBlockPadding));
                                         nBlockPadding = -1;
                                     }
                                 }
                             }
-                            if (pModifier.IsClosingBracketInsertNeeded(sScriptLine)) {
-                                nBlockPadding = pModifier.GetLinePaddingByNumChar(sScriptLine, false);
+                            if (pBlockModifier.IsClosingBracketInsertNeeded(sScriptLine)) {
+                                nBlockPadding = pBlockModifier.GetLinePaddingByNumChar(sScriptLine);
                             }
-                            while (pModifier.IsLineSplitForMergeWithNextLine(sScriptLine) && !sScriptLine.contains("\")") && pReader.ready()) {
+                            while (pBlockModifier.IsLineSplitForMergeWithNextLine(sScriptLine) && !sScriptLine.contains("\")") && pReader.ready()) {
                                 String sAppend = pReader.readLine().trim();
-                                sAppend = pModifier.ConvertComments(sAppend, nArrayIndex >= 0);
+                                sAppend = pBlockModifier.ConvertComments(sAppend, nArrayIndex >= 0);
                                 if (sAppend.length() > 1 && sAppend.contains(("\""))) {
-                                    sScriptLine = pModifier.ConvertMergeWithNextLine(sScriptLine, sAppend); //todo:: verify this holds up
+                                    sScriptLine = pBlockModifier.ConvertMergeWithNextLine(sScriptLine, sAppend); //todo:: verify this holds up
                                 } else {
                                     break;
                                 }
                             }
-                            pModifier = FunctionAppend.pInstance;
-                            sScriptLine = pModifier.Convert(sScriptLine);
+                            pBlockModifier = FunctionAppendArgument.pInstance;
+                            sScriptLine = pBlockModifier.Convert(sScriptLine);
                         }
-                        pModifier = FunctionKeyword.pInstance;
-                        sScriptLine = pModifier.Convert(sScriptLine);
-                        sScriptLine = pModifier.ConvertSemicolon(sScriptLine, nArrayIndex >= 0);
+                        pBlockModifier = KeywordReplace.pInstance;
+                        sScriptLine = pBlockModifier.Convert(sScriptLine);
+                        sScriptLine = pBlockModifier.ConvertSemicolon(sScriptLine, nArrayIndex >= 0);
+                        sScriptLine = pBlockModifier.ConvertAskMenu(sScriptLine);
+                        sScriptLine = pBlockModifier.ConvertNestedAskYesNo(sScriptLine);
                         sScriptLine = ConvertPythonKeyword(sScriptLine, sFileNamePython, nLineNumber);
                         if (!sScriptLine.isEmpty()) {
-                            String sAdditionalVariableLine = pModifier.GetIteratorInsertVarForLoop(sScriptLine);
+                            String sAdditionalVariableLine = pBlockModifier.GetIteratorInsertVarForLoop(sScriptLine);
                             if (!sAdditionalVariableLine.isEmpty()) {
-                                aScriptLines.add(pModifier.ToPaddedString(sAdditionalVariableLine, nBlockPadding));
+                                aScriptLines.add(pBlockModifier.ToPaddedString(sAdditionalVariableLine, nBlockPadding));
                             }
                             aScriptLines.add(sScriptLine);
                             if (sScriptLine.trim().indexOf("//") != 0) {
-                                pModifier = FunctionInsert.pInstance;
-                                String sAdditionalScriptLine = pModifier.Convert(sScriptLine);
+                                pBlockModifier = FunctionAddAction.pInstance;
+                                String sAdditionalScriptLine = pBlockModifier.Convert(sScriptLine);
                                 if (!sAdditionalScriptLine.isEmpty()) {
-                                    int nPadding = pModifier.GetLinePaddingByNumChar(sScriptLine, false);
-                                    aScriptLines.add(pModifier.ToPaddedString(sAdditionalScriptLine, nPadding));
+                                    int nPadding = pBlockModifier.GetLinePaddingByNumChar(sScriptLine);
+                                    aScriptLines.add(pBlockModifier.ToPaddedString(sAdditionalScriptLine, nPadding));
                                 }
-                                String sLoopVariable = pModifier.GetIteratorIncrementInsertForLoop(sScriptLine);
+                                String sLoopVariable = pBlockModifier.GetIteratorIncrementInsertForLoop(sScriptLine); //todo:: see if this is truly necessary by referencing the WhileLoop debug output
                                 sClosingBracketAdditionalLine = !sLoopVariable.isEmpty() ? sLoopVariable : sClosingBracketAdditionalLine;
                                 LogDebugInfo(sScriptLine, sFileNamePython);
                             }
@@ -186,7 +203,7 @@ public class PythonToJavascript {
                 }
             }
             while (nBlockPadding >= 0) {
-                aScriptLines.add(pModifier.ToPaddedString("}", nBlockPadding));
+                aScriptLines.add(pBlockModifier.ToPaddedString("}", nBlockPadding));
                 nBlockPadding -= 4;
             }
         }
@@ -198,11 +215,6 @@ public class PythonToJavascript {
 
     public void LogDebugInfo(String sScriptLine, String sFileNamePython) {
         pDebug.LogDebugInfo(sScriptLine, sFileNamePython);
-    }
-
-
-    public String LogReportTime(long tTime) {
-        return LogReportTime("time:  ", tTime);
     }
 
 

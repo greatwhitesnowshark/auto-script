@@ -1,23 +1,26 @@
-package python;
+package python.output;
+
+import python.handle.AbstractHandler;
+import python.handle.BlockHandler;
 
 import java.io.*;
 import java.util.*;
 
-import static python.FunctionKeyword.mFunctionKeywordReplace;
-import static python.FunctionKeywordPython.mPythonKeywordToFileLine;
+import static python.handle.KeywordReplace.mFunctionKeywordReplace;
+import static python.handle.SyntaxModifier.mPythonKeywordToFileLine;
 import static python.PythonToJavascript.*;
 
 /**
  *
  * @author Sharky
  */
-public class DebugInfo {
+public class OutputLogger {
 
     public static List<String> aFilesSkip = new LinkedList<>(); //records a list of skipped files due to alien functions
     public LinkedHashMap<String, String> mWhileLoopDebug = new LinkedHashMap<>(); //all instances where a while loop or a for-each loop is used for manual referencing
     public Map<String, LinkedList<String>> mFunctionToFileSkip = new HashMap<>(); //debugging variables, (Key-Function, Value-Files)
     public Map<Integer, LinkedList<String>> mNumInstancesToFunctionSkip = new LinkedHashMap<>(); //(Key-# of Files, Value-List of Functions)
-    public Modifier pModifier = new StringModifier();
+    public AbstractHandler pBlockModifier = new BlockHandler();
     public int nCreatedScripts = 0, nSkippedScripts = 0; //tracks the # of total created and skipped scripts
 
     public void LogDebugInfo(String sScriptLine, String sFileName) {
@@ -40,7 +43,7 @@ public class DebugInfo {
     public void LogWhileLoopInfo(String sLineSegment, String sScriptLine, String sFileName) {
         if (sLineSegment.contains("while (") || (sLineSegment.contains("for") && sLineSegment.contains("in"))) {
             if (!mWhileLoopDebug.containsKey(sFileName)) {
-                mWhileLoopDebug.put(sFileName, " '" + sScriptLine.trim() + "'  GetAdditionalVariableForLoop() --> '" + pModifier.GetIteratorIncrementInsertForLoop(sScriptLine) + "'");
+                mWhileLoopDebug.put(sFileName, " '" + sScriptLine.trim() + "'  GetAdditionalVariableForLoop() --> '" + pBlockModifier.GetIteratorIncrementInsertForLoop(sScriptLine) + "'");
             }
         }
     }
@@ -65,7 +68,7 @@ public class DebugInfo {
                                 break;
                             }
                         }
-                        if (sLine.charAt(i) == ' ' || sLine.charAt(i) == '!') {
+                        if (sLine.charAt(i) == ' ' || sLine.charAt(i) == '!' || sLine.charAt(i) == '-' || sLine.charAt(i) == '[') {
                             nIdxStart = i+1;
                             break;
                         }
@@ -234,7 +237,7 @@ public class DebugInfo {
                                         nIndex = sLineTrimmed.indexOf(",") >= 0 ? sLineTrimmed.indexOf(",") < nIndex || nIndex == -1 ? sLineTrimmed.indexOf(",") : nIndex : nIndex;
                                         if (nIndex >= 0) {
                                             sLineTrimmed = sLineTrimmed.substring(0, nIndex);
-                                            if (!mAlienImportClassCall.containsKey(sLineTrimmed.trim())) {
+                                            if (!mAlienImportClassCall.containsKey(sLineTrimmed.trim()) && !mFunctionKeywordReplace.keySet().contains(sLineTrimmed.trim())) {
                                                 mAlienImportClassCall.put(sLineTrimmed.trim(), new LinkedHashMap<>());
                                             }
                                             LinkedHashMap<String, LinkedList<String>> mCall = mAlienImportClassCall.get(sLineTrimmed.trim());

@@ -1,16 +1,16 @@
-package python;
+package python.handle;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import static python.DebugInfo.aFilesSkip;
+import static python.output.OutputLogger.aFilesSkip;
 
 /**
  *
  * @author Sharky
  */
-public class FunctionKeywordPython {
+public class SyntaxModifier {
 
     public static Map<String, String> mFunctionPythonKeywordReplace = new LinkedHashMap<>(); //all python keyword-to-text replacements
     public static Map<String, LinkedList<String[]>> mPythonKeywordToFileLine = new LinkedHashMap<>(); //records file and line information about unknown syntax

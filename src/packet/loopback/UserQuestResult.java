@@ -68,7 +68,7 @@ public class UserQuestResult extends PacketWriteRequest {
     //todo:: Consider whether or not this makes sense. Because really, what we need to worry about are the ScriptMessages.. right?
 
     //todo:: create a CreateNewScriptTemplate() override here so that we can verify if:
-    //todo:: 1) the pTemplate is a Field-Type or null, so that we can create a new Quest-Template
+    //todo:: 1) the pTemplate is a FieldScript-FieldScriptType or null, so that we can create a new Quest-Template
     //todo:: 2) We should be able to use the Result byte to infer which quest-file to write to 'start' or 'end'
 
     @Override

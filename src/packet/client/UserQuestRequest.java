@@ -39,7 +39,7 @@ public class UserQuestRequest extends PacketWrapperNull {
                 QuestTemplate pQuestTemplate = this.bOpening ? ScriptTemplateMap.GetQuestStartTemplate(this.nQuestID) : ScriptTemplateMap.GetQuestEndTemplate(this.nQuestID);
                 if (pQuestTemplate != null) {
                     String sQuestName = pQuestTemplate.sQuestName;
-                    Logger.LogReport("UserQuestRequest:  Request-Type: [%s],  Name: [%s]  Quest-ID: [%d]", (this.bOpening ? "OpeningScript" : "CompleteScript"), sQuestName, this.nQuestID);
+                    Logger.LogReport("UserQuestRequest:  Request-FieldScriptType: [%s],  Name: [%s]  Quest-ID: [%d]", (this.bOpening ? "OpeningScript" : "CompleteScript"), sQuestName, this.nQuestID);
                 } else {
                     Logger.LogError("UserQuestRequest:-  no script template could be found for Quest-ID [%d],  (State: [%s])", this.nQuestID, (this.bOpening ? "OpeningScript" : "CompleteScript"));
                 }

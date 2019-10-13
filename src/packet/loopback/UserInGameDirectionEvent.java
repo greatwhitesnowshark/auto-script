@@ -241,6 +241,6 @@ public class UserInGameDirectionEvent extends PacketWriteRequest {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return String.format("Unknown-Type-Exception-Thrown[%d]", nType);
+        return String.format("Unknown-FieldScriptType-Exception-Thrown[%d]", nType);
     }
 }

@@ -170,7 +170,7 @@ public class ScriptTemplateMap {
         while (pStream.ready()) {
             sLine = pStream.readLine().trim();
             if (!sLine.isEmpty()) {
-                if (sLine.contains("<Field>")) {
+                if (sLine.contains("<FieldScript>")) {
                     sLine = sLine.replace(" `", "@@").replace("` ", "@@");
                     aTemplateInfo = sLine.split("@@");
                     dwField = aTemplateInfo.length > 2 ? Integer.parseInt(aTemplateInfo[2].trim()) : 0;
@@ -199,19 +199,19 @@ public class ScriptTemplateMap {
         while (pStream.ready()) {
             sLine = pStream.readLine().trim();
             if (!sLine.isEmpty()) {
-                if (sLine.contains("<Field>")) {
+                if (sLine.contains("<FieldScript>")) {
                     sLine = sLine.replace(" `", "@@").replace("` ", "@@");
                     aTemplateInfo = sLine.split("@@");
                     dwField = aTemplateInfo.length > 2 ? Integer.parseInt(aTemplateInfo[2].trim().replace("[", "").replace("]", "")) : 0;
                     String sType;
-                    while (pStream.ready() && !(sLine = pStream.readLine().trim()).contains("</Field>")) {
+                    while (pStream.ready() && !(sLine = pStream.readLine().trim()).contains("</FieldScript>")) {
                         if ((sLine.contains("<UserEnter>") || sLine.contains("<FirstUserEnter>") || sLine.contains("<FieldScript>")) && pStream.ready()) {
                             sType = sLine.replace("<", "").replace(">", "");
                             sLine = pStream.readLine().trim();
                             sScript = sType + "\\" + sLine.replace("`", "");
                             aTemplate.add(new FieldTemplate(sScript, dwField, sType));
                             if (Config.bTemplateMapFieldScript) {
-                                Logger.LogReport("Field-Script:  sType [%s], sScript [%s], dwField [%d]", sType, sScript, dwField);
+                                Logger.LogReport("FieldScript-Script:  sType [%s], sScript [%s], dwField [%d]", sType, sScript, dwField);
                             }
                         }
                     }
@@ -230,7 +230,7 @@ public class ScriptTemplateMap {
                     if (!mFieldName.containsKey(dwFieldID)) {
                         mFieldName.put(dwFieldID, sFieldName);
                         if (Config.bTemplateMapFieldName) {
-                            Logger.LogReport("Field-Name-to-ID:  dwFieldID [%d], sFieldName [%s]", dwFieldID, sFieldName);
+                            Logger.LogReport("FieldScript-Name-to-ID:  dwFieldID [%d], sFieldName [%s]", dwFieldID, sFieldName);
                         }
                     }
                 }

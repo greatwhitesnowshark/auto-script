@@ -340,7 +340,7 @@ public class ScriptMessage extends PacketWriteRequest {
                     break;
 
                 case MessageType.AskText:
-                    sOutput += "sInput = self.AskText(\"" + sText + "\", \"Type answer here\", 1, 99";
+                    sOutput += "sInput = self.AskText(\"" + sText + "\", \"FieldScriptType answer here\", 1, 99";
                     lConditionalText.add("if (sInput == \"\") {");
                     lConditionalText.add("} else {");
                     lConditionalText.add("}");

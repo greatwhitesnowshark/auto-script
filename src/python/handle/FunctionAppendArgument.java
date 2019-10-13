@@ -1,4 +1,4 @@
-package python;
+package python.handle;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,9 +7,9 @@ import java.util.Map;
  *
  * @author Sharky
  */
-public class FunctionAppend extends Modifier {
+public class FunctionAppendArgument extends AbstractHandler {
 
-    public static FunctionAppend pInstance = new FunctionAppend();
+    public static FunctionAppendArgument pInstance = new FunctionAppendArgument();
     public static Map<String, String> mFunctionArgumentAppend = new LinkedHashMap<>(); //appends arguments to funcs - "myFunc(arg1)->myFunc(arg1, true)"
 
     @Override
@@ -39,6 +39,7 @@ public class FunctionAppend extends Modifier {
         mFunctionArgumentAppend.put("giveExp",", true");
         mFunctionArgumentAppend.put("giveMesos",", true");
         mFunctionArgumentAppend.put("sendPrev",", true");
+        mFunctionArgumentAppend.put("sendNext", ", true");
 
     }
 }

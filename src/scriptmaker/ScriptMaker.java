@@ -32,7 +32,7 @@ import static util.PacketUtil.*;
  * @todo:  Portal scripts aren't currently being padded correctly throughout the conditional flow-blocks
  *         Add handling for item scripts
  *         Need to determine when the script is transferring your field or when its a user doing it
- *         Need to end Field Scripts at the end of the direction node
+ *         Need to end FieldScript Scripts at the end of the direction node
  *         Need to add UserEffectLocal and FieldEffect packets
  *         Need to update ScriptMessage switch/case section
  *         Need to verify if the quest result packets should be in fact coming from the field scripts

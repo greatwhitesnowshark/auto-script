@@ -1,10 +1,10 @@
-package python;
+package python.handle;
 
 /**
  *
  * @author Sharky
  */
-public class StringModifier extends Modifier {
+public class BlockHandler extends AbstractHandler {
 
     @Override
     public String Convert(String sScriptLine) {
