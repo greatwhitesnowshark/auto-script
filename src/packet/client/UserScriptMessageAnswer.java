@@ -5,7 +5,7 @@
  */
 package packet.client;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import game.scripting.ScriptMan;
 import game.scripting.ScriptMan.MessageType;
 import java.util.LinkedList;

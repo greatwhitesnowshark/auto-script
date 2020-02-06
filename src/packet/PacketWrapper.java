@@ -5,7 +5,7 @@
  */
 package packet;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import script.ScriptModifier;
 import script.ScriptWriteRequest;
 

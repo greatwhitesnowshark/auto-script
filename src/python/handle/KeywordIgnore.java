@@ -1,5 +1,6 @@
 package python.handle;
 
+import util.StringMatch;
 import util.StringUtil;
 
 import java.util.LinkedList;
@@ -17,8 +18,8 @@ public class KeywordIgnore extends AbstractHandler {
     @Override
     public String Convert(String sScriptLine) {
         for (String sKeyword : aForceCommentLine) {
-            if (sScriptLine.contains(sKeyword)) {
-                int nPad = StringUtil.CountStringPaddingChar(sScriptLine);
+            if (StringMatch.Match(sScriptLine, false, true, true, sKeyword)) {
+                int nPad = StringUtil.GetLinePadding(sScriptLine);
                 return StringUtil.AddStringPaddingChar(("//" + sScriptLine.trim()), nPad);
             }
         }
@@ -35,6 +36,8 @@ public class KeywordIgnore extends AbstractHandler {
         aForceCommentLine.add("field.hasProperty");
         aForceCommentLine.add("field.getProperty");
         aForceCommentLine.add(".getAvatarData().getCharacterStat().setSubJob");
+        aForceCommentLine.add("self.showScene");
+
 
     }
 }

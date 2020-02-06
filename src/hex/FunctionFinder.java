@@ -57,7 +57,7 @@ public class FunctionFinder {
                 }
                 sLine = pReader.readLine();
                 nLines++;
-                int nPadding = StringUtil.CountStringPaddingChar(sLine);
+                int nPadding = StringUtil.GetLinePadding(sLine);
                 if (!bLabel && sLabel != null) {
                     nPaddingToEnd = nPadding;
                 }

@@ -164,6 +164,7 @@ public class SyntaxModifier {
 
         mFunctionPythonKeywordReplace.put("None", "");//not done
         mFunctionPythonKeywordReplace.put("and", "&&");
+        mFunctionPythonKeywordReplace.put(" or ", " || ");
         mFunctionPythonKeywordReplace.put("assert", "assert");//not done
         mFunctionPythonKeywordReplace.put("class", "class");//not done
         mFunctionPythonKeywordReplace.put("def", "");

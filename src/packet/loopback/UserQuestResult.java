@@ -5,7 +5,7 @@
  */
 package packet.loopback;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import game.scripting.ScriptSysFunc.QuestResultType;
 import game.user.quest.QuestResult;
 import java.util.LinkedList;

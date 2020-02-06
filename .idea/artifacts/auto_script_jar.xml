@@ -3,9 +3,9 @@
     <output-path>$PROJECT_DIR$/dist</output-path>
     <root id="archive" name="auto-script.jar">
       <element id="module-output" name="auto-script" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../MagatiaSVR/Util/target/Util.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../MagatiaSVR/Game/target/Game.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/dist/lib/netty-all.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../Neckson/classes/artifacts/Game_jar/Game.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../MagatiaSVR/Util/target/Util.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

@@ -1,5 +1,7 @@
 package python.handle;
 
+import util.StringMatch;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,10 +16,10 @@ public class FunctionAppendArgument extends AbstractHandler {
 
     @Override
     public String Convert(String sScriptLine) {
-        for (String sLine : mFunctionArgumentAppend.keySet()) {
-            if (sScriptLine.contains(sLine)) {
-                if (sScriptLine.contains(")") && !sScriptLine.contains(mFunctionArgumentAppend.get(sLine))) {
-                    sScriptLine = sScriptLine.substring(0, sScriptLine.lastIndexOf(")")) + mFunctionArgumentAppend.get(sLine) + ")";
+        for (String sKey : mFunctionArgumentAppend.keySet()) {
+            if (sScriptLine.contains(sKey)) {
+                if (sScriptLine.contains(")") && !sScriptLine.contains(mFunctionArgumentAppend.get(sKey))) {
+                    sScriptLine = sScriptLine.substring(0, sScriptLine.lastIndexOf(")")) + mFunctionArgumentAppend.get(sKey) + ")";
                     break;
                 }
             }
@@ -38,8 +40,8 @@ public class FunctionAppendArgument extends AbstractHandler {
         mFunctionArgumentAppend.put("chr.setSpToCurrentJob",", true");
         mFunctionArgumentAppend.put("giveExp",", true");
         mFunctionArgumentAppend.put("giveMesos",", true");
-        mFunctionArgumentAppend.put("sendPrev",", true");
-        mFunctionArgumentAppend.put("sendNext", ", true");
+        //mFunctionArgumentAppend.put("sendPrev",", true");
+        //mFunctionArgumentAppend.put("sendNext", ", true");
 
     }
 }

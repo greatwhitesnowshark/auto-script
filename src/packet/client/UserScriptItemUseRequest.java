@@ -1,6 +1,6 @@
 package packet.client;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import packet.PacketWrapperNull;
 import packet.opcode.ClientCode;
 

@@ -5,7 +5,7 @@
  */
 package packet.client;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import game.scripting.ScriptSysFunc;
 import packet.opcode.ClientCode;
 import packet.PacketWrapperNull;

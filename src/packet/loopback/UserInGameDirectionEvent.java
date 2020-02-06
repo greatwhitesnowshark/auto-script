@@ -5,7 +5,7 @@
  */
 package packet.loopback;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import game.scripting.ScriptSysFunc.InGameDirectionEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

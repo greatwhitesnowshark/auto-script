@@ -20,30 +20,19 @@ public class StringUtil {
         return sLinePadded.toString();
     }
 
-    public static String TrimWhitespaceFromEnd(String sLine) {
-        if (!sLine.isEmpty()) {
-            while (sLine.length() > 0 && sLine.charAt(sLine.length() - 1) == ' ') {
-                sLine = sLine.substring(0, sLine.length() - 1);
+    public static int GetLinePadding(String sLine) {
+        return CountChar(sLine, ' ') > CountChar(sLine, '\t') ? CountChar(sLine, ' ') : CountChar(sLine, '\t');
+    }
+
+    public static int CountChar(String sLine, char ch) {
+        int nCount = 0;
+        for (char c : sLine.toCharArray()) {
+            if (c == ch) {
+                nCount++;
+            } else {
+                break;
             }
         }
-        return sLine;
-    }
-    
-    public static int CountStringPaddingChar(String sLine) {
-        int nPadding = 0;
-        while (nPadding < sLine.length() && sLine.subSequence(nPadding, nPadding + 1).equals(" ")) {
-            nPadding++;
-        }
-        return nPadding;
-    }
-    
-    public static int CountStringPaddingTab(String sLine) {
-        int nPadding = 0;
-        String sTrimmed = sLine.contains("(") ? sLine.substring(0, sLine.indexOf('(')) : sLine;
-        while (sTrimmed.contains("\t")) {
-            sTrimmed = sTrimmed.substring(1);
-            nPadding++;
-        }
-        return nPadding;
+        return nCount;
     }
 }

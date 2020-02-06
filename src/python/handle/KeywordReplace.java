@@ -1,5 +1,7 @@
 package python.handle;
 
+import util.StringMatch;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,88 +16,19 @@ public class KeywordReplace extends AbstractHandler {
 
     @Override
     public String Convert(String sScriptLine) {
-        boolean bCheck = false;//sFileName.contains("GiantBoss_field") && sScriptLine.contains("Effect.img");
-        if (bCheck) util.Logger.LogReport("[BEFORE] " + sScriptLine);
-        boolean bAddEndQuote = sScriptLine.charAt(sScriptLine.length() - 1) == '\"';
-        String sLine = "";
-        String sLineComments = sScriptLine.contains("//") ? sScriptLine.substring(sScriptLine.indexOf("//")) : "";
-        String sLineCommentsTrimmed = sScriptLine.contains("//") ? sScriptLine.substring(0, sScriptLine.indexOf("//")) : sScriptLine;
-        String[] aLineSplitInterleaveQuotes = sLineCommentsTrimmed.contains("\"") ? sLineCommentsTrimmed.split("\"") : new String[] {};
-        if (aLineSplitInterleaveQuotes.length > 0) {
-            for (int i = 0; i < aLineSplitInterleaveQuotes.length; i++) {
-                String sLineSegment = aLineSplitInterleaveQuotes[i];
-                if (bCheck) util.Logger.LogReport("[" + i + "] " + sLineSegment);
-                if (i % 2 == 0) {
-                    for (String s : mFunctionKeywordReplace.keySet()) {
-                        boolean bSkip = false;
-                        if (sLineSegment.equals(s)) {
-                            sLineSegment = mFunctionKeywordReplace.get(s);
-                        } else {
-                            if (!s.equals(mFunctionKeywordReplace.get(s))) {
-                                while (sLineSegment.contains(s) && !bSkip) {
-                                    String sLineSegmentTrimmed = sLineSegment.substring(sLineSegment.indexOf(s));
-                                    int nIndex = -1;
-                                    nIndex = s.contains(" ") ? nIndex : sLineSegmentTrimmed.indexOf(" ") >= 0 ? sLineSegmentTrimmed.indexOf(" ") < nIndex || nIndex == -1 ? sLineSegmentTrimmed.indexOf(" ") : nIndex : nIndex;
-                                    nIndex = s.contains(")") ? nIndex : sLineSegmentTrimmed.indexOf(")") >= 0 ? sLineSegmentTrimmed.indexOf(")") < nIndex || nIndex == -1 ? sLineSegmentTrimmed.indexOf(")") : nIndex : nIndex;
-                                    nIndex = s.contains("(") ? nIndex : sLineSegmentTrimmed.indexOf("(") + 1 > 0 ? sLineSegmentTrimmed.indexOf("(") + 1 < nIndex || nIndex == -1 ? sLineSegmentTrimmed.indexOf("(") + 1 : nIndex : nIndex;
-                                    nIndex = s.contains(",") ? nIndex : sLineSegmentTrimmed.indexOf(",") >= 0 ? sLineSegmentTrimmed.indexOf(",") < nIndex || nIndex == -1 ? sLineSegmentTrimmed.indexOf(",") : nIndex : nIndex;
-                                    if (nIndex == -1 && s.contains("(")) {
-                                        if (mFunctionKeywordReplace.get(s).contains("InGameDirectionEvent.")) {
-                                            nIndex = s.contains("(") ? sLineSegmentTrimmed.indexOf("(") + 1 > 0 ? sLineSegmentTrimmed.indexOf("(") + 1 < nIndex || nIndex == -1 ? sLineSegmentTrimmed.indexOf("(") + 1 : nIndex : nIndex : nIndex;
-                                        }
-                                    }
-                                    if (nIndex >= 0) {
-                                        String sPrefix = sLineSegment.substring(0, sLineSegment.indexOf(s));
-                                        String sMiddle = sLineSegment.substring(sPrefix.length(), sPrefix.length() + nIndex);
-                                        String sSuffix = sLineSegment.substring(sPrefix.length() + sMiddle.length());
-                                        if (sMiddle.contains(s)) {
-                                            sMiddle = sMiddle.replace(s, mFunctionKeywordReplace.get(s));
-                                        }
-                                        sLineSegment = (sPrefix + sMiddle + sSuffix);
-                                    } else {
-                                        bSkip = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                sLine += sLineSegment;
-                if (i != aLineSplitInterleaveQuotes.length - 1) {
-                    sLine += "\"";
-                }
+        for (String sKey : mFunctionKeywordReplace.keySet()) {
+            StringMatch pMatch = new StringMatch(sScriptLine, sKey, mFunctionKeywordReplace.get(sKey), !sKey.startsWith(".") && !sKey.endsWith(".") && !sKey.endsWith("("), true, true);
+            if (pMatch.GetMatches() > 0) {
+                sScriptLine = pMatch.ReplaceAll();
             }
-            if (bAddEndQuote) {
-                sLine += "\"";
-            }
-            if (!sLineComments.isEmpty()) {
-                sLine += sLineComments;
-            }
-        } else {
-            if (!sLineCommentsTrimmed.isEmpty()) {
-                for (String s : mFunctionKeywordReplace.keySet()) {
-                    if (sLineCommentsTrimmed.equals(s)) {
-                        sLineCommentsTrimmed = mFunctionKeywordReplace.get(s);
-                    } else {
-                        if (!s.equals(mFunctionKeywordReplace.get(s))) {
-                            while (sLineCommentsTrimmed.contains(s)) {
-                                sLineCommentsTrimmed = sLineCommentsTrimmed.replace(s, mFunctionKeywordReplace.get(s));
-                            }
-                        }
-                    }
-                }
-                sScriptLine = sLineCommentsTrimmed;
-                sScriptLine += sLineComments;
-            }
-            sLine += sScriptLine;
         }
-        if (bCheck) util.Logger.LogReport("[AFTER] " + sLine);
-        return sLine;
+        return sScriptLine;
     }
 
 
     static {
 
+        mFunctionKeywordReplace.put("giveNewSecondary", "UserEquipNewItem");
         mFunctionKeywordReplace.put("parentID", "self.GetTemplateID()");
         mFunctionKeywordReplace.put("self.GetTemplateID", "self.GetTemplateID");
         mFunctionKeywordReplace.put("self.showEffect(","self.OnUserInGameDirectionEvent(InGameDirectionEvent.EffectPlay, ");
@@ -257,6 +190,7 @@ public class KeywordReplace extends AbstractHandler {
         mFunctionKeywordReplace.put("showNpcSpecialActionByTemplateId","NpcSetSpecialAction");
         mFunctionKeywordReplace.put("showFadeTransition","FieldEffectOverlapDetail");
         mFunctionKeywordReplace.put("spawnNpc","FieldSummonNpc");
+        mFunctionKeywordReplace.put("startQuestNoCheck", "QuestRecordTryStartAct");
         mFunctionKeywordReplace.put("startQuest","QuestRecordTryStartAct");
         mFunctionKeywordReplace.put("int(", "parseInt(");
         mFunctionKeywordReplace.put("str(","(");
@@ -323,6 +257,8 @@ public class KeywordReplace extends AbstractHandler {
         mFunctionKeywordReplace.put("from net.swordie.ms.enums import WeatherEffNoticeType","WeatherEffectNoticeType = Java.type(\"game.field.WeatherEffectNoticeType\")");
         mFunctionKeywordReplace.put("WeatherEffNoticeType.","WeatherEffectNoticeType.");
         mFunctionKeywordReplace.put("SayOkay","Say");
+        mFunctionKeywordReplace.put("warpInstanceIn", "RegisterTransferFieldInstance");
+        mFunctionKeywordReplace.put("warpInstanceOut", "RegisterTransferField");
         mFunctionKeywordReplace.put("RegisterTransferFieldInstanceIn","RegisterTransferFieldInstance");
         mFunctionKeywordReplace.put("UserScriptMessageScript","UserScriptMessage");
         mFunctionKeywordReplace.put("RegisterTransferFieldInstanceOut","RegisterTransferField");
@@ -426,6 +362,12 @@ public class KeywordReplace extends AbstractHandler {
         mFunctionKeywordReplace.put("chr.addSkill", "self.UserLearnSkill");
         mFunctionKeywordReplace.put("chr.getId", "self.UserGetCharacterID");
         mFunctionKeywordReplace.put("TextEffectType.BlackFadedBrush.getVal", "1");
+        mFunctionKeywordReplace.put("sendSayOkay", "Say");
+        mFunctionKeywordReplace.put("sendSayImage", "SayImage");
+        mFunctionKeywordReplace.put("sendSay", "Say");
+        mFunctionKeywordReplace.put("getPosition", "GetPosition");
+        mFunctionKeywordReplace.put("chr.addSkill", "self.UserLearnSkill");
+        mFunctionKeywordReplace.put("chr.getSkillLevel", "self.GetSkillLevel");
         mFunctionKeywordReplace.put("sm.","self."); //try to keep this one at the bottom so its switched out last
 
     }

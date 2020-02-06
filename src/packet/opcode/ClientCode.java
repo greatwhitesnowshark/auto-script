@@ -5,8 +5,8 @@
  */
 package packet.opcode;
 
-import game.network.ClientPacket;
-import game.network.InPacket;
+import base.network.opcode.ClientPacket;
+import base.network.InPacket;
 import java.io.IOException;
 import java.util.Arrays;
 

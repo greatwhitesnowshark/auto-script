@@ -11,7 +11,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../MagatiaSVR/Game/target/Game.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../Neckson/classes/artifacts/Game_jar/Game.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -20,10 +20,12 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../MagatiaSVR/Util/target/Util.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../MagatiaSVR/Util/target/Util.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/../../MagatiaSVR/Util/target/Util.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
   </component>

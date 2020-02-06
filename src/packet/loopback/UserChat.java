@@ -5,7 +5,7 @@
  */
 package packet.loopback;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import packet.opcode.LoopbackCode;
 import packet.PacketWrapperNull;
 import script.ScriptWriteRequest;

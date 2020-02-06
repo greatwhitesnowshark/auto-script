@@ -1,5 +1,7 @@
 package python.handle;
 
+import util.StringMatch;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ public class FunctionAddAction extends AbstractHandler {
     @Override
     public String Convert(String sScriptLine) {
         for (String sKey : mFunctionFollowInsert.keySet()) {
-            if (sScriptLine.contains(sKey)) {
+            if (StringMatch.Match(sScriptLine, true, true, true, sKey)) {
                 return mFunctionFollowInsert.get(sKey);
             }
         }

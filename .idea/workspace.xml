@@ -1,40 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/packet/PacketWrapper.java" line="19" mnemonic="6" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1cbd79b9-e677-4870-b73c-b42862c223b6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/python/output/SortFieldScript.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/python/handle/IncorrectTranslations.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/python/handle/MiscStringPart.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/python/handle/MistranslatedText.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/python/handle/QuoteEndOfLine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/python/output/SortFiveScripts.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/util/StringMatch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/auto_script_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/auto_script_jar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/nbproject/private/private.xml" beforeDir="false" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/Convert.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/DebugInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/ForceComment.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/FunctionAppend.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/FunctionInsert.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/FunctionKeyword.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/FunctionKeywordPython.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/Modifier.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto-script.iml" beforeDir="false" afterPath="$PROJECT_DIR$/auto-script.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/META-INF/auto-script.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/hex/FunctionFinder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/hex/FunctionFinder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/PacketWrapper$OnPacket.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/PacketWrapper$OnPacket.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/PacketWrapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/PacketWrapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/PacketWrapperNull.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/PacketWrapperNull.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/PacketWriteRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/PacketWriteRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserPortalScriptRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserPortalScriptRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserQuestRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserQuestRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserScriptItemUseRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserScriptItemUseRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserScriptMessageAnswer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserScriptMessageAnswer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserSelectNpc.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/client/UserSelectNpc.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/ForceMoveByScript.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/ForceMoveByScript.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/InGameCurNodeEventEnd.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/InGameCurNodeEventEnd.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/Message.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/Message.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/NpcSpecialAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/NpcSpecialAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/ScriptMessage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/ScriptMessage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/SetField.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/SetField.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserChat.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserChat.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserEffectLocal.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserEffectLocal.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserInGameDirectionEvent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserInGameDirectionEvent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserQuestResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserQuestResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserSetInGameDirectionMode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserSetInGameDirectionMode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserSetStandaloneMode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/loopback/UserSetStandaloneMode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/opcode/ClientCode$OnPacket.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/opcode/ClientCode$OnPacket.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/opcode/ClientCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/opcode/ClientCode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/packet/opcode/LoopbackCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/packet/opcode/LoopbackCode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/PurgeDirectory.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/PurgeDirectory.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/PythonToJavascript.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/PythonToJavascript.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/StringModifier.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/handle/AbstractHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/handle/AbstractHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/handle/BlockHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/handle/BlockHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/handle/FunctionAddAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/handle/FunctionAddAction.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/handle/FunctionAppendArgument.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/handle/FunctionAppendArgument.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/handle/KeywordIgnore.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/handle/KeywordIgnore.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/handle/KeywordReplace.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/handle/KeywordReplace.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/handle/SyntaxModifier.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/handle/SyntaxModifier.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/output/OutputLogger.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/output/OutputLogger.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/output/SortFieldScript$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/output/SortFieldScript$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/output/SortFieldScript$FieldScriptType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/output/SortFieldScript$FieldScriptType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/python/output/SortFieldScript.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/python/output/SortFieldScript.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/script/Compiler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/script/Compiler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/script/MessageHistory.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/script/MessageHistory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/script/NestedBlockHistory.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/script/NestedBlockHistory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/script/Script.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/script/Script.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/script/ScriptFieldObjMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/script/ScriptFieldObjMap.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/script/ScriptModifier.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/script/ScriptModifier.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/script/ScriptTemplateMap.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/script/ScriptTemplateMap.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/script/ScriptWriteRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/script/ScriptWriteRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/scriptmaker/Config.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/scriptmaker/Config.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/scriptmaker/DirectoryPurge.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/scriptmaker/DirectoryPurge.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/scriptmaker/ScriptMaker$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/scriptmaker/ScriptMaker$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/scriptmaker/ScriptMaker.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/scriptmaker/ScriptMaker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/AbstractTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/AbstractTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/DeveloperTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/DeveloperTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/FieldTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/FieldTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/NpcTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/NpcTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/PortalTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/PortalTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/QuestEndTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/QuestEndTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/QuestStartTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/QuestStartTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/QuestTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/QuestTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/template/ReactorTemplate.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/template/ReactorTemplate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/util/Logger.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/util/Logger.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/util/PacketUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/util/PacketUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/auto-script/util/StringUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/auto-script/util/StringUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hex/FunctionFinder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/hex/FunctionFinder.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/packet/PacketWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/PacketWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/client/UserPortalScriptRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserPortalScriptRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/packet/client/UserQuestRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserQuestRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/client/UserScriptItemUseRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserScriptItemUseRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/client/UserScriptMessageAnswer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserScriptMessageAnswer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/client/UserSelectNpc.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/client/UserSelectNpc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/ForceMoveByScript.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/ForceMoveByScript.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/Message.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/NpcSpecialAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/NpcSpecialAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/packet/loopback/ScriptMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/ScriptMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/SetField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/SetField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserChat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserEffectLocal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserEffectLocal.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserInGameDirectionEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserInGameDirectionEvent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserQuestResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserQuestResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/Convert.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/DebugInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/output/OutputLogger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/ForceComment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/KeywordIgnore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/FunctionAppend.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/FunctionInsert.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/FunctionAddAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/FunctionKeyword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/KeywordReplace.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/FunctionKeywordPython.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/SyntaxModifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/Modifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/AbstractHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserSetInGameDirectionMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserSetInGameDirectionMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/loopback/UserSetStandaloneMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/loopback/UserSetStandaloneMode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/opcode/ClientCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/opcode/ClientCode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/packet/opcode/LoopbackCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/packet/opcode/LoopbackCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/python/PythonToJavascript.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/PythonToJavascript.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/python/StringModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/BlockHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/script/ScriptTemplateMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/ScriptTemplateMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/handle/AbstractHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/AbstractHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/handle/FunctionAddAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/FunctionAddAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/handle/KeywordIgnore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/KeywordIgnore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/handle/KeywordReplace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/KeywordReplace.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/handle/SyntaxModifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/handle/SyntaxModifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/output/OutputLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/output/OutputLogger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/python/output/SortFieldScript.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/python/output/SortFieldScript.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/NestedBlockHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/NestedBlockHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/script/Script.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/script/Script.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/scriptmaker/ScriptMaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/scriptmaker/ScriptMaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/StringUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/StringUtil.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -51,11 +133,61 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/python/output/SortFieldScript.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="62" column="53" selection-end-line="82" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/python/output/SortFiveScripts.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19">
+              <caret line="26" column="68" selection-start-line="26" selection-start-column="68" selection-end-line="26" selection-end-column="68" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/util/StringMatch.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="89">
+              <caret line="488" column="7" selection-start-line="488" selection-start-column="7" selection-end-line="488" selection-end-column="7" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#7372#7373#0" expanded="true" />
+                <element signature="e#7429#7430#0" expanded="true" />
+                <element signature="e#7690#7691#0" expanded="true" />
+                <element signature="e#7763#7764#0" expanded="true" />
+                <element signature="e#7986#7987#0" expanded="true" />
+                <element signature="e#8024#8025#0" expanded="true" />
+                <element signature="e#8280#8281#0" expanded="true" />
+                <element signature="e#8311#8312#0" expanded="true" />
+                <element signature="e#21852#21853#0" expanded="true" />
+                <element signature="e#22163#22164#0" expanded="true" />
+                <element signature="e#22432#22433#0" expanded="true" />
+                <element signature="e#22840#22841#0" expanded="true" />
+                <element signature="e#23180#23181#0" expanded="true" />
+                <element signature="e#23422#23423#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/python/PythonToJavascript.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2414">
-              <caret line="146" column="37" lean-forward="true" selection-start-line="146" selection-start-column="37" selection-end-line="146" selection-end-column="37" />
+            <state relative-caret-position="2560">
+              <caret line="158" column="60" selection-start-line="158" selection-start-column="60" selection-end-line="158" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -64,10 +196,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/python/handle/KeywordIgnore.java">
+        <entry file="file://$PROJECT_DIR$/src/python/PurgeDirectory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="20" column="47" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
+            <state relative-caret-position="107">
+              <caret line="26" column="66" selection-start-line="26" selection-start-column="66" selection-end-line="26" selection-end-column="66" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -76,10 +208,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/python/handle/KeywordReplace.java">
+        <entry file="file://$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="242" column="61" selection-start-line="242" selection-start-column="61" selection-end-line="242" selection-end-column="61" />
+            <state relative-caret-position="155">
+              <caret line="29" selection-start-line="29" selection-end-line="29" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/python/handle/SyntaxModifier.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2176">
+              <caret line="132" column="25" selection-start-line="132" selection-start-column="25" selection-end-line="132" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -90,20 +234,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/python/output/OutputLogger.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
+            <state relative-caret-position="153">
+              <caret line="135" column="59" selection-start-line="135" selection-start-column="59" selection-end-line="135" selection-end-column="59" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/python/handle/BlockHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
             </state>
           </provider>
         </entry>
@@ -111,31 +246,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/python/handle/AbstractHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="212" column="5" selection-start-line="212" selection-start-column="5" selection-end-line="212" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/python/output/SortFieldScript.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="73" column="9" selection-start-line="73" selection-start-column="9" selection-end-line="73" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#475#476#0" expanded="true" />
-                <element signature="e#511#512#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="230">
-              <caret line="41" column="58" selection-start-line="41" selection-start-column="58" selection-end-line="41" selection-end-column="58" />
+            <state relative-caret-position="4">
+              <caret line="209" column="38" selection-start-line="209" selection-start-column="38" selection-end-line="209" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -144,10 +256,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/util/StringUtil.java">
+        <entry file="file://$PROJECT_DIR$/src/python/handle/MiscStringPart.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
-              <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
+            <state relative-caret-position="251">
+              <caret line="67" column="41" selection-start-line="67" selection-start-column="41" selection-end-line="67" selection-end-column="41" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -163,39 +278,38 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mWhileLoopDebug</find>
+      <find>&quot;}&quot;</find>
+      <find>remove</find>
+      <find>Reset</find>
       <find>warp</find>
-      <find>JobConstants</find>
-      <find>removeSkill</find>
-      <find>chr.</find>
-      <find>specialaction</find>
-      <find>functiontofile</find>
-      <find>function</find>
-      <find>final</find>
-      <find>static</find>
-      <find>static final</find>
-      <find>mob</find>
-      <find>SendDelay</find>
-      <find>flip</find>
-      <find>setInstanceInfo</find>
-      <find>staticimports</find>
-      <find>mAlienImport</find>
-      <find>mAlienImportClassCall</find>
-      <find>Stat.</find>
-      <find>set</find>
-      <find>stat</find>
-      <find>i--</find>
-      <find>SyntaxModifier</find>
-      <find>BlockModifier</find>
-      <find>str)</find>
-      <find>str(</find>
-      <find>aScriptLine[i]</find>
-      <find>sScriptLine</find>
-      <find>//</find>
-      <find>SayNext</find>
+      <find>System.out</find>
+      <find>culprit</find>
+      <find>sContextMarked</find>
+      <find>questrecordtrystartact</find>
+      <find>convertifelse</find>
+      <find>functions located in</find>
+      <find>nCommentIndex</find>
+      <find>aFilesSkip</find>
+      <find>ConvertCleanComments</find>
+      <find>dojang_Eff</find>
+      <find>aRemovedFiles</find>
+      <find>merge</find>
+      <find>sArray</find>
+      <find>m</find>
+      <find>RemoveScript</find>
+      <find>s</find>
+      <find>tTimestamp</find>
+      <find>34200</find>
+      <find>BufferedWriter</find>
+      <find>sJavascriptDirectory</find>
+      <find>mScriptLines</find>
+      <find>semicolon</find>
+      <find>main</find>
+      <find>StartsWith</find>
+      <find>ConvertMerge</find>
+      <find>sOverrideNextLineRead</find>
     </findStrings>
     <replaceStrings>
-      <replace />
       <replace>public static</replace>
       <replace>mFuncUnknownSkip</replace>
       <replace>mPythonKeywordFileInfo</replace>
@@ -203,39 +317,47 @@
       <replace>nSkippedScriptCount</replace>
       <replace>sSemicolon</replace>
       <replace>(&quot; + nIndex + &quot;)</replace>
-      <replace>sScriptLine</replace>
       <replace>aScriptLine[i]</replace>
+      <replace>bWrapAround</replace>
+      <replace>lTargetLocation</replace>
+      <replace>s</replace>
+      <replace>base.network.</replace>
+      <replace>game.network.Client</replace>
+      <replace>GetLinePadding</replace>
+      <replace>Logger.Println</replace>
+      <replace>StringUtil.GetLinePadding</replace>
+      <replace>StringUtil</replace>
+      <replace>sScriptLine</replace>
+      <replace>Matches</replace>
+      <replace>GetStringMatchList</replace>
+      <replace>sFindText</replace>
+      <replace>pMatch</replace>
+      <replace>GetLastWholeWord</replace>
+      <replace>SetIsIgnoreQuotes</replace>
+      <replace>SetContext</replace>
+      <replace>a</replace>
+      <replace>lFiveScripts</replace>
+      <replace>bFoundComments</replace>
+      <replace>sArray</replace>
+      <replace>mTranslations</replace>
     </replaceStrings>
     <dirStrings>
-      <dir>C:\Users\Chris\Desktop\auto-script\src</dir>
       <dir>C:\Users\Chris\Desktop\auto-script</dir>
+      <dir>C:\Users\Chris\Desktop\auto-script\src\python\handle</dir>
+      <dir>C:\Users\Chris\Desktop\auto-script\src</dir>
       <dir>C:\Users\Chris\Desktop\auto-script\src\python</dir>
+      <dir>C:\Users\Chris\Desktop\Projects\auto-script\src\python</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HierarchyBrowserManager">
+    <option name="SCOPE" value="This Class" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/packet/opcode/ClientCode.java" />
-        <option value="$PROJECT_DIR$/src/packet/client/UserScriptItemUseRequest.java" />
-        <option value="$PROJECT_DIR$/src/script/ScriptTemplateMap.java" />
-        <option value="$PROJECT_DIR$/src/packet/loopback/SetField.java" />
-        <option value="$PROJECT_DIR$/src/packet/client/UserSelectNpc.java" />
-        <option value="$PROJECT_DIR$/src/scriptmaker/ScriptDebugConfig.java" />
-        <option value="$PROJECT_DIR$/src/scriptmaker/ScriptLogger.java" />
-        <option value="$PROJECT_DIR$/src/packet/client/UserScriptMessageAnswer.java" />
-        <option value="$PROJECT_DIR$/src/scriptmaker/ScriptMakerConfig.java" />
-        <option value="$PROJECT_DIR$/src/scriptmaker/DebugConfig.java" />
-        <option value="$PROJECT_DIR$/src/util/PacketUtil.java" />
-        <option value="$PROJECT_DIR$/src/scriptmaker/Analyzer.java" />
-        <option value="$PROJECT_DIR$/src/scriptmaker/ScriptMaker.java" />
-        <option value="$PROJECT_DIR$/src/hex/FunctionFinder.java" />
-        <option value="$PROJECT_DIR$/src/scriptmaker/Config.java" />
-        <option value="$PROJECT_DIR$/src/python/PythToJS.java" />
-        <option value="$PROJECT_DIR$/src/python/PurgeDirectory.java" />
-        <option value="$PROJECT_DIR$/src/util/StringUtil.java" />
         <option value="$PROJECT_DIR$/src/packet/loopback/ScriptMessage.java" />
         <option value="$PROJECT_DIR$/src/python/FunctionFollowInsert.java" />
         <option value="$PROJECT_DIR$/src/python/PythonKeyword.java" />
@@ -262,17 +384,35 @@
         <option value="$PROJECT_DIR$/src/python/handler/Handler.java" />
         <option value="$PROJECT_DIR$/src/python/handle/Handler.java" />
         <option value="$PROJECT_DIR$/src/python/handle/KeywordHandler.java" />
-        <option value="$PROJECT_DIR$/src/python/output/OutputLogger.java" />
+        <option value="$PROJECT_DIR$/src/python/handle/SyntaxModifier.java" />
+        <option value="$PROJECT_DIR$/src/util/PacketUtil.java" />
+        <option value="$PROJECT_DIR$/src/packet/PacketWrapper.java" />
+        <option value="$PROJECT_DIR$/src/packet/opcode/ClientCode.java" />
+        <option value="$PROJECT_DIR$/src/packet/opcode/LoopbackCode.java" />
+        <option value="$PROJECT_DIR$/src/hex/FunctionFinder.java" />
+        <option value="$PROJECT_DIR$/src/script/NestedBlockHistory.java" />
+        <option value="$PROJECT_DIR$/src/script/Script.java" />
+        <option value="$PROJECT_DIR$/src/scriptmaker/ScriptMaker.java" />
+        <option value="$PROJECT_DIR$/src/util/StringUtil.java" />
+        <option value="$PROJECT_DIR$/src/python/handle/QuoteEndOfLine.java" />
+        <option value="$PROJECT_DIR$/src/util/StringReplace.java" />
+        <option value="$PROJECT_DIR$/src/python/handle/MistranslatedText.java" />
+        <option value="$PROJECT_DIR$/src/python/handle/FunctionAddAction.java" />
         <option value="$PROJECT_DIR$/src/python/handle/KeywordIgnore.java" />
-        <option value="$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java" />
         <option value="$PROJECT_DIR$/src/python/handle/KeywordReplace.java" />
-        <option value="$PROJECT_DIR$/src/python/handle/AbstractHandler.java" />
-        <option value="$PROJECT_DIR$/src/python/PythonToJavascript.java" />
         <option value="$PROJECT_DIR$/src/python/output/SortFieldScript.java" />
+        <option value="$PROJECT_DIR$/src/python/handle/IncorrectTranslations.java" />
+        <option value="$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java" />
+        <option value="$PROJECT_DIR$/src/python/output/OutputLogger.java" />
+        <option value="$PROJECT_DIR$/src/python/handle/MiscStringPart.java" />
+        <option value="$PROJECT_DIR$/src/util/StringMatch.java" />
+        <option value="$PROJECT_DIR$/src/python/PythonToJavascript.java" />
+        <option value="$PROJECT_DIR$/src/python/handle/AbstractHandler.java" />
+        <option value="$PROJECT_DIR$/src/python/output/SortFiveScripts.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-9" />
     <option name="y" value="-9" />
     <option name="width" value="1386" />
@@ -283,7 +423,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -318,6 +457,12 @@
             </path>
             <path>
               <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
+              <item name="auto-script" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="auto-script" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
@@ -325,15 +470,18 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../reee/scripts" />
-    <property name="project.structure.last.edited" value="Facets" />
+    <property name="last.edited.regexp" value="Where would you like to go? \r\n#L0#Henesys" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Swordie" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
   </component>
   <component name="RecentsManager">
     <key name="MoveMembersDialog.RECENTS_KEY">
@@ -359,12 +507,25 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.PythonToJavascript">
-    <configuration name="KeywordReplace" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="python.handle.KeywordReplace" />
+    <configuration name="AbstractHandler" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="python.handle.AbstractHandler" />
       <module name="auto-script" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="python.handle.AbstractHandler" />
+          <option name="PATTERN" value="python.handle.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="IncorrectTranslations" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="python.handle.IncorrectTranslations" />
+      <module name="auto-script" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="python.handle.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -375,6 +536,7 @@
     <configuration name="PurgeDirectory" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="python.PurgeDirectory" />
       <module name="auto-script" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../Swordie" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="python.handle.AbstractHandler" />
@@ -388,6 +550,7 @@
     <configuration name="PythonToJavascript" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="python.PythonToJavascript" />
       <module name="auto-script" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../Swordie" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="python.handle.AbstractHandler" />
@@ -398,8 +561,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SortFieldScript" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="python.output.SortFieldScript" />
+    <configuration name="SortFiveScripts" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="python.output.SortFiveScripts" />
       <module name="auto-script" />
       <extension name="coverage">
         <pattern>
@@ -411,26 +574,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StringUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="util.StringUtil" />
-      <module name="auto-script" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="util.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+    <list>
+      <item itemvalue="Application.AbstractHandler" />
+      <item itemvalue="Application.IncorrectTranslations" />
+      <item itemvalue="Application.PurgeDirectory" />
+      <item itemvalue="Application.PythonToJavascript" />
+      <item itemvalue="Application.SortFiveScripts" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.PythonToJavascript" />
+        <item itemvalue="Application.AbstractHandler" />
         <item itemvalue="Application.PurgeDirectory" />
-        <item itemvalue="Application.SortFieldScript" />
-        <item itemvalue="Application.KeywordReplace" />
-        <item itemvalue="Application.StringUtil" />
+        <item itemvalue="Application.IncorrectTranslations" />
+        <item itemvalue="Application.SortFiveScripts" />
       </list>
     </recent_temporary>
   </component>
@@ -456,10 +613,9 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1386" height="788" extended-state="0" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4954955" visible="true" weight="0.18627451" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4954955" visible="true" weight="0.22390318" />
       <window_info id="Structure" order="1" sideWeight="0.5009009" side_tool="true" weight="0.2496112" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -467,8 +623,8 @@
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" sideWeight="0.5045045" side_tool="true" weight="0.16840883" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32824427" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32977098" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32569557" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.95090014" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -477,10 +633,11 @@
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Dependency Viewer" order="10" weight="0.3289689" />
-      <window_info anchor="bottom" id="Messages" order="11" weight="0.32824427" />
+      <window_info anchor="bottom" id="Messages" order="11" weight="0.32569557" />
+      <window_info anchor="bottom" id="Inspection Results" order="12" weight="0.3289689" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24886878" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.24886535" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Maven" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
@@ -488,140 +645,11 @@
       <window_info anchor="right" id="Palette&#9;" order="7" />
     </layout>
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/util/PacketUtil.java</url>
-          <line>43</line>
-          <properties />
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-  </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/template/QuestTemplate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/template/QuestEndTemplate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/packet/PacketWrapperNull.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="28" column="13" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/packet/PacketWriteRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="15" column="87" selection-start-line="15" selection-start-column="87" selection-end-line="15" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/packet/PacketWrapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="94" column="22" selection-start-line="94" selection-start-column="22" selection-end-line="94" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/packet/loopback/UserQuestResult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="68" selection-start-line="68" selection-end-line="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/script/Compiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="54" column="32" selection-start-line="54" selection-start-column="32" selection-end-line="54" selection-end-column="32" />
-          <folding>
-            <element signature="e#4976#4977#0" expanded="true" />
-            <element signature="e#5006#5007#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/template/AbstractTemplate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-15">
-          <caret line="35" column="19" selection-start-line="35" selection-start-column="19" selection-end-line="35" selection-end-column="19" />
-          <folding>
-            <element signature="e#1035#1036#0" expanded="true" />
-            <element signature="e#1087#1088#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/packet/loopback/UserSetInGameDirectionMode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="47" column="31" lean-forward="true" selection-start-line="47" selection-start-column="31" selection-end-line="47" selection-end-column="31" />
-          <folding>
-            <element signature="e#1975#1976#0" expanded="true" />
-            <element signature="e#2001#2002#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/packet/opcode/LoopbackCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="53" column="33" selection-start-line="53" selection-start-column="33" selection-end-line="53" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/packet/opcode/ClientCode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="33" column="38" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/packet/client/UserQuestRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="410">
-          <caret line="49" column="13" selection-start-line="49" selection-start-column="13" selection-end-line="49" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/template/QuestStartTemplate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="18" column="5" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/template/NpcTemplate.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="18" column="14" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/script/ScriptWriteRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-43">
-          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/template/PortalTemplate.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -648,17 +676,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/../MagatiaSVR/Game/target/Game.jar!/game/center/Center.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1173">
-          <caret line="69" column="13" selection-start-line="69" selection-start-column="13" selection-end-line="69" selection-end-column="13" />
-          <folding>
-            <element signature="e#0#33793#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://$PROJECT_DIR$/../MagatiaSVR/Game/target/Game.jar!/game/center/Center.class" />
     <entry file="file://$PROJECT_DIR$/src/packet/client/UserPortalScriptRequest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -691,43 +709,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/PacketUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/script/Script.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="86" column="21" selection-start-line="86" selection-start-column="21" selection-end-line="86" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/hex/FunctionFinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/scriptmaker/ScriptMaker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="210" column="40" lean-forward="true" selection-start-line="210" selection-start-column="40" selection-end-line="210" selection-end-column="40" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_161/src.zip!/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3306">
@@ -745,13 +726,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="15" column="47" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk-12.0.2/lib/src.zip!/java.base/java/lang/String.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="77">
-          <caret line="3051" column="39" selection-start-line="3051" selection-start-column="39" selection-end-line="3051" selection-end-column="39" />
         </state>
       </provider>
     </entry>
@@ -789,40 +763,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/python/AbstractImpl.java" />
     <entry file="file://$PROJECT_DIR$/src/python/ConvertAndLogInfo.java" />
-    <entry file="file://$PROJECT_DIR$/src/python/PurgeDirectory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="23" column="53" lean-forward="true" selection-start-line="23" selection-start-column="53" selection-end-line="23" selection-end-column="53" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/python/handle/FunctionAddAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="66" selection-start-line="11" selection-start-column="66" selection-end-line="11" selection-end-column="66" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/script/ScriptModifier.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/python/handle/SyntaxModifier.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="123" column="29" lean-forward="true" selection-start-line="123" selection-start-column="29" selection-end-line="123" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -833,20 +777,93 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/python/Convert.java">
+    <entry file="file://$PROJECT_DIR$/src/python/Convert.java" />
+    <entry file="file://$PROJECT_DIR$/src/scriptmaker/ScriptMaker.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/python/output/OutputLogger.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
+        <state relative-caret-position="-1158">
+          <caret line="31" column="3" selection-start-line="31" selection-start-column="3" selection-end-line="31" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/NestedBlockHistory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="27" column="88" selection-start-line="27" selection-start-column="88" selection-end-line="27" selection-end-column="88" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hex/FunctionFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/opcode/LoopbackCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="8" column="14" lean-forward="true" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/opcode/ClientCode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="49">
+          <caret line="7" column="16" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/packet/PacketWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/Compiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1406">
+          <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/script/ScriptWriteRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="11" column="33" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/PacketUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="11" column="25" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template/DeveloperTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/template/FieldTemplate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -857,27 +874,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/StringUtil.java">
+    <entry file="file://$PROJECT_DIR$/src/script/Script.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
+        <state relative-caret-position="531">
+          <caret line="349" column="49" selection-start-line="349" selection-start-column="49" selection-end-line="349" selection-end-column="49" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java">
+    <entry file="file://$PROJECT_DIR$/src/python/handle/FunctionAddAction.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="41" column="58" selection-start-line="41" selection-start-column="58" selection-end-line="41" selection-end-column="58" />
+        <state relative-caret-position="240">
+          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/python/handle/KeywordIgnore.java">
+    <entry file="file://$PROJECT_DIR$/src/python/handle/MistranslatedText.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="20" column="47" selection-start-line="20" selection-start-column="47" selection-end-line="20" selection-end-column="47" />
+        <state relative-caret-position="1700">
+          <caret line="100" column="28" selection-start-line="100" selection-start-column="28" selection-end-line="100" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/python/handle/QuoteEndOfLine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk-12.0.2/lib/src.zip!/java.base/java/lang/String.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="2031" column="19" selection-start-line="2031" selection-start-column="19" selection-end-line="2031" selection-end-column="19" />
+          <folding>
+            <element signature="e#58618#58619#0" expanded="true" />
+            <element signature="e#58662#58663#0" expanded="true" />
+            <element signature="e#81207#81208#0" expanded="true" />
+            <element signature="e#81258#81259#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../MagatiaSVR/Game/target/Game.jar!/base/util/Logger.class" />
+    <entry file="file://$PROJECT_DIR$/src/python/handle/IncorrectTranslations.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="56" column="18" selection-start-line="56" selection-start-column="18" selection-end-line="56" selection-end-column="18" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -886,37 +934,139 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/python/handle/KeywordReplace.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="242" column="61" selection-start-line="242" selection-start-column="61" selection-end-line="242" selection-end-column="61" />
+        <state relative-caret-position="6188">
+          <caret line="367" column="55" selection-start-line="367" selection-start-column="55" selection-end-line="367" selection-end-column="55" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/StringUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="15" column="24" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/python/handle/KeywordIgnore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="595">
+          <caret line="39" selection-start-line="39" selection-end-line="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/python/handle/SyntaxModifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2176">
+          <caret line="132" column="25" selection-start-line="132" selection-start-column="25" selection-end-line="132" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/python/output/SortFieldScript.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="62" column="53" selection-end-line="82" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/python/output/OutputLogger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="135" column="59" selection-start-line="135" selection-start-column="59" selection-end-line="135" selection-end-column="59" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/python/PurgeDirectory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="26" column="66" selection-start-line="26" selection-start-column="66" selection-end-line="26" selection-end-column="66" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/python/handle/MiscStringPart.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="67" column="41" selection-start-line="67" selection-start-column="41" selection-end-line="67" selection-end-column="41" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/StringMatch.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="89">
+          <caret line="488" column="7" selection-start-line="488" selection-start-column="7" selection-end-line="488" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#7372#7373#0" expanded="true" />
+            <element signature="e#7429#7430#0" expanded="true" />
+            <element signature="e#7690#7691#0" expanded="true" />
+            <element signature="e#7763#7764#0" expanded="true" />
+            <element signature="e#7986#7987#0" expanded="true" />
+            <element signature="e#8024#8025#0" expanded="true" />
+            <element signature="e#8280#8281#0" expanded="true" />
+            <element signature="e#8311#8312#0" expanded="true" />
+            <element signature="e#21852#21853#0" expanded="true" />
+            <element signature="e#22163#22164#0" expanded="true" />
+            <element signature="e#22432#22433#0" expanded="true" />
+            <element signature="e#22840#22841#0" expanded="true" />
+            <element signature="e#23180#23181#0" expanded="true" />
+            <element signature="e#23422#23423#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/python/handle/AbstractHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="212" column="5" selection-start-line="212" selection-start-column="5" selection-end-line="212" selection-end-column="5" />
+        <state relative-caret-position="4">
+          <caret line="209" column="38" selection-start-line="209" selection-start-column="38" selection-end-line="209" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/python/output/SortFieldScript.java">
+    <entry file="file://$PROJECT_DIR$/src/python/output/SortFiveScripts.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="73" column="9" selection-start-line="73" selection-start-column="9" selection-end-line="73" selection-end-column="9" />
+        <state relative-caret-position="19">
+          <caret line="26" column="68" selection-start-line="26" selection-start-column="68" selection-end-line="26" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#475#476#0" expanded="true" />
-            <element signature="e#511#512#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/python/handle/FunctionAppendArgument.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/python/PythonToJavascript.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2414">
-          <caret line="146" column="37" lean-forward="true" selection-start-line="146" selection-start-column="37" selection-end-line="146" selection-end-column="37" />
+        <state relative-caret-position="2560">
+          <caret line="158" column="60" selection-start-line="158" selection-start-column="60" selection-end-line="158" selection-end-column="60" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -976,6 +1126,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
+          <last-edited>12</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

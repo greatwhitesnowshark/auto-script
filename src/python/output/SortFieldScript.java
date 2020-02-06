@@ -21,11 +21,12 @@ public class SortFieldScript {
     }
 
     public static void SortFieldScriptMap() {
-        try (BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\Chris\\Desktop\\Swordie\\FieldID_to_Script.txt"))) {
-            FieldScriptType t = null;
+        try (BufferedReader br = new BufferedReader(new FileReader("fieldscripts.txt"))) {
+            FieldScriptType t;
             String sLine;
             while (br.ready()) {
                 sLine = br.readLine();
+                t = null;
                 if (sLine.contains("<UserEnter>")) {
                     t = FieldScriptType.UserEnter;
                 } else if (sLine.contains("<FirstUserEnter>")) {
@@ -33,8 +34,8 @@ public class SortFieldScript {
                 } else if (sLine.contains("<FieldScript>")) {
                     t = FieldScriptType.FieldScript;
                 }
-                if (sLine.contains("`") && sLine.contains(".js")) {
-                    String sScript = sLine.substring(sLine.indexOf("`") + 1, sLine.indexOf("."));
+                if (sLine.contains(">") && t != null && sLine.length() > sLine.indexOf(">") + 2) {
+                    String sScript = sLine.substring(sLine.indexOf(">") + 1).trim();
                     switch (t) {
                         case UserEnter:
                             if (!aUserEnterScript.contains(sScript)) {
@@ -72,10 +73,10 @@ public class SortFieldScript {
         if (aFieldScript.contains(sScriptName)) {
             return FieldScriptType.FieldScript;
         }
-        return FieldScriptType.NotSorted;
+        return FieldScriptType.Etc;
     }
 
 
-    public enum FieldScriptType { UserEnter, FirstUserEnter, FieldScript, NotSorted }
+    public enum FieldScriptType { UserEnter, FirstUserEnter, FieldScript, Etc }
 
 }

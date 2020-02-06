@@ -5,7 +5,7 @@
  */
 package packet.client;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import java.awt.Point;
 import packet.opcode.ClientCode;
 import packet.PacketWrapperNull;

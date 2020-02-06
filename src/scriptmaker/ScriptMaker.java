@@ -5,8 +5,8 @@
  */
 package scriptmaker;
 
-import game.network.ClientPacket;
-import game.network.InPacket;
+import base.network.opcode.ClientPacket;
+import base.network.InPacket;
 import io.netty.buffer.Unpooled;
 import packet.PacketWrapper;
 import packet.opcode.LoopbackCode;

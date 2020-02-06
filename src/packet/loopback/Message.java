@@ -5,7 +5,7 @@
  */
 package packet.loopback;
 
-import game.network.InPacket;
+import base.network.InPacket;
 import game.user.quest.QuestMan;
 import java.util.LinkedList;
 import packet.opcode.LoopbackCode;

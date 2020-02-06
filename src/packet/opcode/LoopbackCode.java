@@ -5,7 +5,7 @@
  */
 package packet.opcode;
 
-import game.network.LoopbackPacket;
+import base.network.opcode.LoopbackPacket;
 import game.user.UserEffect;
 import packet.PacketWrapper;
 import packet.loopback.UserChat;

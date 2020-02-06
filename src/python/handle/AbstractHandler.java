@@ -1,6 +1,10 @@
 package python.handle;
 
+import util.StringMatch;
 import util.StringUtil;
+
+import java.util.LinkedHashMap;
+import java.util.function.Predicate;
 
 /**
  *
@@ -8,215 +12,298 @@ import util.StringUtil;
  */
 public abstract class AbstractHandler {
 
-    public int GetLinePaddingByNumChar(String sScriptLine) {
-        int nCharPad = StringUtil.CountStringPaddingChar(sScriptLine);
-        int nTabPad = StringUtil.CountStringPaddingTab(sScriptLine);
-        return nCharPad > nTabPad * 4 ? nCharPad : nTabPad * 4;
-    }
-
     public boolean IsSkippedLine(String sScriptLine) {
-        return sScriptLine.contains("sm.dispose") || sScriptLine.contains("sm.diposse") || sScriptLine.contains("sm.disose");
-    }
-
-    public boolean IsCloseArrayBracket(String sScriptLine) {
-        String sTrim = sScriptLine.contains("#") ? sScriptLine.substring(0, sScriptLine.indexOf("#")).trim() : sScriptLine.trim();
-        if (!sTrim.isEmpty() && sTrim.length() > 0 && !sTrim.contains("[")) {
-            char cLastChar = sTrim.charAt(sTrim.length() - 1);
-            if (cLastChar == ']') {
+        String[] aSkippedContext = new String[] {
+                "sm.dispose",
+                "sm.diposse",
+                "sm.disose",
+                "self.QuestRecordExSet(18418,"
+        };
+        StringMatch pMatch = new StringMatch(sScriptLine, "", "", true, true, true);
+        for (String s : aSkippedContext) {
+            pMatch.SetFindText(s);
+            if (pMatch.GetMatches() > 0) {
                 return true;
             }
-            return (sTrim.length() == 2 && sTrim.equals("],")) || (sTrim.length() == 1 && sTrim.equals("]"));
         }
         return false;
+    }
+
+    public boolean IsCloseArrayBracket(String sScriptLine, boolean bAssociative) {
+        StringMatch pMatch = new StringMatch(sScriptLine, "", "", true, true, true);
+        return pMatch.EndsWith("]") || (pMatch.EndsWith("}") && bAssociative);
     }
 
     public boolean IsOpenArrayBracket(String sScriptLine) {
-        String sTrim = sScriptLine.contains("#") ? sScriptLine.substring(0, sScriptLine.indexOf("#")).trim() : sScriptLine.trim();
-        if (!sTrim.isEmpty() && sTrim.length() > 0 && !sTrim.contains("]")) {
-            char cLastChar = sTrim.charAt(sTrim.length() - 1);
-            if (cLastChar == '[') {
-                return true;
-            }
-            return sTrim.length() > 3 && sTrim.substring(sTrim.length() - 3).equals("= [");
-        }
-        return false;
+        StringMatch pMatch = new StringMatch(sScriptLine, "", "", true, true, true);
+        return pMatch.EndsWith("= [") || pMatch.EndsWith("= {");
     }
 
     public boolean IsCorrectPaddingForClosingBracket(String sScriptLine, int nBlockPadding) {
-        if (sScriptLine.contains("}") && GetLinePaddingByNumChar(sScriptLine) == nBlockPadding) {
+        if (sScriptLine.contains("}") && StringUtil.GetLinePadding(sScriptLine) == nBlockPadding) {
             return false;
         }
-        return nBlockPadding >= 0 && GetLinePaddingByNumChar(sScriptLine) <= nBlockPadding;
+        return nBlockPadding >= 0 && StringUtil.GetLinePadding(sScriptLine) <= nBlockPadding;
     }
 
     public boolean IsClosingBracketInsertNeeded(String sScriptLine) {
-        return sScriptLine.contains("{") && (sScriptLine.contains("if") || sScriptLine.contains("else") || sScriptLine.contains("while") || sScriptLine.contains("for") || sScriptLine.contains("function"));
+        StringMatch pMatch = new StringMatch(sScriptLine, "{", "", true, true, true, (p) -> {
+            String[] a = new String[] {
+                    "if",
+                    "else",
+                    "while",
+                    "for",
+                    "function"
+            };
+            for (String s : a) {
+                if (StringMatch.Match(p.GetString(), true, true, true, s)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        return pMatch.GetMatches() > 0;
     }
 
-    public boolean IsLineSplitForMergeWithNextLine(String sScriptLine) {
-        char c = sScriptLine.trim().length() > 1 ? sScriptLine.trim().charAt(sScriptLine.trim().length() - 1) : '_',
-                b = sScriptLine.trim().length() > 2 ? sScriptLine.trim().charAt(sScriptLine.trim().length() - 2) : '_',
-                a = sScriptLine.trim().length() > 3 ? sScriptLine.trim().charAt(sScriptLine.trim().length() - 3) : '_';
-        if (c == '+' || c == '"' || (c == ')' && (b == '(' || (b == ')' && a == '(')))) {
-            return (sScriptLine.contains("sm.") && (sScriptLine.contains("(\"") || sScriptLine.contains(", \""))) || sScriptLine.contains("= \"");
+    public String GetRemoveScriptLineKey(String sScriptLine) {
+        String[] aRemoveScript = new String[] {
+                "self.setBossCooldown",
+                "BossConstants",
+                "BossCooldown",
+                "chr.getAvatarData",
+                "lambda",
+                "list",
+                "import",
+                "map",
+                "swordie",
+                "Swordie",
+                "sjonnie",
+                "Sjonnie",
+                "asura",
+                "Asura"
+        };
+        for (String s : aRemoveScript) {
+            StringMatch pMatch = new StringMatch(sScriptLine, s, "", false, !s.equals("map") && !s.equals("list"), true);
+            if (pMatch.GetMatches() > 0) {
+                return s;
+            }
         }
-        return false;
+        return "";
     }
 
-    public String ConvertComments(String sScriptLine, boolean bArray) {
+    public String ConvertComments(String sScriptLine, final boolean bArray) {
         if (!sScriptLine.isEmpty() && sScriptLine.contains("#")) {
-            boolean bOnlyComment = false;
             if (sScriptLine.trim().charAt(0) == '#') {
-                bOnlyComment = true;
-                if (GetLinePaddingByNumChar(sScriptLine) <= 2) {
+                if (StringUtil.GetLinePadding(sScriptLine) <= 2) {
                     sScriptLine = sScriptLine.trim();
                 }
             }
-            String sLine = "";
-            String[] aLineSplitInterleaveQuotes = sScriptLine.contains("\"") ? sScriptLine.split("\"") : new String[]{};
-            if (aLineSplitInterleaveQuotes.length > 0) {
-                boolean bAddEndQuote = sScriptLine.charAt(sScriptLine.length() - 1) == '\"', bFoundComment = false;
-                for (int i = 0; i < aLineSplitInterleaveQuotes.length; i++) {
-                    String sLineSegment = aLineSplitInterleaveQuotes[i];
-                    if (i % 2 == 0 && !bFoundComment) {
-                        if (sLineSegment.contains("#")) {
-                            String sLineNoComments = sLineSegment.substring(0, sLineSegment.indexOf("#"));
-                            String sLineComments = sLineSegment.substring(sLineSegment.indexOf("#"));
-                            sLineComments = sLineComments.replace("#", "//");
-                            if (!sLineNoComments.trim().isEmpty()) {
-                                sLineNoComments = StringUtil.TrimWhitespaceFromEnd(sLineNoComments);
-                                sLineNoComments += !bOnlyComment && !bArray && !sLineNoComments.contains("{") && !sLineComments.contains(":") ? "; " : " ";
-                            }
-                            sLineSegment = sLineNoComments + sLineComments;
-                            bFoundComment = true;
-                        }
-                    }
-                    sLine += sLineSegment;
-                    if (i != aLineSplitInterleaveQuotes.length - 1) {
-                        sLine += "\"";
-                    }
+            StringMatch pMatch = new StringMatch(sScriptLine, "#", "//", false, true, false);
+            sScriptLine = pMatch.ReplaceAll();
+        }
+        return sScriptLine;
+    }
+
+    public String ConvertCleanComments(String sScriptLine) { //todo:: this cleaning is only because one of my methods fucks up
+        char[] aLineChars = sScriptLine.trim().toCharArray();
+        if (aLineChars.length >= 2) {
+            if (aLineChars[0] == '/' && aLineChars[1] == '/' && !sScriptLine.contains(".")) {
+                if (aLineChars[aLineChars.length - 2] == ')' && aLineChars[aLineChars.length - 1] == ';') {
+                    sScriptLine = sScriptLine.substring(0, sScriptLine.indexOf(");"));
+                    //Logger.Println(sLine + "  -(" + pFile.getFileName().toString() + ")");
                 }
-                if (bAddEndQuote) {
-                    sLine += "\"";
-                }
-            } else {
-                String sLineNoComments = sScriptLine.substring(0, sScriptLine.indexOf("#"));
-                String sLineComments = sScriptLine.substring(sScriptLine.indexOf("#"));
-                sLineComments = sLineComments.replace("#", "//");
-                if (!sLineNoComments.trim().isEmpty()) {
-                    sLineNoComments = StringUtil.TrimWhitespaceFromEnd(sLineNoComments);
-                    sLineNoComments += !bOnlyComment && !bArray && !sLineNoComments.contains("{") && !sLineComments.contains(":") ? "; " : " ";
-                }
-                sLine = sLineNoComments + sLineComments;
             }
-            sScriptLine = sLine;
+        }
+        return sScriptLine;
+    }
+
+    public String ConvertForEachLoop(String sScriptLine) {
+        if (sScriptLine != null && sScriptLine.contains("range") && sScriptLine.contains("for") && sScriptLine.contains("each") && sScriptLine.contains("in")) {
+            String s = sScriptLine, sArray, sVariable;
+            if (s.contains("range (")) {
+                s.replace("range (", "range(");
+            }
+            sArray = s.split("range")[1];
+            sArray = sArray.substring(sArray.indexOf("(") + 1, sArray.lastIndexOf(")"));
+            String[] a = s.split("in")[0].split(" ");
+            sVariable = a[a.length - 1].trim();
+            if (sVariable.contains("(")) {
+                sVariable = sVariable.substring(sVariable.indexOf("(") + 1);
+            }
+            s = s.replaceAll("(range\\(?.*)\\)", sArray);
+            s = s.replace("each", "");
+            s = s.replace(" in ", " = 0; " + sVariable + " < "); //todo:: need to parse the variable here
+            s = new StringMatch(s, ")", "; " + sVariable + "++)", false, false, true).ReplaceLast();
+            sScriptLine = s;
+        }
+        return sScriptLine;
+    }
+
+    public String ConvertCleanParenthesis(String sScriptLine) {
+        StringMatch pMatch = new StringMatch(sScriptLine, "( ", "(", false, true, true);
+        if (pMatch.GetMatches() > 0) {
+            sScriptLine = pMatch.ReplaceAll();
+        }
+        return sScriptLine;
+    }
+
+    public String ConvertRemoveComments(String sScriptLine) {
+        if (StringMatch.Match(sScriptLine, "//")) {
+            sScriptLine = sScriptLine.substring(0, sScriptLine.indexOf("//")).stripTrailing();
         }
         return sScriptLine;
     }
 
     public String ConvertIfElseStatements(String sScriptLine) {
-        String sComment = "";
-        if (sScriptLine.contains(":")) {
-            if (sScriptLine.contains("//")) {
-                sComment = sScriptLine.substring(sScriptLine.indexOf("//"));
-                sScriptLine = sScriptLine.substring(0, sScriptLine.indexOf("//"));
-            }
-            if (sScriptLine.contains("\"")) {
-                boolean bFunction = sScriptLine.contains("(") && sScriptLine.contains(")");
-                boolean bForEachLoop = sScriptLine.contains(" in ");
-                String[] aScriptLine = sScriptLine.split("\"");
-                sScriptLine = "";
-                for (int i = 0; i < aScriptLine.length; i++) {
-                    if (i == 0 || i % 2 == 0) {
-                        if (aScriptLine[i].contains("while ") && !aScriptLine[i].contains("while (")) {
-                            aScriptLine[i] = aScriptLine[i].replace("while ", "while (");
-                        } else if (aScriptLine[i].contains("for ") && bForEachLoop) {
-                            aScriptLine[i] = aScriptLine[i].replace("for ", "for each (");
-                        } else if (aScriptLine[i].contains("def ") && bFunction) {
-                            aScriptLine[i] = aScriptLine[i].replace("def ", "function ");
-                        } else if (aScriptLine[i].contains("elif")) {
-                            aScriptLine[i] = aScriptLine[i].replace("elif", "} else if (");
-                        } else if (aScriptLine[i].contains("if ")) {
-                            aScriptLine[i] = aScriptLine[i].replace("if ", "if (");
-                        } else if (aScriptLine[i].contains("else:")) {
-                            aScriptLine[i] = aScriptLine[i].replace("else:", "} else:");
-                        }
-                        if (aScriptLine[i].contains(":")) {
-                            aScriptLine[i] = aScriptLine[i].replace(":", sScriptLine.contains("else:") || sScriptLine.contains("function") ? " {" : ") {");
-                        }
-                    }
-                    sScriptLine += aScriptLine[i];
-                    if (i != aScriptLine.length - 1) {
-                        sScriptLine += "\"";
-                    }
-                }
-            } else {
-                if (sScriptLine.contains("while ") && !sScriptLine.contains("while (")) {
-                    sScriptLine = sScriptLine.replace("while ", "while (");
-                } else if (sScriptLine.contains("for ") && sScriptLine.contains(" in ")) {
-                    sScriptLine = sScriptLine.replace("for ", "for each (");
-                } else if (sScriptLine.contains("def ") && sScriptLine.contains("(") && sScriptLine.contains(")")) {
-                    sScriptLine = sScriptLine.replace("def ", "function ");
-                } else if (sScriptLine.contains("elif")) {
-                    sScriptLine = sScriptLine.replace("elif", "} else if (");
-                } else if (sScriptLine.contains("if ") && sScriptLine.contains(":")) {
-                    sScriptLine = sScriptLine.replace("if ", "if (");
-                } else if (sScriptLine.contains("else:")) {
-                    sScriptLine = sScriptLine.replace("else:", "} else:");
-                }
-                sScriptLine = sScriptLine.replace(":", sScriptLine.contains("else:") || sScriptLine.contains("function") ? " {" : ") {");
+        String sContext = sScriptLine;
+
+        if (StringMatch.Match(sScriptLine, false, true, true, ":")) {
+            StringMatch pMatch = new StringMatch(sScriptLine, "", "", false, true, true);
+
+            pMatch.Reset(sScriptLine, "while", "while (", (p) -> !StringMatch.Match(p.GetString(), "while ("));
+            sScriptLine = pMatch.GetMatches() > 0 ? pMatch.ReplaceAll() : sScriptLine;
+
+            pMatch.Reset(sScriptLine,"for", "for each(", (p) -> StringMatch.Match(p.GetString(), true, true, true, "in"));
+            sScriptLine = pMatch.GetMatches() > 0 ? pMatch.ReplaceAll() : sScriptLine;
+
+            pMatch.Reset(sScriptLine, "def", "function", (p) -> StringMatch.Match(p.GetString(), "(") && StringMatch.Match(p.GetString(), ")"));
+            sScriptLine = pMatch.GetMatches() > 0 ? pMatch.ReplaceAll() : sScriptLine;
+
+            pMatch.Reset(sScriptLine, "elif", "} else if (");
+            sScriptLine = pMatch.GetMatches() > 0 ? pMatch.ReplaceAll() : sScriptLine;
+
+            pMatch.Reset(sScriptLine, "if", "if (");
+            sScriptLine = pMatch.GetMatches() > 0 ? pMatch.ReplaceAll() : sScriptLine;
+
+            pMatch.Reset(sScriptLine,"else:", "} else:");
+            sScriptLine = pMatch.GetMatches() > 0 ? pMatch.ReplaceAll() : sScriptLine;
+
+            if (!sScriptLine.trim().equals(sContext.trim())) {
+                pMatch.Reset(sScriptLine, ":", (StringMatch.Match(sScriptLine, "else:", "function") ? " {" : ") {"));
+                sScriptLine = pMatch.GetMatches() > 0 ? pMatch.ReplaceAll() : sScriptLine;
             }
         }
-        if (sScriptLine.contains(" ( ")) {
-            sScriptLine = sScriptLine.replace(" ( ", " (");
+        if (StringMatch.Match(sScriptLine, true, true, true, "( ")) {
+            sScriptLine = StringMatch.ReplaceAll(sScriptLine, "( ", "(", true, true, true, null);
         }
-        sScriptLine += sComment;
         return sScriptLine;
     }
 
     public String ConvertSemicolon(String sScriptLine, boolean bArray) {
-        if (!sScriptLine.isEmpty() && !bArray) {
-            if (!sScriptLine.contains("//") && sScriptLine.trim().charAt(sScriptLine.trim().length() - 1) != '{') {
-                sScriptLine = StringUtil.TrimWhitespaceFromEnd(sScriptLine);
-                sScriptLine += ";";
+        if (!sScriptLine.isBlank() && !bArray) {
+            StringMatch pMatch = new StringMatch(sScriptLine, "", "", false, true, false);
+            String[] aBlockedEnd = {"(", "\"", "'", "[", "{", "+", "&", "*", "/", "|"};
+            for (String sBlocked : aBlockedEnd) {
+                if (pMatch.EndsWith(sBlocked)) {
+                    return sScriptLine;
+                }
             }
+            sScriptLine = pMatch.Append("; ", (s) -> !s.isBlank());
         }
         return sScriptLine;
     }
 
-    public String ConvertMergeWithNextLine(String sScriptLine, String sAppend) {
-        int nLineSubstr, nAppendSubstr;
-        boolean bOperatorAppend = sScriptLine.trim().charAt(sScriptLine.trim().length() - 1) == '+';
-        if (bOperatorAppend) {
-            nLineSubstr = sScriptLine.lastIndexOf("+") + 1;
-            nAppendSubstr = 0;
-        } else {
-            if (sAppend.trim().length() > 3 && sAppend.trim().substring(0, 3).equals("+ \"")) {
-                nLineSubstr = sScriptLine.lastIndexOf("\"");
-                nAppendSubstr = sAppend.indexOf("\"") + 1;
-            } else {
-                nLineSubstr = sScriptLine.length() - 1;
-                nAppendSubstr = sAppend.indexOf("\"") + 1;
+    public boolean IsMergeWithNextLine(String sScriptLine, String sAppend) {
+        if (!sScriptLine.isBlank() && !sAppend.isBlank()) {
+            StringMatch pScriptLineMatch = new StringMatch(sScriptLine, "", "", false, true, true);
+            StringMatch pAppendMatch = new StringMatch(sAppend, "", "", false, true, true);
+            if (pAppendMatch.StartsWith("+")) {
+                return pAppendMatch.StartsWith("+ \"") &&
+                        (pScriptLineMatch.EndsWith("\"") || pScriptLineMatch.EndsWith(")"));
+            } else if (pAppendMatch.StartsWith("\"")) {
+                return pScriptLineMatch.EndsWith("(") || pScriptLineMatch.EndsWith("+") || pScriptLineMatch.EndsWith("\"");
+            } else if (pAppendMatch.StartsWith("(")) {
+                return pScriptLineMatch.EndsWith("+");
             }
         }
-        return sScriptLine.substring(0, nLineSubstr) + (nAppendSubstr == 0 ? " " : "") + sAppend.substring(nAppendSubstr);
+        return false;
+    }
+
+    public String ConvertMergeWithNextLine(String sScriptLine, String sAppend) {
+        StringMatch pMatch = new StringMatch(sScriptLine, "", "", false, false, false);
+        StringMatch pAppend = new StringMatch(sAppend, "", "", false, false, false);
+        boolean bMerge = false;
+        if (pAppend.StartsWith("+")) {
+            if (pAppend.StartsWith("+ \"")) {
+                if (pMatch.EndsWith("\"")) {
+                    pAppend.SetFindText("+ \"");
+                    pMatch.SetFindText("\"");
+                    bMerge = true;
+                } else if (pMatch.EndsWith(")")) {
+                    pMatch.SetFindText("\" +");
+                    bMerge = true;
+                }
+            }
+        } else if (pAppend.StartsWith("\"")) {
+            if (pMatch.EndsWith("+")) {
+                if (pMatch.EndsWith("\" +")) {
+                    pMatch.SetFindText("\" +");
+                    bMerge = true;
+                } else if (pMatch.EndsWith(") +")) {
+                    pMatch.SetFindText("\" +");
+                    bMerge = true;
+                }
+            } else if (pMatch.EndsWith("\"")) {
+                pMatch.SetFindText("\"");
+                pAppend.SetFindText("\"");
+                bMerge = true;
+            } else if (pMatch.EndsWith("(")) {
+                bMerge = true;
+            }
+        }
+        return bMerge ? (pMatch.ReplaceLast() + pAppend.ReplaceFirst().trim()) : null;
     }
 
     public String ConvertAskMenu(String sScriptLine) {
-        if (sScriptLine.contains("Say(") && sScriptLine.contains("#L")) {
-            sScriptLine = sScriptLine.replace("Say(", "AskMenu(");
-            if (sScriptLine.contains(", true)")) {
-                sScriptLine = sScriptLine.replace(", true)", ")");
+        if (StringMatch.Match(sScriptLine, false, true, true, ".Say(")) {
+            if (StringMatch.Match(sScriptLine, false, false, true, "#L")) {
+                sScriptLine = StringMatch.ReplaceAll(sScriptLine, ".Say(", ".AskMenu(", false, true, true);
+                if (StringMatch.Match(sScriptLine, false, true, true, ", true)")) {
+                    sScriptLine = StringMatch.ReplaceAll(sScriptLine, ", true)", ")", false, true, true);
+                }
             }
         }
         return sScriptLine;
     }
 
     public String ConvertNestedAskYesNo(String sScriptLine) {
-        if (sScriptLine.contains("if (self.AskYesNo") && sScriptLine.contains(")) {")) {
-            sScriptLine = sScriptLine.replace(")) {", ") == 1) {");
+        if (StringMatch.Match(sScriptLine, false, true, true, "if (self.AskYesNo")) {
+            if (StringMatch.Match(sScriptLine, false, true, true, ")) {")) {
+                sScriptLine = StringMatch.ReplaceAll(sScriptLine, ")) {", ") == 1) {", false, true, true);
+            }
         }
         return sScriptLine;
+    }
+
+    public void LogMissedShitInfo(String sScriptLine, String sFileName) {
+        /*if (StringMatch.Match(sScriptLine, false, true, true, ".")) {
+            StringMatch pMatch = new StringMatch(sScriptLine, ".", "", false, true, true);
+            if (pMatch.GetMatches() > 0) {
+                String[] aSkipIfMatch = {"length", "type", "includes"};
+                for (int i = 0; i < pMatch.GetMatches(); i++) {
+                    StringMatch.Match pMatchItr = pMatch.GetMatchesList().get(i);
+                    if (pMatchItr.GetString().length() >= pMatchItr.GetStartIndex() + pMatchItr.GetFindText().length()) {
+                        if (Character.isLowerCase(pMatchItr.GetString().charAt(pMatchItr.GetEndIndex()))) {
+                            String sText = pMatchItr.GetString().substring(pMatchItr.GetEndIndex());
+                            StringMatch pMatchSkip = new StringMatch(sText, "", "", true, true, true);
+                            if (!sText.isBlank()) {
+                                String sMatch = "";
+                                for (String sKey : aSkipIfMatch) {
+                                    pMatchSkip.SetFindText(sKey);
+                                    if (pMatchSkip.StartsWith(sKey)) {
+                                        sMatch = sKey;
+                                        break;
+                                    }
+                                }
+                                if (sMatch.isBlank()) {
+                                    util.Logger.LogReport("(" + sFileName + ") [" + sMatch + "] {" + pMatchItr.GetString().charAt(pMatchItr.GetEndIndex()) + "} / " + sScriptLine);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
     }
 
     public String GetIteratorInsertVarForLoop(String sScriptLine) {
@@ -244,7 +331,7 @@ public abstract class AbstractHandler {
 
     public String GetIteratorIncrementInsertForLoop(String sScriptLine) {
         String sAdditionalLine = "";
-        /*if (sScriptLine.contains("while (") && sScriptLine.contains(") {") && (sScriptLine.contains("<") || sScriptLine.contains(">"))) {
+        if (sScriptLine.contains("while (") && sScriptLine.contains(") {") && (sScriptLine.contains("<") || sScriptLine.contains(">"))) {
             String[] aSplit = sScriptLine.substring(sScriptLine.indexOf("while ("), sScriptLine.indexOf(") {")).split("while")[1].substring(2).split(" ");
             String sVariable = "", sOperation = "", sValueTo = "";
             if (aSplit.length == 3) {
@@ -261,7 +348,7 @@ public abstract class AbstractHandler {
                     sAdditionalLine += sOperation.contains(">") ? (sVariable + "--;") : sOperation.contains("<") ? (sVariable + "++;") : "";
                 }
             }
-        }*/
+        }
         return sAdditionalLine;
     }
 

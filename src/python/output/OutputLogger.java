@@ -1,5 +1,6 @@
 package python.output;
 
+import base.util.Logger;
 import python.handle.AbstractHandler;
 import python.handle.BlockHandler;
 
@@ -16,12 +17,13 @@ import static python.PythonToJavascript.*;
  */
 public class OutputLogger {
 
+    public static List<String> aFilesCreated = new ArrayList<>(); //mostly used for verification and count
     public static List<String> aFilesSkip = new LinkedList<>(); //records a list of skipped files due to alien functions
     public LinkedHashMap<String, String> mWhileLoopDebug = new LinkedHashMap<>(); //all instances where a while loop or a for-each loop is used for manual referencing
     public Map<String, LinkedList<String>> mFunctionToFileSkip = new HashMap<>(); //debugging variables, (Key-Function, Value-Files)
     public Map<Integer, LinkedList<String>> mNumInstancesToFunctionSkip = new LinkedHashMap<>(); //(Key-# of Files, Value-List of Functions)
     public AbstractHandler pBlockModifier = new BlockHandler();
-    public int nCreatedScripts = 0, nSkippedScripts = 0; //tracks the # of total created and skipped scripts
+    public int nCreatedScripts, nSkippedScripts; //tracks the # of total created and skipped scripts
 
     public void LogDebugInfo(String sScriptLine, String sFileName) {
         String sLine = sScriptLine;
@@ -76,38 +78,40 @@ public class OutputLogger {
                     boolean bLogDebugReport = false;
                     if (nIdxStart != nIdxMiddle) {
                         String sDebug = sLine.substring(nIdxStart);
-                        String sDebugImportClass = sLine.substring(nIdxStart, nIdxMiddle);
-                        if ((!mFunctionKeywordReplace.containsValue(sDebugImportClass) || sDebugImportClass.equals("self")) && sDebug.contains("(")) {
-                            int nIdxEnd = sDebug.indexOf('(');
-                            sDebugFuncName = sDebug.substring(0, nIdxEnd);
-                            if (bLogDebugReport && !sDebugFuncName.contains(".")) {
-                                util.Logger.LogReport("sDebugFuncName does not contain a '.' = " + sDebugFuncName);
-                                util.Logger.LogReport("sLine = " + sLine);
-                                util.Logger.LogReport("sDebug = " + sDebug);
-                                util.Logger.LogReport("sDebugImportClass = " + sDebugImportClass);
-                                util.Logger.LogReport("nIdxStart = %d, nIdxMiddle = %d, nIdxEnd = %d", nIdxStart, nIdxMiddle, nIdxEnd);
-                            }
-                            if (!mFunctionKeywordReplace.containsValue(sDebugFuncName) && !mFunctionKeywordReplace.containsValue(sDebugFuncName.substring(sDebugFuncName.indexOf('.')))) {
-                                if (!sDebugFuncName.isEmpty() && !sDebugFuncName.contains(",")) {
-                                    LinkedList<String> aFileInfo;
-                                    if (!mFunctionToFileSkip.keySet().contains(sDebugFuncName)) {
-                                        aFileInfo = new LinkedList<>();
-                                        aFileInfo.add(sFileName);
-                                    } else {
-                                        aFileInfo = mFunctionToFileSkip.get(sDebugFuncName);
-                                        if (!aFileInfo.contains(sFileName)) {
+                        if (!sDebug.contains(".includes")) {
+                            String sDebugImportClass = sLine.substring(nIdxStart, nIdxMiddle);
+                            if ((!mFunctionKeywordReplace.containsValue(sDebugImportClass) || sDebugImportClass.equals("self")) && sDebug.contains("(")) {
+                                int nIdxEnd = sDebug.indexOf('(');
+                                sDebugFuncName = sDebug.substring(0, nIdxEnd);
+                                if (bLogDebugReport && !sDebugFuncName.contains(".")) {
+                                    util.Logger.LogReport("sDebugFuncName does not contain a '.' = " + sDebugFuncName);
+                                    util.Logger.LogReport("sLine = " + sLine);
+                                    util.Logger.LogReport("sDebug = " + sDebug);
+                                    util.Logger.LogReport("sDebugImportClass = " + sDebugImportClass);
+                                    util.Logger.LogReport("nIdxStart = %d, nIdxMiddle = %d, nIdxEnd = %d", nIdxStart, nIdxMiddle, nIdxEnd);
+                                }
+                                if (!mFunctionKeywordReplace.containsValue(sDebugFuncName) && !mFunctionKeywordReplace.containsValue(sDebugFuncName.substring(sDebugFuncName.indexOf('.'))) && !aRemovedFiles.contains(sFileName)) {
+                                    if (!sDebugFuncName.isEmpty() && !sDebugFuncName.contains(",")) {
+                                        LinkedList<String> aFileInfo;
+                                        if (!mFunctionToFileSkip.keySet().contains(sDebugFuncName)) {
+                                            aFileInfo = new LinkedList<>();
                                             aFileInfo.add(sFileName);
+                                        } else {
+                                            aFileInfo = mFunctionToFileSkip.get(sDebugFuncName);
+                                            if (!aFileInfo.contains(sFileName)) {
+                                                aFileInfo.add(sFileName);
+                                            }
                                         }
+                                        mFunctionToFileSkip.put(sDebugFuncName, aFileInfo);
+                                        String sFileInfoName = sFileName.contains(".py") ? sFileName.replace(".py", ".js")
+                                                : !sFileName.contains(".") ? sFileName.concat(".js")
+                                                : sFileName;
+                                        if (!aFilesSkip.contains(sFileInfoName.substring(0, sFileInfoName.indexOf(".")))) {
+                                            aFilesSkip.add(sFileInfoName.substring(0, sFileInfoName.indexOf(".")));
+                                        }
+                                        sLine = sLine.substring(sLine.indexOf(sDebugFuncName) + sDebugFuncName.length());
+                                        continue;
                                     }
-                                    mFunctionToFileSkip.put(sDebugFuncName, aFileInfo);
-                                    String sFileInfoName = sFileName.contains(".py") ? sFileName.replace(".py", ".js")
-                                            : !sFileName.contains(".") ? sFileName.concat(".js")
-                                            : sFileName;
-                                    if (!aFilesSkip.contains(sFileInfoName.substring(0, sFileInfoName.indexOf(".")))) {
-                                        aFilesSkip.add(sFileInfoName.substring(0, sFileInfoName.indexOf(".")));
-                                    }
-                                    sLine = sLine.substring(sLine.indexOf(sDebugFuncName) + sDebugFuncName.length());
-                                    continue;
                                 }
                             }
                         }
@@ -122,15 +126,25 @@ public class OutputLogger {
 
     public void PrintDebugInfoOutput() throws IOException {
         for (String sFileName : mScriptLines.keySet()) {
-            if (!aFilesSkip.contains(sFileName.substring(0, sFileName.indexOf(".")))) {
+            if (!aFilesSkip.contains(sFileName.substring(0, sFileName.indexOf("."))) && !aRemovedFiles.contains((sFileName.substring(0, sFileName.indexOf("."))))) {
                 try (BufferedWriter pWriter = new BufferedWriter(new FileWriter(sJavascriptDirectory + sFileName))) {
                     LinkedList<String> aScriptLines = mScriptLines.get(sFileName);
-                    for (String sLine : aScriptLines) {
-                        pWriter.write(sLine);
-                        pWriter.newLine();
+                    for (int i = 0; i < aScriptLines.size(); i++) {
+                        String sLine = aScriptLines.get(i);
+                        if (!sLine.isBlank()) {
+                            pWriter.write(sLine);
+                            if (i < aScriptLines.size() - 1) {
+                                pWriter.newLine();
+                            }
+                        }
                     }
+                    if (!aFilesCreated.contains(sFileName.substring(0, sFileName.indexOf(".")))) {
+                        aFilesCreated.add(sFileName.substring(0, sFileName.indexOf(".")));
+                    }
+                    nCreatedScripts++;
+                } catch (Exception e) {
+                    nSkippedScripts++;
                 }
-                nCreatedScripts++;
             } else {
                 nSkippedScripts++;
             }
@@ -224,7 +238,11 @@ public class OutputLogger {
                     if (sConstant.contains(".")) {
                         String sFileName = sPythonDirectory + "\\" + aFileInfo[0];
                         int nLineNumber = 1;
-                        try (BufferedReader pReader = new BufferedReader(new FileReader(sFileName))) {
+                        String sPythonFileName = sFileName;
+                        if (sFileName.contains("\\FirstUserEnter") || sFileName.contains("\\UserEnter") || sFileName.contains("\\FieldScript") || sFileName.contains("\\Etc")) {
+                            sPythonFileName = sPythonFileName.replace("\\FirstUserEnter", "").replace("\\UserEnter", "").replace("\\FieldScript", "").replace("\\Etc", "");
+                        }
+                        try (BufferedReader pReader = new BufferedReader(new FileReader(sPythonFileName))) {
                             while (pReader.ready()) {
                                 String sLine = pReader.readLine();
                                 if (sLine.contains((sImport + ".")) || (sLine.contains(sImport) && sLine.contains("from ") && sLine.contains(" import "))) {
@@ -237,22 +255,24 @@ public class OutputLogger {
                                         nIndex = sLineTrimmed.indexOf(",") >= 0 ? sLineTrimmed.indexOf(",") < nIndex || nIndex == -1 ? sLineTrimmed.indexOf(",") : nIndex : nIndex;
                                         if (nIndex >= 0) {
                                             sLineTrimmed = sLineTrimmed.substring(0, nIndex);
-                                            if (!mAlienImportClassCall.containsKey(sLineTrimmed.trim()) && !mFunctionKeywordReplace.keySet().contains(sLineTrimmed.trim())) {
-                                                mAlienImportClassCall.put(sLineTrimmed.trim(), new LinkedHashMap<>());
-                                            }
-                                            LinkedHashMap<String, LinkedList<String>> mCall = mAlienImportClassCall.get(sLineTrimmed.trim());
-                                            if (!mCall.keySet().contains(aFileInfo[0])) {
-                                                mCall.put(aFileInfo[0], new LinkedList<>());
-                                            }
-                                            LinkedList<String> lLines = mCall.get(aFileInfo[0]);
-                                            String sLineToAdd = sLine.trim() + " [at line: " + nLineNumber + "]";
-                                            if (!lLines.contains(sLineToAdd)) {
-                                                lLines.add(sLineToAdd);
-                                            }
-                                            mCall.put(aFileInfo[0], lLines);
-                                            mAlienImportClassCall.put(sLineTrimmed.trim(), mCall);
-                                            if (!mImportClassPackage.containsKey(sLineTrimmed.trim())) {
-                                                mImportClassPackage.put(sLineTrimmed.trim(), sConstant);
+                                            if (!mFunctionKeywordReplace.keySet().contains(sLineTrimmed.trim())) {
+                                                if (!mAlienImportClassCall.containsKey(sLineTrimmed.trim())) {
+                                                    mAlienImportClassCall.put(sLineTrimmed.trim(), new LinkedHashMap<>());
+                                                }
+                                                LinkedHashMap<String, LinkedList<String>> mCall = mAlienImportClassCall.get(sLineTrimmed.trim());
+                                                if (!mCall.keySet().contains(aFileInfo[0])) {
+                                                    mCall.put(aFileInfo[0], new LinkedList<>());
+                                                }
+                                                LinkedList<String> lLines = mCall.get(aFileInfo[0]);
+                                                String sLineToAdd = sLine.trim() + " [at line: " + nLineNumber + "]";
+                                                if (!lLines.contains(sLineToAdd)) {
+                                                    lLines.add(sLineToAdd);
+                                                }
+                                                mCall.put(aFileInfo[0], lLines);
+                                                mAlienImportClassCall.put(sLineTrimmed.trim(), mCall);
+                                                if (!mImportClassPackage.containsKey(sLineTrimmed.trim())) {
+                                                    mImportClassPackage.put(sLineTrimmed.trim(), sConstant);
+                                                }
                                             }
                                         }
                                     }
@@ -264,23 +284,27 @@ public class OutputLogger {
             }
             Object[] aSortedImportClassCall = mAlienImportClassCall.keySet().toArray();
             Arrays.sort(aSortedImportClassCall);
+            LinkedList<String> aImportClass = new LinkedList<>();
             if (aSortedImportClassCall.length > 0) {
                 sStaticImportsView.append("\r\n<These are the individual objects called through import-class declarations..... " + mAlienImportClassCall.keySet().size() + " calls>\r\n");
                 for (Object o : aSortedImportClassCall) {
-                    String sCall = (String) o;
-                    sStaticImportsView.append("\r\n\r\n\t\t:: " + sCall);
-                    sStaticImportsView.append("\r\n\t\t" + mImportClassPackage.get(sCall));
-                    if (!mAlienImportClassCall.get(sCall).keySet().isEmpty()) {
-                        for (String sFileInfo : mAlienImportClassCall.get(sCall).keySet()) {
-                            sStaticImportsView.append("\r\n\r\n\t\t\t\t\t-(" + sFileInfo + ")");
-                            LinkedList<String> lLines = mAlienImportClassCall.get(sCall).get(sFileInfo);
-                            if (!lLines.isEmpty()) {
-                                for (String sLine : lLines) {
-                                    sStaticImportsView.append("\r\n\t\t\t\t\t\t\t" + sLine);
+                    String sCall = (String) o, sClass;
+                    if ((sClass = mImportClassPackage.get(sCall)) != null && !aImportClass.contains(sClass)) {
+                        aImportClass.add(sClass);
+                        ///sStaticImportsView.append("\r\n\r\n\t\t:: " + sCall);
+                        sStaticImportsView.append("\r\n\t\t" + sClass);
+                        /*if (!mAlienImportClassCall.get(sCall).keySet().isEmpty()) {
+                            for (String sFileInfo : mAlienImportClassCall.get(sCall).keySet()) {
+                                sStaticImportsView.append("\r\n\r\n\t\t\t\t\t-(" + sFileInfo + ")");
+                                LinkedList<String> lLines = mAlienImportClassCall.get(sCall).get(sFileInfo);
+                                if (!lLines.isEmpty()) {
+                                    for (String sLine : lLines) {
+                                        sStaticImportsView.append("\r\n\t\t\t\t\t\t\t" + sLine);
+                                    }
                                 }
                             }
-                        }
-                        sStaticImportsView.append("\r\n");
+                            sStaticImportsView.append("\r\n");
+                        }*/
                     }
                 }
             }
@@ -289,10 +313,14 @@ public class OutputLogger {
             Object[] aSortedSkippedFiles = aFilesSkip.toArray();
             Arrays.sort(aSortedSkippedFiles);
             if (aSortedSkippedFiles.length > 0) {
-                sSkippedFileView.append("\r\n<These are the skipped files that were not created due to unknown handling syntax..... " + aSortedSkippedFiles.length + " files>\r\n");
+                sSkippedFileView.append("\r\n<These are the skipped files that were not created due to unknown handling syntax..... " + (aSortedSkippedFiles.length - aRemovedFiles.size()) + " files>\r\n");
+                int i = 1;
                 for (Object o : aSortedSkippedFiles) {
                     String sFlName = (String) o;
-                    sSkippedFileView.append("\r\n\t\t:: " + sFlName);
+                    String sFleName = sFlName.contains(".") ? sFlName.substring(0, sFlName.indexOf(".")) : sFlName;
+                    if (!aRemovedFiles.contains(sFleName + ".py")) {
+                        sSkippedFileView.append("\r\n\t\t" + i++ + ": " + sFlName);
+                    }
                 }
             }
         }
@@ -303,18 +331,20 @@ public class OutputLogger {
         sSkippedFileView.append("\r\n</Skipped-Files View>\r\n");
         util.Logger.LogReport("Number of files containing while loops......... " + mWhileLoopDebug.size());
         for (String sFile : mWhileLoopDebug.keySet()) {
-            util.Logger.LogReport("(" + sFile + ") - " + mWhileLoopDebug.get(sFile));
+            Logger.Println("(" + sFile + ") - " + mWhileLoopDebug.get(sFile));
         }
-        if (!mWhileLoopDebug.isEmpty()) System.out.println("\r\n");
-        if (bFunctionToInstancesView) System.out.println(sFunctionToFileView.toString());
-        if (bFunctionToFileView) System.out.println("\r\n" + sFunctionToFileLineView.toString());
-        if (bPythonKeywordFileView) System.out.println("\r\n" + sPythonKeywordToFileView.toString());
-        if (bStaticImportsView && !mAlienImportClassCall.isEmpty()) System.out.println("\r\n" + sStaticImportsView.toString());
-        if (bSkippedScriptView && !aFilesSkip.isEmpty()) System.out.println("\r\n" + sSkippedFileView.toString());
-        if (!mAlienImportClass.isEmpty()) System.out.println("Total number of constants classes/enums to import.......... " + mAlienImportClass.size());
-        if (aSortedKey != null) System.out.println("Total number of alien/unknown functions.................... " + aSortedKey.length);
-        System.out.println("Total number of created scripts............................ " + nCreatedScripts);
-        System.out.println("Total number of skipped scripts............................ " + nSkippedScripts);
-        System.out.println();
+        if (!mWhileLoopDebug.isEmpty()) Logger.Println("\r\n");
+        if (bFunctionToInstancesView) Logger.Println(sFunctionToFileView.toString());
+        if (bFunctionToFileView) Logger.Println("\r\n" + sFunctionToFileLineView.toString());
+        if (bPythonKeywordFileView) Logger.Println("\r\n" + sPythonKeywordToFileView.toString());
+        if (bStaticImportsView && !mAlienImportClassCall.isEmpty()) Logger.Println("\r\n" + sStaticImportsView.toString());
+        if (bSkippedScriptView && !aFilesSkip.isEmpty()) Logger.Println("\r\n" + sSkippedFileView.toString());
+        if (!aRemovedFiles.isEmpty()) PrintRemovedFileOutput();
+        if (!mAlienImportClass.isEmpty()) Logger.Println("Total number of constants classes/enums to import.......... " + mAlienImportClass.size());
+        if (aSortedKey != null) Logger.Println("Total number of alien/unknown functions.................... " + aSortedKey.length);
+        Logger.Println("Total number of created scripts............................ " + nCreatedScripts);
+        Logger.Println("Total number of skipped scripts............................ " + (aFilesSkip.size() - aRemovedFiles.size()));
+        Logger.Println("Total number of removed files.............................. " + aRemovedFiles.size());
+        Logger.Println("");
     }
 }
