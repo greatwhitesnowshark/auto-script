@@ -24,7 +24,7 @@ import static python.handle.SyntaxModifier.*;
 
 /**
  *
- * @author Sharky - Really more of "swordie-python" to JS
+ * @author Sharky - Really more of "<unnamed-target-app>-python" to JS
  */
 public class PythonToJavascript {
 
